@@ -15,6 +15,11 @@
 			<artifactId>util.server</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-server</artifactId>
+			<version>9.3.8.v20160314</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -33,7 +38,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>de.uni_passau.fim.bochenek.ma.gui.charger.Server</mainClass>
+							<mainClass>de.uni_passau.fim.bochenek.ma.gui.charger.ServerProvider</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URL;
 
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 
@@ -15,37 +16,38 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
  */
 public class GuiServer {
 
-	private int port;
-	private Server server;
+	private int appPort;
+	private int socketPort;
+	private Server appServer;
+	private Server socketServer;
 
 	/**
 	 * TODO
 	 * 
-	 * @param port
+	 * @param appPort
 	 * @param url
+	 * @param socketPort
+	 * @param socketHandler
 	 */
-	public GuiServer(int port, URL url) {
-		// TODO
-		if (port > 1024 && port <= 65535 && isPortAvailable(port)) {
-			this.port = port;
-		} else {
-			int tmpPort = (int) Math.floor(Math.random() * 64511) + 1024;
-			while (!isPortAvailable(tmpPort)) {
-				tmpPort = (int) Math.floor(Math.random() * 64511) + 1024;
-			}
-			this.port = tmpPort;
-		}
+	public GuiServer(int appPort, URL url, int socketPort, Handler socketHandler) {
 
-		server = new Server(port);
+		// Randomly allocate port, if selected one is already taken
+		this.appPort = isPortAvailable(appPort) ? appPort : 0;
+		this.socketPort = isPortAvailable(socketPort) ? socketPort : 0;
 
+		// Set up the application server
+		appServer = new Server(appPort);
 		ResourceHandler resource_handler = new ResourceHandler();
-
 		if (url != null) {
 			resource_handler.setResourceBase(url.toExternalForm());
 		} else {
 			// TODO Actual error handling
 		}
-		server.setHandler(resource_handler);
+		appServer.setHandler(resource_handler);
+
+		// Set up the socket server
+		socketServer = new Server(socketPort);
+		socketServer.setHandler(socketHandler);
 	}
 
 	/**
@@ -53,10 +55,12 @@ public class GuiServer {
 	 */
 	public void start() {
 		// TODO Better check
-		if (server != null) {
+		if (appServer != null) {
 			try {
-				server.start();
-				server.join();
+				appServer.start();
+				socketServer.start(); // TODO No check for socketServer above
+
+				// TODO join() ?
 			} catch (Exception e) {
 				// TODO Correct handling or simply throw
 				e.printStackTrace();
@@ -68,9 +72,10 @@ public class GuiServer {
 	 * TODO
 	 */
 	public void stop() {
-		if (server != null && server.isStarted()) {
+		if (appServer != null && appServer.isStarted()) {
 			try {
-				server.stop();
+				appServer.stop();
+				socketServer.stop(); // TODO No check for socketServer above
 			} catch (Exception e) {
 				// TODO Correct handling or simply throw
 				e.printStackTrace();
@@ -94,8 +99,12 @@ public class GuiServer {
 		}
 	}
 
-	public int getPort() {
-		return this.port;
+	public int getAppPort() {
+		return appPort; // TODO May be uninitialized
+	}
+
+	public int getSocketPort() {
+		return socketPort; // TODO May be uninitialized
 	}
 
 }
