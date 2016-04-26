@@ -2,6 +2,7 @@ package de.uni_passau.fim.bochenek.ma.util.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.URL;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -25,7 +26,7 @@ public class GuiServer {
 	 * @param port
 	 * @param base
 	 */
-	public GuiServer(int port, String base) {
+	public GuiServer(int port, URL url) {
 		// TODO
 		if (port > 1024 && port <= 65535 && isPortAvailable(port)) {
 			this.port = port;
@@ -40,7 +41,12 @@ public class GuiServer {
 		server = new Server(port);
 
 		ResourceHandler resource_handler = new ResourceHandler();
-		resource_handler.setResourceBase(base);
+
+		if (url != null) {
+			resource_handler.setResourceBase(url.toExternalForm());
+		} else {
+			// TODO Actual error handling
+		}
 
 		GzipHandler gzip = new GzipHandler();
 		server.setHandler(gzip);
