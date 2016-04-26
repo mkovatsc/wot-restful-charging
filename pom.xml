@@ -1,0 +1,32 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<modelVersion>4.0.0</modelVersion>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.javaVersion>1.8</project.build.javaVersion>
+	</properties>
+
+	<groupId>de.uni_passau.fim.bochenek.ma</groupId>
+	<artifactId>wot-restful-charging</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<developers>
+		<developer>
+			<id>bochenek</id>
+			<name>Martin Bochenek</name>
+			<email>bochenek@fim.uni-passau.de</email>
+			<organization>Universität Passau</organization>
+			<organizationUrl>http://www.uni-passau.de/</organizationUrl>
+		</developer>
+	</developers>
+
+	<modules>
+		<module>util.server</module>
+		<module>gui.charger</module>
+	</modules>
+
+</project>

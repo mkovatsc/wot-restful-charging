@@ -1,0 +1,9 @@
+/*
+
+!/gui.*
+!/lib.*
+!/util.*
+!/pom.xml
+
+!/.gitattributes
+!/.gitignore

@@ -1,2 +1,2 @@
-# wot-restful-charging
+# RESTful Electric Vehicle Charging
 Master's thesis repository
