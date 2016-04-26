@@ -50,11 +50,7 @@ public class GuiServer {
 			// TODO Actual error handling
 		}
 
-		GzipHandler gzip = new GzipHandler();
-		server.setHandler(gzip);
-		HandlerList handlers = new HandlerList();
-		handlers.setHandlers(new Handler[]{resource_handler, new DefaultHandler()});
-		gzip.setHandler(handlers);
+		server.setHandler(resource_handler);
 	}
 
 	/**
