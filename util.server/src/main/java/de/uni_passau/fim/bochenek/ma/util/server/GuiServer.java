@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URL;
 
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.websocket.server.WebSocketHandler;
 
 /**
  * TODO
@@ -29,7 +29,7 @@ public class GuiServer {
 	 * @param socketPort
 	 * @param socketHandler
 	 */
-	public GuiServer(int appPort, URL url, int socketPort, Handler socketHandler) {
+	public GuiServer(int appPort, URL url, int socketPort, WebSocketHandler socketHandler) {
 
 		// Randomly allocate port, if selected one is already taken
 		this.appPort = isPortAvailable(appPort) ? appPort : 0;

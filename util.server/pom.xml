@@ -15,6 +15,11 @@
 			<artifactId>jetty-server</artifactId>
 			<version>9.3.8.v20160314</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-server</artifactId>
+			<version>9.3.8.v20160314</version>
+		</dependency>
 	</dependencies>
 
 </project>

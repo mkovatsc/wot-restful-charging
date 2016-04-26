@@ -1,6 +1,5 @@
 package de.uni_passau.fim.bochenek.ma.gui.charger;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,11 +29,8 @@ public class AppSocket {
 	public void onConnect(Session session) {
 		logger.log(Level.INFO, "Connection from: " + session.getRemoteAddress().getAddress());
 
-		try {
-			session.getRemote().sendString("Hello, Client!");
-		} catch (IOException e) {
-			logger.log(Level.INFO, "Exception!");
-		}
+		// Automatically add client to listeners on connect
+		SocketHandler.getInstance().addListener(session);
 	}
 
 	@OnWebSocketMessage

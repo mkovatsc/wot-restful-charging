@@ -22,10 +22,9 @@ public class ServerProvider {
 		int appPort = 8080;
 		int socketPort = 8081;
 		URL appUrl = ServerProvider.class.getResource("/webapp");
-		SocketHandler sockHandler = new SocketHandler();
 
 		// Start GUI server
-		GuiServer server = new GuiServer(appPort, appUrl, socketPort, sockHandler);
+		GuiServer server = new GuiServer(appPort, appUrl, socketPort, SocketHandler.getInstance());
 		server.start();
 
 		// Debugging information
