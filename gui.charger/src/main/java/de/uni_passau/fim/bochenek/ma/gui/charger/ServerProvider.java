@@ -8,10 +8,10 @@ import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
  * @author Martin Bochenek
  *
  */
-public class Server {
+public class ServerProvider {
 
 	public static void main(String[] args) {
-		GuiServer server = new GuiServer(8080, Server.class.getResource("/webapp"));
+		GuiServer server = new GuiServer(8080, ServerProvider.class.getResource("/webapp"));
 		server.start();
 	}
 
