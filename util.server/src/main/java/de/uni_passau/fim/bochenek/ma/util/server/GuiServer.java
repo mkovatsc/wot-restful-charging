@@ -4,12 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URL;
 
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 
 /**
  * TODO
@@ -49,7 +45,6 @@ public class GuiServer {
 		} else {
 			// TODO Actual error handling
 		}
-
 		server.setHandler(resource_handler);
 	}
 
