@@ -2,6 +2,12 @@ package de.uni_passau.fim.bochenek.ma.gui.charger;
 
 import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
 
+/**
+ * TODO
+ * 
+ * @author Martin Bochenek
+ *
+ */
 public class Server {
 
 	public static void main(String[] args) {

@@ -12,6 +12,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 
 /**
+ * TODO
  * 
  * @author Martin Bochenek
  *
@@ -22,9 +23,10 @@ public class GuiServer {
 	private Server server;
 
 	/**
+	 * TODO
 	 * 
 	 * @param port
-	 * @param base
+	 * @param url
 	 */
 	public GuiServer(int port, URL url) {
 		// TODO
@@ -55,6 +57,9 @@ public class GuiServer {
 		gzip.setHandler(handlers);
 	}
 
+	/**
+	 * TODO
+	 */
 	public void start() {
 		// TODO Better check
 		if (server != null) {
@@ -68,6 +73,9 @@ public class GuiServer {
 		}
 	}
 
+	/**
+	 * TODO
+	 */
 	public void stop() {
 		if (server != null && server.isStarted()) {
 			try {
