@@ -25,7 +25,12 @@ public class ServerProvider {
 
 		// Start GUI server
 		GuiServer server = new GuiServer(appPort, appUrl, socketPort, SocketHandler.getInstance());
-		server.start();
+		try {
+			server.start();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// Debugging information
 		logger.log(Level.INFO, "GuiServer (Application) started on: " + server.getAppPort());
