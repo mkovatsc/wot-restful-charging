@@ -1,0 +1,47 @@
+<html lang="en" >
+  <head>
+    <title>CarUI - Dashboard</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc4/angular-material.min.css">
+  </head>
+  <body ng-app="CarUI" layout="column" ng-cloak>
+
+    <md-toolbar layout="row" ng-controller="SidenavController">
+      <md-button ng-click="toggleLeft()" class="menu" hide-gt-md aria-label="Sidenav">
+        <md-icon md-svg-icon="assets/img/icons/ic_menu_white_24px.svg"></md-icon>
+      </md-button>
+      <h1>CarUI - Dashboard</h1>
+    </md-toolbar>
+
+    <div flex layout="row">
+
+        <md-sidenav md-is-locked-open="$mdMedia('gt-md')" md-component-id="left" class="md-sidenav-left md-whiteframe-z2" >
+        </md-sidenav>
+
+        <md-content flex id="content">
+          <h1>Hello, World!</h1>
+          <h2>I am your car.</h2>
+        </md-content>
+
+    </div>
+
+    <!-- Angular Material requires Angular.js Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+    <!-- Angular Material Library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc4/angular-material.min.js"></script>
+
+    <!-- Bootstrap application -->
+    <script src="app/app.module.js"></script>
+    <script src="app/app.routes.js"></script>
+
+    <!-- Controller -->
+    <script src="app/components/navigation/sidenavController.js"></script>
+  </body>
+</html>

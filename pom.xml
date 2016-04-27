@@ -25,6 +25,7 @@
 	</developers>
 
 	<modules>
+		<module>gui.car</module>
 		<module>gui.charger</module>
 		<module>lib.charger</module>
 		<module>util.server</module>
