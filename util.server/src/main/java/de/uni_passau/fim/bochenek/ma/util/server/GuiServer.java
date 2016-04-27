@@ -30,56 +30,47 @@ public class GuiServer {
 	 * @param socketHandler
 	 */
 	public GuiServer(int appPort, URL url, int socketPort, WebSocketHandler socketHandler) {
-
-		// Randomly allocate port, if selected one is already taken
-		this.appPort = isPortAvailable(appPort) ? appPort : 0;
-		this.socketPort = isPortAvailable(socketPort) ? socketPort : 0;
-
-		// Set up the application server
-		appServer = new Server(appPort);
-		ResourceHandler resource_handler = new ResourceHandler();
-		if (url != null) {
-			resource_handler.setResourceBase(url.toExternalForm());
-		} else {
-			// TODO Actual error handling
-		}
-		appServer.setHandler(resource_handler);
-
-		// Set up the socket server
-		socketServer = new Server(socketPort);
-		socketServer.setHandler(socketHandler);
+		setupAppServer(appPort, url);
+		setupSocketServer(socketPort, socketHandler);
 	}
 
 	/**
 	 * TODO
+	 * 
+	 * @param appPort
+	 * @param url
 	 */
-	public void start() {
-		// TODO Better check
+	public GuiServer(int appPort, URL url) {
+		setupAppServer(appPort, url);
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @throws Exception
+	 */
+	public void start() throws Exception {
 		if (appServer != null) {
-			try {
-				appServer.start();
-				socketServer.start(); // TODO No check for socketServer above
-
-				// TODO join() ?
-			} catch (Exception e) {
-				// TODO Correct handling or simply throw
-				e.printStackTrace();
-			}
+			appServer.start();
 		}
+		if (socketServer != null) {
+			socketServer.start();
+		}
+
+		// TODO join() ?
 	}
 
 	/**
 	 * TODO
+	 * 
+	 * @throws Exception
 	 */
-	public void stop() {
+	public void stop() throws Exception {
 		if (appServer != null && appServer.isStarted()) {
-			try {
-				appServer.stop();
-				socketServer.stop(); // TODO No check for socketServer above
-			} catch (Exception e) {
-				// TODO Correct handling or simply throw
-				e.printStackTrace();
-			}
+			appServer.stop();
+		}
+		if (socketServer != null && appServer.isStarted()) {
+			socketServer.stop();
 		}
 	}
 
@@ -97,6 +88,44 @@ public class GuiServer {
 		} catch (IOException e) {
 			return false;
 		}
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param appPort
+	 * @param url
+	 */
+	private void setupAppServer(int appPort, URL url) {
+
+		// Randomly allocate port, if selected one is already taken
+		this.appPort = isPortAvailable(appPort) ? appPort : 0;
+
+		// Set up the application server
+		appServer = new Server(appPort);
+		ResourceHandler resource_handler = new ResourceHandler();
+		if (url != null) {
+			resource_handler.setResourceBase(url.toExternalForm());
+		} else {
+			// TODO Actual error handling
+		}
+		appServer.setHandler(resource_handler);
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param socketPort
+	 * @param socketHandler
+	 */
+	private void setupSocketServer(int socketPort, WebSocketHandler socketHandler) {
+
+		// Randomly allocate port, if selected one is already taken
+		this.socketPort = isPortAvailable(socketPort) ? socketPort : 0;
+
+		// Set up the socket server
+		socketServer = new Server(socketPort);
+		socketServer.setHandler(socketHandler);
 	}
 
 	public int getAppPort() {
