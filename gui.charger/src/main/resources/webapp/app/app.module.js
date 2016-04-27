@@ -1,1 +1,1 @@
-var app = angular.module('ChargerGUI', ['ngMaterial']);
+var app = angular.module('ChargerUI', ['ngMaterial']);
