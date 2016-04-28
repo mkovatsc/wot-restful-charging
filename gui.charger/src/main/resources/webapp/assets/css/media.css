@@ -1,0 +1,15 @@
+@media (min-width: 600px){
+  #se-box {
+    margin-right: 7px;
+  }
+
+  #ev-box {
+    margin-left: 7px;
+  }
+}
+
+@media (max-width: 599px){
+  #se-box {
+    margin-bottom: 15px;
+  }
+}

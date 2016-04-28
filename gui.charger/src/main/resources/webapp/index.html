@@ -9,6 +9,7 @@
 
     <!-- Custom style sheets -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/media.css">
   </head>
   <body ng-app="ChargerUI" layout="column" ng-cloak>
 
@@ -21,13 +22,13 @@
 
     <div layout="row" flex>
 
-        <md-sidenav md-is-locked-open="$mdMedia('gt-md')" md-component-id="left" class="md-sidenav-left md-whiteframe-z2"></md-sidenav>
+        <md-sidenav md-is-locked-open="$mdMedia('gt-md')" md-component-id="left" class="md-sidenav-left md-whiteframe-z2" flex></md-sidenav>
 
-        <div id="content" layout="column" flex>
+        <div id="content" layout="column" layout-margin flex>
 
-          <div ng-controller="statusController" layout="row" layout-xs="column" layout-margin flex>
+          <div ng-controller="statusController" layout="row" layout-xs="column">
 
-            <div id="se-box" class="md-whiteframe-5dp" layout="column" flex>
+            <div id="se-box" class="md-whiteframe-5dp" layout="column" flex-gt-xs>
               <md-toolbar layout-padding>
                 <h2>Supply Equipment</h2>
               </md-toolbar>
@@ -51,7 +52,7 @@
               </md-content>
             </div>
 
-            <div id="ev-box" class="md-whiteframe-5dp" layout="column" flex>
+            <div id="ev-box" class="md-whiteframe-5dp" layout="column" flex-gt-xs>
               <md-toolbar layout-padding>
                 <h2>Electric Vehicle</h2>
               </md-toolbar>
@@ -85,7 +86,7 @@
 
           </div>
 
-          <div class="md-whiteframe-5dp" layout-margin>
+          <div class="md-whiteframe-5dp">
             <md-tabs md-dynamic-height md-border-bottom>
               <md-tab label="debug">
                 <md-content class="md-padding">
