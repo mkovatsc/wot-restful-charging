@@ -31,7 +31,7 @@ public class GuiServer {
 	 */
 	public GuiServer(int appPort, URL url, int socketPort, WebSocketHandler socketHandler) {
 		setupAppServer(appPort, url);
-		setupSocketServer(socketPort, socketHandler);
+		setupSocketServer(socketPort, socketHandler); // TODO SSL?
 	}
 
 	/**
