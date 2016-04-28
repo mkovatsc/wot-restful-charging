@@ -3,22 +3,18 @@ angular.module("ChargerUI")
     // TODO switch to Socket.io?
     // TODO Config -> provider()
     var socket = new WebSocket("ws://localhost:8081");
-    var sockReady = false;
     var handlers = {};
 
     socket.onopen = function() {
       $log.info("Socket successfully opened.");
-      sockReady = true;
     };
 
     socket.onclose = function() {
       $log.info("Socket closed.");
-      sockReady = false;
     }
 
     socket.onerror = function(error) {
       $log.error("Socket error: " + error);
-      sockReady = false;
     };
 
     socket.onmessage = function(evt) {
@@ -37,7 +33,7 @@ angular.module("ChargerUI")
         handlers[msgType] = handler;
       },
       send: function(msg) {
-        if (sockReady) {
+        if (socket.readyState == 1) {
           $log.debug("Sending message to server: " + msg);
           socket.send(msg);
         } else {
