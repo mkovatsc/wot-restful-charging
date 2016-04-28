@@ -26,7 +26,7 @@
 
         <md-content flex id="content">
 
-          <div layout="row">
+          <div layout="row" ng-controller="statusController">
 
             <div layout="column" id="se-box" class="md-whiteframe-5dp" flex>
               <md-toolbar layout-padding>
@@ -41,8 +41,11 @@
               <md-toolbar layout-padding>
                 <h2>Electric Vehicle</h2>
               </md-toolbar>
-              <md-content layout-padding>
-                <p>This is as test!</p>
+              <md-content layout="column" layout-padding>
+                <div class="soc">
+                  <md-progress-linear md-mode="determinate" value="{{ev.stateOfCharge}}"></md-progress-linear>
+                  <h3>State of Charge ({{ev.stateOfCharge}}%)</h3>
+                </div>
               </md-content>
             </div>
 
@@ -81,6 +84,7 @@
 
     <!-- Controllers -->
     <script src="app/components/content/debugController.js"></script>
+    <script src="app/components/content/statusController.js"></script>
     <script src="app/components/navigation/sidenavController.js"></script>
 
     <!-- Services -->
