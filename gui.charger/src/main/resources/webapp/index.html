@@ -24,91 +24,16 @@
 
         <md-sidenav md-is-locked-open="$mdMedia('gt-md')" md-component-id="left" class="md-sidenav-left md-whiteframe-z2" flex></md-sidenav>
 
-        <div id="content" layout="column" layout-margin flex>
-
-          <div ng-controller="statusController" layout="row" layout-xs="column">
-
-            <div id="se-box" class="md-whiteframe-5dp" layout="column" flex-gt-xs>
-              <md-toolbar layout-padding>
-                <h2>Supply Equipment</h2>
-              </md-toolbar>
-              <md-content layout="column" layout-padding>
-                <div class="charging-param">
-                  <h3>Charging Parameters</h3>
-                  <md-tabs md-dynamic-height md-border-bottom>
-                    <md-tab label="present">
-                      <md-content class="md-padding">
-                        <p>Voltage: {{se.presentVoltage || 'N/A'}}</p>
-                        <p>Current: {{se.presentCurrent || 'N/A'}}</p>
-                      </md-content>
-                    </md-tab>
-                    <md-tab label="maximum">
-                      <md-content class="md-padding">
-                        <p>TODO</p>
-                      </md-content>
-                    </md-tab>
-                  </md-tabs>
-                </div>
-              </md-content>
-            </div>
-
-            <div id="ev-box" class="md-whiteframe-5dp" layout="column" flex-gt-xs>
-              <md-toolbar layout-padding>
-                <h2>Electric Vehicle</h2>
-              </md-toolbar>
-              <md-content layout="column" layout-padding>
-                <div class="charging-param">
-                  <h3>Charging Parameters</h3>
-                  <md-tabs md-dynamic-height md-border-bottom>
-                    <md-tab label="target">
-                      <md-content class="md-padding">
-                        <p>Voltage: {{ev.targetVoltage || 'N/A'}}</p>
-                        <p>Current: {{ev.targetCurrent || 'N/A'}}</p>
-                      </md-content>
-                    </md-tab>
-                    <md-tab label="maximum">
-                      <md-content class="md-padding">
-                        <p>Voltage: {{ev.maximumVoltageLimit || 'N/A'}}</p>
-                        <p>Current: {{ev.maximumCurrentLimit || 'N/A'}}</p>
-                      </md-content>
-                    </md-tab>
-                  </md-tabs>
-                </div>
-                <div class="soc">
-                  <h3>
-                    State of Charge ( {{ev.stateOfCharge || '-'}} % )
-                    <img ng-src="assets/img/icons/{{ev.chargingComplete && 'ic_check_black_24px.svg' || 'ic_sync_black_24px.svg'}}"/>
-                  </h3>
-                  <md-progress-linear md-mode="determinate" value="{{ev.stateOfCharge}}"></md-progress-linear>
-                </div>
-              </md-content>
-            </div>
-
-          </div>
-
-          <div class="md-whiteframe-5dp">
-            <md-tabs md-dynamic-height md-border-bottom>
-              <md-tab label="debug">
-                <md-content class="md-padding">
-                  <md-virtual-repeat-container ng-controller="debugController" id="debug-msg-container">
-                    <div md-virtual-repeat="message in debugmsgs" class="debug-msg" flex>
-                      {{ message.time }} - {{ message.message }}
-                    </div>
-                  </md-virtual-repeat-container>
-                </md-content>
-              </md-tab>
-            </md-tabs>
-          </div>
-
-        </div>
+        <div id="content" layout="column" layout-margin flex ng-view></div>
 
     </div>
 
-    <!-- Angular Material requires Angular.js Libraries -->
+    <!-- Angular.js Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
 
     <!-- Angular Material Library -->
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc4/angular-material.min.js"></script>

@@ -1,1 +1,1 @@
-var app = angular.module('ChargerUI', ['ngMaterial']);
+angular.module('ChargerUI', ['ngMaterial', 'ngRoute']);

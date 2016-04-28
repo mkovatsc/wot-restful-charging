@@ -1,0 +1,73 @@
+<div ng-controller="statusController" layout="row" layout-xs="column">
+
+  <div id="se-box" class="md-whiteframe-5dp" layout="column" flex-gt-xs>
+    <md-toolbar layout-padding>
+      <h2>Supply Equipment</h2>
+    </md-toolbar>
+    <md-content layout="column" layout-padding>
+      <div class="charging-param">
+        <h3>Charging Parameters</h3>
+        <md-tabs md-dynamic-height md-border-bottom>
+          <md-tab label="present">
+            <md-content class="md-padding">
+              <p>Voltage: {{se.presentVoltage || 'N/A'}}</p>
+              <p>Current: {{se.presentCurrent || 'N/A'}}</p>
+            </md-content>
+          </md-tab>
+          <md-tab label="maximum">
+            <md-content class="md-padding">
+              <p>TODO</p>
+            </md-content>
+          </md-tab>
+        </md-tabs>
+      </div>
+    </md-content>
+  </div>
+
+  <div id="ev-box" class="md-whiteframe-5dp" layout="column" flex-gt-xs>
+    <md-toolbar layout-padding>
+      <h2>Electric Vehicle</h2>
+    </md-toolbar>
+    <md-content layout="column" layout-padding>
+      <div class="charging-param">
+        <h3>Charging Parameters</h3>
+        <md-tabs md-dynamic-height md-border-bottom>
+          <md-tab label="target">
+            <md-content class="md-padding">
+              <p>Voltage: {{ev.targetVoltage || 'N/A'}}</p>
+              <p>Current: {{ev.targetCurrent || 'N/A'}}</p>
+            </md-content>
+          </md-tab>
+          <md-tab label="maximum">
+            <md-content class="md-padding">
+              <p>Voltage: {{ev.maximumVoltageLimit || 'N/A'}}</p>
+              <p>Current: {{ev.maximumCurrentLimit || 'N/A'}}</p>
+            </md-content>
+          </md-tab>
+        </md-tabs>
+      </div>
+      <div class="soc">
+        <h3>
+          State of Charge ( {{ev.stateOfCharge || '-'}} % )
+          <img ng-src="assets/img/icons/{{ev.chargingComplete && 'ic_check_black_24px.svg' || 'ic_sync_black_24px.svg'}}"/>
+        </h3>
+        <md-progress-linear md-mode="determinate" value="{{ev.stateOfCharge}}"></md-progress-linear>
+      </div>
+    </md-content>
+  </div>
+
+</div>
+
+<div class="md-whiteframe-5dp">
+  <md-tabs md-dynamic-height md-border-bottom>
+    <md-tab label="debug">
+      <md-content class="md-padding">
+        <md-virtual-repeat-container ng-controller="debugController" id="debug-msg-container">
+          <div md-virtual-repeat="message in debugmsgs" class="debug-msg" flex>
+            {{ message.time }} - {{ message.message }}
+          </div>
+        </md-virtual-repeat-container>
+      </md-content>
+    </md-tab>
+  </md-tabs>
+</div>
