@@ -1,3 +1,11 @@
+#se-box {
+  margin: 0 15px 15px 0;
+}
+
+#ev-box {
+  margin: 0 0 15px 0;
+}
+
 #debug-msg-container {
   height: 150px;
   width: 100%;

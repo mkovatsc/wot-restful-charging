@@ -25,8 +25,29 @@
         </md-sidenav>
 
         <md-content flex id="content">
-          <h1>Hello, World!</h1>
-          <h2>I am your charger.</h2>
+
+          <div layout="row">
+
+            <div layout="column" id="se-box" class="md-whiteframe-5dp" flex>
+              <md-toolbar layout-padding>
+                <h2>Supply Equipment</h2>
+              </md-toolbar>
+              <md-content layout-padding>
+                <p>This is as test!</p>
+              </md-content>
+            </div>
+
+            <div layout="column" id="ev-box" class="md-whiteframe-5dp" flex>
+              <md-toolbar layout-padding>
+                <h2>Electric Vehicle</h2>
+              </md-toolbar>
+              <md-content layout-padding>
+                <p>This is as test!</p>
+              </md-content>
+            </div>
+
+          </div>
+
           <md-content class="md-whiteframe-5dp">
             <md-tabs md-dynamic-height md-border-bottom>
               <md-tab label="debug">
@@ -40,6 +61,7 @@
               </md-tab>
             </md-tabs>
           </md-content>
+
         </md-content>
 
     </div>
