@@ -22,7 +22,9 @@
 
     <div layout="row" flex>
 
-        <md-sidenav md-is-locked-open="$mdMedia('gt-md')" md-component-id="left" class="md-sidenav-left md-whiteframe-z2" flex></md-sidenav>
+        <md-sidenav md-is-locked-open="$mdMedia('gt-md')" md-component-id="left" class="md-sidenav-left md-whiteframe-z2" flex>
+          <navigation></navigation>
+        </md-sidenav>
 
         <div id="content" layout="column" layout-margin flex ng-view></div>
 
@@ -49,5 +51,9 @@
 
     <!-- Services -->
     <script src="app/shared/websocket/socketService.js"></script>
+    <script src="app/shared/navigation/sidenavService.js"></script>
+
+    <!-- Directives -->
+    <script src="app/shared/navigation/sidenavDirective.js"></script>
   </body>
 </html>
