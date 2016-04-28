@@ -1,5 +1,5 @@
 angular.module('ChargerUI')
-  .controller('SidenavController', function ($scope, $timeout, $mdSidenav, $mdUtil) {
+  .controller('sidenavController', function ($scope, $timeout, $mdSidenav, $mdUtil) {
     $scope.toggleLeft = buildToggler('left');
 
     function buildToggler(navID) {

@@ -9,14 +9,14 @@
   </head>
   <body ng-app="ChargerUI" layout="column" ng-cloak>
 
-    <md-toolbar layout="row" ng-controller="SidenavController">
+    <md-toolbar layout="row" ng-controller="sidenavController">
       <md-button ng-click="toggleLeft()" class="menu" hide-gt-md aria-label="Sidenav">
         <md-icon md-svg-icon="assets/img/icons/ic_menu_white_24px.svg"></md-icon>
       </md-button>
       <h1>ChargerUI - Dashboard</h1>
     </md-toolbar>
 
-    <div flex layout="row">
+    <div flex layout="row" ng-controller="debugController">
 
         <md-sidenav md-is-locked-open="$mdMedia('gt-md')" md-component-id="left" class="md-sidenav-left md-whiteframe-z2" >
         </md-sidenav>
@@ -41,7 +41,11 @@
     <script src="app/app.module.js"></script>
     <script src="app/app.routes.js"></script>
 
-    <!-- Controller -->
+    <!-- Controllers -->
+    <script src="app/components/content/debugController.js"></script>
     <script src="app/components/navigation/sidenavController.js"></script>
+
+    <!-- Services -->
+    <script src="app/shared/websocket/socketService.js"></script>
   </body>
 </html>
