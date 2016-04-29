@@ -3,8 +3,8 @@ app.config(function ($routeProvider) {
     templateUrl: "app/components/content/dashboardView.html",
     name: "Dashboard"
   }).when("/test", {
-    templateUrl: "app/components/content/testView.html",
-    name: "Test"
+    templateUrl: "app/components/content/stateView.html",
+    name: "State Machine"
   }).otherwise({
     redirectTo: "/"
   });
