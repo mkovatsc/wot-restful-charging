@@ -1,6 +1,6 @@
 angular.module('ChargerUI')
-  .controller('debugController', function ($scope, $log, socketService) {
-    $scope.debugmsgs = [];
+  .controller('debugController', function ($scope, $log, socketService, debugService) {
+    $scope.debugmsgs = debugService.messages;
 
     var debugHandler = function(json) {
       var currentdate = new Date();
@@ -8,8 +8,7 @@ angular.module('ChargerUI')
                       + ('0' + currentdate.getMinutes()).slice(-2) + ":"
                       + ('0' + currentdate.getSeconds()).slice(-2); // TODO format string
 
-      var message = {time : datetime, message : json.message};
-      $scope.debugmsgs.unshift(message);
+      debugService.pushMsg(datetime, json.message);
       $scope.$apply();
     };
 
