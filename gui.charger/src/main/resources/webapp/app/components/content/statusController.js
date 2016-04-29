@@ -1,10 +1,12 @@
-angular.module('ChargerUI')
-  .controller('statusController', function ($scope, $log, socketService) {
-    var statusHandler = function(json) {
-      $scope.se = json.se;
-      $scope.ev = json.ev;
-      $scope.$apply();
-    };
+app.controller('statusController', function ($scope, socketService, statusService) {
+  $scope.se = statusService.se;
+  $scope.ev = statusService.ev;
 
-    socketService.addHandler('status', statusHandler);
-  });
+  var statusHandler = function(json) {
+    statusService.saveSE(json.se);
+    statusService.saveEV(json.ev);
+    $scope.$apply();
+  };
+
+  socketService.addHandler('status', statusHandler);
+});

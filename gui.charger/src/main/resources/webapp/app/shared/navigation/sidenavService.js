@@ -1,20 +1,19 @@
-angular.module("ChargerUI")
-  .factory("sidenavService", function ($route, $location) {
-    var routes = [];
-    
-    angular.forEach($route.routes, function (route, path) {
-      if (route.name) {
-        routes.push({
-          path: path,
-          name: route.name
-        });
-      }
-    });
+app.factory("sidenavService", function ($route, $location) {
+  var routes = [];
 
-    return {
-      routes: routes,
-      activeRoute: function (route) {
-        return route.path === $location.path();
-      }
-    };
+  angular.forEach($route.routes, function (route, path) {
+    if (route.name) {
+      routes.push({
+        path: path,
+        name: route.name
+      });
+    }
+  });
+
+  return {
+    routes: routes,
+    activeRoute: function (route) {
+      return route.path === $location.path();
+    }
+  };
 });
