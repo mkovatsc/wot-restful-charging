@@ -1,7 +1,7 @@
-app.controller('stateController', function ($scope, $timeout) {
-  var currentState;
+app.controller('stateController', function ($scope, statusService) {
 
+  // TODO Live update not working
   $scope.isActive = function (state) {
-    return currentState === state;
+    return (statusService.se.data != null) && (statusService.se.data.currentState === state);
   };
 });
