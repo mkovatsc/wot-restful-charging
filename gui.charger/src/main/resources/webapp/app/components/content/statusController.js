@@ -3,8 +3,8 @@ app.controller('statusController', function ($scope, socketService, statusServic
   $scope.ev = statusService.ev;
 
   var statusHandler = function(json) {
-    statusService.saveSE(json.se);
-    statusService.saveEV(json.ev);
+    $scope.se.set(json.se);
+    $scope.ev.set(json.ev);
     $scope.$apply();
   };
 

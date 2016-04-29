@@ -10,8 +10,8 @@
         <md-tabs md-dynamic-height md-border-bottom>
           <md-tab label="present">
             <md-content class="md-padding">
-              <p>Voltage: {{se.presentVoltage || 'N/A'}}</p>
-              <p>Current: {{se.presentCurrent || 'N/A'}}</p>
+              <p>Voltage: {{se.data.presentVoltage || 'N/A'}}</p>
+              <p>Current: {{se.data.presentCurrent || 'N/A'}}</p>
             </md-content>
           </md-tab>
           <md-tab label="maximum">
@@ -34,24 +34,24 @@
         <md-tabs md-dynamic-height md-border-bottom>
           <md-tab label="target">
             <md-content class="md-padding">
-              <p>Voltage: {{ev.targetVoltage || 'N/A'}}</p>
-              <p>Current: {{ev.targetCurrent || 'N/A'}}</p>
+              <p>Voltage: {{ev.data.targetVoltage || 'N/A'}}</p>
+              <p>Current: {{ev.data.targetCurrent || 'N/A'}}</p>
             </md-content>
           </md-tab>
           <md-tab label="maximum">
             <md-content class="md-padding">
-              <p>Voltage: {{ev.maximumVoltageLimit || 'N/A'}}</p>
-              <p>Current: {{ev.maximumCurrentLimit || 'N/A'}}</p>
+              <p>Voltage: {{ev.data.maximumVoltageLimit || 'N/A'}}</p>
+              <p>Current: {{ev.data.maximumCurrentLimit || 'N/A'}}</p>
             </md-content>
           </md-tab>
         </md-tabs>
       </div>
       <div class="soc">
         <h3>
-          State of Charge ( {{ev.stateOfCharge || '-'}} % )
-          <img ng-src="assets/img/icons/{{ev.chargingComplete && 'ic_check_black_24px.svg' || 'ic_sync_black_24px.svg'}}"/>
+          State of Charge ( {{ev.data.stateOfCharge || '-'}} % )
+          <img ng-src="assets/img/icons/{{ev.data.chargingComplete && 'ic_check_black_24px.svg' || 'ic_sync_black_24px.svg'}}"/>
         </h3>
-        <md-progress-linear md-mode="determinate" value="{{ev.stateOfCharge}}"></md-progress-linear>
+        <md-progress-linear md-mode="determinate" value="{{ev.data.stateOfCharge}}"></md-progress-linear>
       </div>
     </md-content>
   </div>
