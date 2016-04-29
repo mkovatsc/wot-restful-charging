@@ -1,6 +1,7 @@
 angular.module("ChargerUI")
-  .factory("sidenavService", function ($route) {
+  .factory("sidenavService", function ($route, $location) {
     var routes = [];
+    
     angular.forEach($route.routes, function (route, path) {
       if (route.name) {
         routes.push({

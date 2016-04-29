@@ -1,5 +1,5 @@
 <md-sidenav role="navigation" md-is-locked-open="$mdMedia('gt-md')" md-component-id="left" class="md-sidenav-left md-whiteframe-z2" flex>
-  <md-card ng-repeat="route in routes">
+  <md-card ng-repeat="route in routes" ng-class="{active: activeRoute(route)}">
     <md-card-title>
       <md-card-title-text>
         <span class="md-headline">{{route.name}}</span>
