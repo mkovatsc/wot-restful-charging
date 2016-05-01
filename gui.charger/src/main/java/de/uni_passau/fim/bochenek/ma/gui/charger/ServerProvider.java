@@ -4,6 +4,10 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.uni_passau.fim.bochenek.ma.lib.charger.Charger;
+import de.uni_passau.fim.bochenek.ma.lib.charger.CustomDeliverer;
+import de.uni_passau.fim.bochenek.ma.lib.charger.handler.MessageHandler;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.TestResource;
 import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
 
 /**
@@ -31,6 +35,15 @@ public class ServerProvider {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		// Setup and start charger
+		Charger charger = new Charger();
+		MessageHandler handler = new MessageHandler();
+		CustomDeliverer deliverer = new CustomDeliverer(charger.getRoot());
+		deliverer.registerHandler("default", handler);
+		charger.setMessageDeliverer(deliverer);
+		charger.add(new TestResource("iamyourcharger"));
+		charger.start();
 
 		// Debugging information
 		logger.log(Level.INFO, "GuiServer (Application) started on: " + server.getAppPort());

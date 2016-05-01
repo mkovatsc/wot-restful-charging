@@ -14,7 +14,7 @@ import org.eclipse.jetty.websocket.server.WebSocketHandler;
  * @author Martin Bochenek
  *
  */
-public class GuiServer {
+public class GuiServer { // TODO Split into GuiServer and SocketServer
 
 	private int appPort;
 	private int socketPort;

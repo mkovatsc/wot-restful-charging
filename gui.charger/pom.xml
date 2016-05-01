@@ -12,6 +12,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.uni_passau.fim.bochenek.ma</groupId>
+			<artifactId>lib.charger</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.uni_passau.fim.bochenek.ma</groupId>
 			<artifactId>util.server</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
