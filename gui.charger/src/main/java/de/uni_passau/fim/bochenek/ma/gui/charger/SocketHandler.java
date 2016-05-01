@@ -30,9 +30,10 @@ public class SocketHandler extends WebSocketHandler {
 		if (SocketHandler.instance == null) {
 			instance = new SocketHandler();
 			listeners = new LinkedList<Session>();
-			
+
+			// Start keep-alive timer
 			Timer timer = new Timer();
-			timer.schedule(new WebsocketKeepalive(), 0, 10000);
+			timer.schedule(new WebsocketKeepalive(), 0, 15000);
 		}
 		return SocketHandler.instance;
 	}
@@ -42,10 +43,29 @@ public class SocketHandler extends WebSocketHandler {
 		factory.register(AppSocket.class);
 	}
 
+	/**
+	 * TODO
+	 * 
+	 * @param listener
+	 */
 	public void addListener(Session listener) {
 		listeners.add(listener);
 	}
 
+	/**
+	 * TODO
+	 * 
+	 * @return
+	 */
+	public boolean cleanListeners() {
+		return listeners.removeIf(s -> !s.isOpen());
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param message
+	 */
 	public void pushToListeners(String message) {
 		for (Session listener : listeners) {
 			try {

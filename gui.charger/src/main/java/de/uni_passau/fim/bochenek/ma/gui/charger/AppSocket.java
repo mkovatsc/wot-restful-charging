@@ -18,6 +18,7 @@ public class AppSocket {
 	@OnWebSocketClose
 	public void onClose(int statusCode, String reason) {
 		logger.log(Level.INFO, "Connection closed: " + reason);
+		SocketHandler.getInstance().cleanListeners();
 	}
 
 	@OnWebSocketError
