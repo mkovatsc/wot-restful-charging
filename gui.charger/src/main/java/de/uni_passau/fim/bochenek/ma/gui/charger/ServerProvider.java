@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.uni_passau.fim.bochenek.ma.lib.charger.Charger;
-import de.uni_passau.fim.bochenek.ma.lib.charger.handler.MessageHandler;
+import de.uni_passau.fim.bochenek.ma.gui.charger.handler.MessageHandler;
 import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
 
 /**
