@@ -1,12 +1,14 @@
-app.factory("socketService", function ($window, $log) {
+app.factory("socketService", function ($window, $timeout, $log) {
   // TODO switch to Socket.io?
   // TODO Config -> provider()
   var socket = new WebSocket("ws://localhost:8081");
-  if (socket.readyState == 3) {
-    var error = "Socket could not be opened.";
-    $log.error(error);
-    $window.alert(error);
-  }
+  $timeout(function() {
+    if (socket.readyState == 3) {
+      var error = "Socket could not be opened.";
+      $log.error(error);
+      $window.alert(error);
+    }
+  }, 2500);
 
   var handlers = {};
 
@@ -19,7 +21,7 @@ app.factory("socketService", function ($window, $log) {
   }
 
   socket.onerror = function(error) {
-    $log.error("Socket error: " + error);
+    $log.error("Socket error.");
   };
 
   socket.onmessage = function(evt) {
