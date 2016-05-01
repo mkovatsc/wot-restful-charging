@@ -4,9 +4,7 @@ app.factory("socketService", function ($window, $timeout, $log) {
   var socket = new WebSocket("ws://localhost:8081");
   $timeout(function() {
     if (socket.readyState == 3) {
-      var error = "Socket could not be opened.";
-      $log.error(error);
-      $window.alert(error);
+      $window.alert("Socket could not be opened.");
     }
   }, 2500);
 
