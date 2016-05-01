@@ -1,7 +1,13 @@
-app.factory("socketService", function ($log) {
+app.factory("socketService", function ($window, $log) {
   // TODO switch to Socket.io?
   // TODO Config -> provider()
   var socket = new WebSocket("ws://localhost:8081");
+  if (socket.readyState == 3) {
+    var error = "Socket could not be opened.";
+    $log.error(error);
+    $window.alert(error);
+  }
+
   var handlers = {};
 
   socket.onopen = function() {
