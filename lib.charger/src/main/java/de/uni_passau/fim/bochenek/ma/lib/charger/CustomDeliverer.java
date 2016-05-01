@@ -20,7 +20,8 @@ public class CustomDeliverer extends ServerMessageDeliverer {
 
 	@Override
 	public void deliverRequest(Exchange exchange) {
-		if (exchange.getRequest().getPayloadString() != null && !exchange.getRequest().getPayloadString().equals("")) {
+		if (exchange.getRequest().getPayloadString() != null && !exchange.getRequest().getPayloadString().equals("")
+				&& handlers.containsKey("default")) {
 			handlers.get("default").callback(exchange.getRequest().getPayloadString());
 		}
 		super.deliverRequest(exchange);
@@ -31,7 +32,7 @@ public class CustomDeliverer extends ServerMessageDeliverer {
 	 * @param name
 	 * @param handler
 	 */
-	public void registerHandler(String name, IHandler handler) {
+	protected void registerHandler(String name, IHandler handler) {
 		handlers.put(name, handler);
 	}
 
