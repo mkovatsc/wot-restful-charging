@@ -7,7 +7,7 @@ import org.eclipse.californium.core.network.Exchange;
 import org.eclipse.californium.core.server.ServerMessageDeliverer;
 import org.eclipse.californium.core.server.resources.Resource;
 
-import de.uni_passau.fim.bochenek.ma.lib.charger.interfaces.IHandler;
+import de.uni_passau.fim.bochenek.ma.lib.charger.handler.IHandler;
 
 public class CustomDeliverer extends ServerMessageDeliverer {
 

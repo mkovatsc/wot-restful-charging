@@ -1,4 +1,4 @@
-package de.uni_passau.fim.bochenek.ma.lib.charger.interfaces;
+package de.uni_passau.fim.bochenek.ma.lib.charger.handler;
 
 /**
  * 

@@ -3,7 +3,7 @@ package de.uni_passau.fim.bochenek.ma.lib.charger;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.server.MessageDeliverer;
 
-import de.uni_passau.fim.bochenek.ma.lib.charger.interfaces.IHandler;
+import de.uni_passau.fim.bochenek.ma.lib.charger.handler.IHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.TestResource;
 
 /**

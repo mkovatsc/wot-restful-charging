@@ -3,7 +3,7 @@ package de.uni_passau.fim.bochenek.ma.gui.charger.handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.uni_passau.fim.bochenek.ma.lib.charger.interfaces.IHandler;
+import de.uni_passau.fim.bochenek.ma.lib.charger.handler.IHandler;
 
 public class MessageHandler implements IHandler {
 
