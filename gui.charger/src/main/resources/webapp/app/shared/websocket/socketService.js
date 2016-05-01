@@ -19,11 +19,23 @@ app.factory("socketService", function ($log) {
   socket.onmessage = function(evt) {
     $log.debug("Socket received: " + evt.data);
 
-    var msg = JSON.parse(evt.data);
-    if (msg.hasOwnProperty('type') && msg.type in handlers) {
-      handlers[msg.type](msg.content);
+    var msg;
+    try {
+      msg = JSON.parse(evt.data);
+    } catch (e) {
+      $log.info("No valid JSON message received.");
+    }
+
+    if (msg != null) {
+      if (msg.hasOwnProperty('type') && msg.type in handlers) {
+        handlers[msg.type](msg.content);
+      } else {
+        $log.error("No callback registered for received message!");
+      }
     } else {
-      $log.error("No callback registered for received message!");
+      if (evt.data == "Ping!") { // Keepalive
+        socket.send("Pong!");
+      }
     }
   }
 

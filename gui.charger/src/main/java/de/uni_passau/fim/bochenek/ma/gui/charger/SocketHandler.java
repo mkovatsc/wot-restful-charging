@@ -3,6 +3,8 @@ package de.uni_passau.fim.bochenek.ma.gui.charger;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
@@ -28,6 +30,9 @@ public class SocketHandler extends WebSocketHandler {
 		if (SocketHandler.instance == null) {
 			instance = new SocketHandler();
 			listeners = new LinkedList<Session>();
+			
+			Timer timer = new Timer();
+			timer.schedule(new WebsocketKeepalive(), 0, 10000);
 		}
 		return SocketHandler.instance;
 	}
@@ -50,6 +55,21 @@ public class SocketHandler extends WebSocketHandler {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @author Martin Bochenek
+	 *
+	 */
+	static class WebsocketKeepalive extends TimerTask {
+
+		@Override
+		public void run() {
+			instance.pushToListeners("Ping!");
+		}
+
 	}
 
 }
