@@ -10,6 +10,11 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
+import com.google.gson.Gson;
+
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
+
 /**
  * 
  * @author Martin Bochenek
@@ -22,6 +27,11 @@ public class SocketHandler extends WebSocketHandler {
 
 	private static List<Session> listeners;
 
+	// Config
+	private static final int KEEPALIVE_INTERVAL = 15; // Seconds
+	private static final String KEEPALIVE_MESSAGE = "Ping!";
+	private static final String MSG_CONTAINER = "{\"type\":\"%s\",\"content\":%s}";
+
 	private SocketHandler() {
 
 	}
@@ -33,7 +43,7 @@ public class SocketHandler extends WebSocketHandler {
 
 			// Start keep-alive timer
 			Timer timer = new Timer();
-			timer.schedule(new WebsocketKeepalive(), 0, 15000);
+			timer.schedule(new WebsocketKeepalive(), 0, KEEPALIVE_INTERVAL * 1000);
 		}
 		return SocketHandler.instance;
 	}
@@ -80,6 +90,16 @@ public class SocketHandler extends WebSocketHandler {
 	/**
 	 * TODO
 	 * 
+	 * @param message
+	 */
+	public void pushToListeners(MessageType type, Message message) {
+		Gson gson = new Gson();
+		this.pushToListeners(String.format(MSG_CONTAINER, type, gson.toJson(message)));
+	}
+
+	/**
+	 * TODO
+	 * 
 	 * @author Martin Bochenek
 	 *
 	 */
@@ -87,7 +107,7 @@ public class SocketHandler extends WebSocketHandler {
 
 		@Override
 		public void run() {
-			instance.pushToListeners("Ping!");
+			instance.pushToListeners(KEEPALIVE_MESSAGE);
 		}
 
 	}

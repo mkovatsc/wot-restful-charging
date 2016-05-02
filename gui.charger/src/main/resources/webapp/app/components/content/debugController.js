@@ -11,5 +11,5 @@ app.controller('debugController', function ($scope, socketService, debugService)
     $scope.$apply();
   };
 
-  socketService.addHandler('debug', debugHandler);
+  socketService.addHandler('DEBUG', debugHandler);
 });

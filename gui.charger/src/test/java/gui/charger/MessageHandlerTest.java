@@ -20,11 +20,11 @@ public class MessageHandlerTest {
 	public void test() {
 
 		// Messages to send
-		String msg1 = "{\"type\" : \"debug\", \"content\" : {\"message\" : \"This is a test.\"}}";
-		String msg2 = "{\"type\" : \"debug\", \"content\" : {\"message\" : \"Another one.\"}}";
-		String msg3 = "{\"type\" : \"debug\", \"content\" : {\"message\" : \"And a last one.\"}}";
-		String msg4 = "{\"type\" : \"debug\", \"content\" : {\"message\" : \"Repeated message #%d\"}}";
-		String status = "{\"type\":\"status\",\"content\":{\"se\":{\"presentVoltage\":%d,\"presentCurrent\":%d,\"currentState\":\"supportedAppProtocol\"},\"ev\":{\"stateOfCharge\":%d,\"maximumVoltageLimit\":400,\"maximumCurrentLimit\":100,\"targetVoltage\":%d,\"targetCurrent\":%d,\"chargingComplete\":%s}}}";
+		String msg1 = "{\"type\" : \"DEBUG\", \"content\" : {\"message\" : \"This is a test.\"}}";
+		String msg2 = "{\"type\" : \"DEBUG\", \"content\" : {\"message\" : \"Another one.\"}}";
+		String msg3 = "{\"type\" : \"DEBUG\", \"content\" : {\"message\" : \"And a last one.\"}}";
+		String msg4 = "{\"type\" : \"DEBUG\", \"content\" : {\"message\" : \"Repeated message #%d\"}}";
+		String status = "{\"type\":\"STATUS\",\"content\":{\"se\":{\"presentVoltage\":%d,\"presentCurrent\":%d,\"currentState\":\"supportedAppProtocol\"},\"ev\":{\"stateOfCharge\":%d,\"maximumVoltageLimit\":400,\"maximumCurrentLimit\":100,\"targetVoltage\":%d,\"targetCurrent\":%d,\"chargingComplete\":%s}}}";
 
 		// Setup CoAP client
 		String baseURI = "coap://localhost:5683";
