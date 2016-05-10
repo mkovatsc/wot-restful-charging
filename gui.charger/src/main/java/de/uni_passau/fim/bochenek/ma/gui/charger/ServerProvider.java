@@ -6,7 +6,11 @@ import java.util.logging.Logger;
 
 import de.uni_passau.fim.bochenek.ma.gui.charger.handler.MessageHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.Charger;
-import de.uni_passau.fim.bochenek.ma.lib.charger.handler.HandlerType;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.DebugMessage;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.StatusMessage;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.StatusMessage.EvStatus;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.StatusMessage.SeStatus;
 import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
 
 /**
@@ -38,7 +42,8 @@ public class ServerProvider {
 		// Setup and start charger
 		Charger charger = new Charger();
 		MessageHandler handler = new MessageHandler();
-		charger.registerHandler(HandlerType.DEFAULT, handler);
+		charger.registerHandler(MessageType.DEBUG, handler);
+		charger.registerHandler(MessageType.STATUS, handler);
 		charger.start();
 
 		// Debugging information
