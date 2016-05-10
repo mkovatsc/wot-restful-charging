@@ -16,15 +16,11 @@
       <h1>CarUI - Dashboard</h1>
     </md-toolbar>
 
-    <div flex layout="row">
+    <div layout="row" flex>
 
-        <md-sidenav md-is-locked-open="$mdMedia('gt-md')" md-component-id="left" class="md-sidenav-left md-whiteframe-z2" >
-        </md-sidenav>
+        <navigation></navigation>
 
-        <md-content flex id="content">
-          <h1>Hello, World!</h1>
-          <h2>I am your car.</h2>
-        </md-content>
+        <div id="content" layout="column" layout-margin flex ng-view></div>
 
     </div>
 
@@ -34,6 +30,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-cookies.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
 
     <!-- Angular Material Library -->
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc4/angular-material.min.js"></script>
@@ -44,5 +41,11 @@
 
     <!-- Controller -->
     <script src="app/components/navigation/sidenavController.js"></script>
+
+    <!-- Services -->
+    <script src="app/shared/navigation/sidenavService.js"></script>
+
+    <!-- Directives -->
+    <script src="app/shared/navigation/sidenavDirective.js"></script>
   </body>
 </html>

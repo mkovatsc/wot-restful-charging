@@ -1,0 +1,16 @@
+<md-sidenav role="navigation" md-is-locked-open="$mdMedia('gt-md')" md-component-id="left" class="md-sidenav-left md-whiteframe-z2" flex>
+  <md-card ng-repeat="route in routes" ng-class="{active: activeRoute(route)}">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-headline">{{route.name}}</span>
+        <span class="md-subhead">TODO</span>
+      </md-card-title-text>
+      <md-card-title-media>
+        <div class="md-media-sm card-media"></div>
+      </md-card-title-media>
+    </md-card-title>
+    <md-card-actions layout="row" layout-align="end center">
+      <md-button ng-href="#{{route.path}}">Open</md-button>
+    </md-card-actions>
+  </md-card>
+</md-sidenav>

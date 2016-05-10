@@ -1,1 +1,1 @@
-var app = angular.module('CarUI', ['ngMaterial']);
+var app = angular.module('CarUI', ['ngMaterial', 'ngRoute', 'ngCookies']);
