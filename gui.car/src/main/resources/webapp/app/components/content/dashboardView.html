@@ -1,4 +1,21 @@
-<md-content flex id="content">
-  <h1>Hello, World!</h1>
-  <h2>I am your car.</h2>
-</md-content>
+<div layout="row" layout-xs="column">
+
+  <div id="ticker-box" ng-controller="tickerController" class="md-whiteframe-5dp" layout="column" layout-padding flex-gt-xs>
+    <md-content layout="column">
+      <p>Tick: {{tickCount}}</p>
+      <select ng-model="tickingSpeed" ng-options="speed.value as speed.name for speed in tickingSpeeds"></select>
+      <div layout="row">
+        <md-button class="md-raised" data-ng-click="startTicking()">Start</md-button>
+        <md-button class="md-raised" data-ng-click="tick()" ng-disabled="tickDisabled()">Tick</md-button>
+        <md-button class="md-raised md-warn" data-ng-click="stopTicking()">Stop</md-button>
+      </div>
+    </md-content>
+  </div>
+
+  <div id="" class="md-whiteframe-5dp" layout="column" flex-gt-xs>
+  </div>
+
+  <div id="" class="md-whiteframe-5dp" layout="column" flex-gt-xs>
+  </div>
+
+</div>
