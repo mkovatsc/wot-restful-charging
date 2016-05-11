@@ -1,4 +1,4 @@
-app.controller('SidenavController', function ($scope, $timeout, $mdSidenav, $mdUtil) {
+app.controller('sidenavController', function ($scope, $timeout, $mdSidenav, $mdUtil) {
   $scope.toggleLeft = buildToggler('left');
 
   function buildToggler(navID) {
