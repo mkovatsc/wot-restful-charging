@@ -1,4 +1,6 @@
-app.controller('tickerController', function ($scope, $interval, tickerService, $log) {
+app.controller('tickerController', function ($scope, $rootScope, $interval, tickerService) {
+
+  $rootScope.car = cars.bmw_i3;
 
   $scope.tickCount = tickerService.tickCount();
   $scope.tickingSpeed = tickerService.tickingSpeed;
@@ -8,6 +10,10 @@ app.controller('tickerController', function ($scope, $interval, tickerService, $
   $scope.stopTicking= tickerService.stopTicking;
   $scope.tick = tickerService.tick;
   $scope.isRunning = tickerService.isRunning;
+
+  $scope.$watch("tickCount", function() {
+    $rootScope.car.battery.soc = $rootScope.car.charging.status(1, $scope.tickCount);
+  });
 
   tickerService.addCallback(function(){
     $scope.tickCount = tickerService.tickCount();

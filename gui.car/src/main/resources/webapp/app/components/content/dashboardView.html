@@ -1,11 +1,16 @@
 <div id="control" layout="column" layout-gt-sm="row">
 
   <div id="" class="md-whiteframe-5dp" layout-padding flex-gt-sm>
-    <h2>TODO</h2>
+    <h2>Car Model</h2>
+    <h3>{{car.name}}</h3>
   </div>
 
   <div id="" class="md-whiteframe-5dp" layout-padding flex-gt-sm>
-    <h2>TODO</h2>
+    <h2>State of Charge</h2>
+    <div>
+      {{car.battery.soc * 100 | number : 0}} %
+      <md-progress-linear md-mode="determinate" value="{{car.battery.soc * 100 | number : 0}}"></md-progress-linear>
+    </div>
   </div>
 
   <div id="ticker-box" ng-controller="tickerController" class="md-whiteframe-5dp" layout="column" layout-padding flex-gt-sm>
