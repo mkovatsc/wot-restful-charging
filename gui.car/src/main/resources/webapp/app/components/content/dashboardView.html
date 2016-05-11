@@ -13,9 +13,9 @@
       <p>Tick: {{tickCount}}</p>
       <select ng-model="tickingSpeed" ng-options="speed.value as speed.name for speed in tickingSpeeds"></select>
       <div layout="row">
-        <md-button class="md-raised" data-ng-click="startTicking()">Start</md-button>
-        <md-button class="md-raised" data-ng-click="tick()" ng-disabled="tickDisabled()">Tick</md-button>
-        <md-button class="md-raised md-warn" data-ng-click="stopTicking()">Stop</md-button>
+        <md-button class="md-raised" data-ng-click="startTicking()" ng-disabled="isRunning()">Start</md-button>
+        <md-button class="md-raised" data-ng-click="tick()" ng-disabled="isRunning()">Tick</md-button>
+        <md-button class="md-raised md-warn" data-ng-click="stopTicking()" ng-disabled="!isRunning()">Stop</md-button>
       </div>
     </md-content>
   </div>

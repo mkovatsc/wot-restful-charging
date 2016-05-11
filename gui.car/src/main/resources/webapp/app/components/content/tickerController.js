@@ -7,7 +7,7 @@ app.controller('tickerController', function ($scope, $interval, tickerService, $
   $scope.startTicking = tickerService.startTicking;
   $scope.stopTicking= tickerService.stopTicking;
   $scope.tick = tickerService.tick;
-  $scope.tickDisabled = tickerService.tickDisabled;
+  $scope.isRunning = tickerService.isRunning;
 
   tickerService.addCallback(function(){
     $scope.tickCount = tickerService.tickCount();

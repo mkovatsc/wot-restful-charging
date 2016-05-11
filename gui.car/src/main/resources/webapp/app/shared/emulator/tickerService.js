@@ -43,7 +43,7 @@ app.factory("tickerService", function ($interval) {
         ticker = undefined;
       }
     },
-    tickDisabled : function() {
+    isRunning : function() {
       return angular.isDefined(ticker);
     },
     tickCount : function() {
