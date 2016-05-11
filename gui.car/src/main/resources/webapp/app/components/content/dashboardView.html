@@ -1,6 +1,14 @@
-<div layout="row" layout-xs="column">
+<div id="control" layout="column" layout-gt-sm="row">
 
-  <div id="ticker-box" ng-controller="tickerController" class="md-whiteframe-5dp" layout="column" layout-padding flex-gt-xs>
+  <div id="" class="md-whiteframe-5dp" layout-padding flex-gt-sm>
+    <h2>TODO</h2>
+  </div>
+
+  <div id="" class="md-whiteframe-5dp" layout-padding flex-gt-sm>
+    <h2>TODO</h2>
+  </div>
+
+  <div id="ticker-box" ng-controller="tickerController" class="md-whiteframe-5dp" layout="column" layout-padding flex-gt-sm>
     <md-content layout="column">
       <p>Tick: {{tickCount}}</p>
       <select ng-model="tickingSpeed" ng-options="speed.value as speed.name for speed in tickingSpeeds"></select>
@@ -10,12 +18,6 @@
         <md-button class="md-raised md-warn" data-ng-click="stopTicking()">Stop</md-button>
       </div>
     </md-content>
-  </div>
-
-  <div id="" class="md-whiteframe-5dp" layout="column" flex-gt-xs>
-  </div>
-
-  <div id="" class="md-whiteframe-5dp" layout="column" flex-gt-xs>
   </div>
 
 </div>
