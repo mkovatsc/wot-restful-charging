@@ -7,3 +7,5 @@
 
 !/.gitattributes
 !/.gitignore
+
+!/.gitlab-ci.yml
