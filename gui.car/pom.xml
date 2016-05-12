@@ -12,7 +12,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.uni_passau.fim.bochenek.ma</groupId>
-			<artifactId>lib.charger</artifactId>
+			<artifactId>lib.car</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

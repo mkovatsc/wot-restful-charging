@@ -13,8 +13,8 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import com.google.gson.Gson;
 
 import de.uni_passau.fim.bochenek.ma.gui.car.AppSocket;
-import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
-import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
+import de.uni_passau.fim.bochenek.ma.lib.car.messages.Message;
+import de.uni_passau.fim.bochenek.ma.lib.car.messages.Message.MessageType;
 
 /**
  * TODO

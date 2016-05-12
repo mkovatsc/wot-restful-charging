@@ -16,6 +16,7 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 
 /**
+ * TODO
  * 
  * @author Martin Bochenek
  *
