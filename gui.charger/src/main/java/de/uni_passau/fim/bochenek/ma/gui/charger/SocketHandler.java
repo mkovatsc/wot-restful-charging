@@ -30,6 +30,7 @@ public class SocketHandler extends WebSocketHandler {
 
 	// Config
 	private static final int KEEPALIVE_INTERVAL = 15; // Seconds
+	private static final boolean KEEPALIVE_ENABLED = false;
 	private static final String KEEPALIVE_MESSAGE = "Ping!";
 	private static final String MSG_CONTAINER = "{\"type\":\"%s\",\"content\":%s}";
 
@@ -43,8 +44,10 @@ public class SocketHandler extends WebSocketHandler {
 			listeners = new LinkedList<Session>();
 
 			// Start keep-alive timer
-			Timer timer = new Timer();
-			timer.schedule(new WebsocketKeepalive(), 0, KEEPALIVE_INTERVAL * 1000);
+			if (KEEPALIVE_ENABLED) {
+				Timer timer = new Timer();
+				timer.schedule(new WebsocketKeepalive(), 0, KEEPALIVE_INTERVAL * 1000);
+			}
 		}
 		return SocketHandler.instance;
 	}
