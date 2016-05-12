@@ -1,11 +1,11 @@
 @media (min-width: 960px){
-  #control div:not(:last-child) {
+  #control div:not(:last-child), #info div:not(:last-child)  {
       margin-right: 15px;
   }
 }
 
 @media (max-width: 959px){
-  #control div:not(:last-child) {
+  #control div:not(:last-child), #info div:not(:last-child) {
       margin-bottom: 15px;
   }
 }

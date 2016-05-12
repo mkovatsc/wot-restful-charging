@@ -18,11 +18,23 @@
       <p>Tick: {{tickCount}}</p>
       <select ng-model="tickingSpeed" ng-options="speed.value as speed.name for speed in tickingSpeeds"></select>
       <div layout="row">
-        <md-button class="md-raised" data-ng-click="startTicking()" ng-disabled="isRunning()">Start</md-button>
-        <md-button class="md-raised" data-ng-click="tick()" ng-disabled="isRunning()">Tick</md-button>
-        <md-button class="md-raised md-warn" data-ng-click="stopTicking()" ng-disabled="!isRunning()">Stop</md-button>
+        <md-button class="md-raised" data-ng-click="startTicking()" ng-disabled="!car.plugged_in || isRunning()">Start</md-button>
+        <md-button class="md-raised" data-ng-click="tick()" ng-disabled="!car.plugged_in || isRunning()">Tick</md-button>
+        <md-button class="md-raised md-warn" data-ng-click="stopTicking()" ng-disabled="!car.plugged_in || !isRunning()">Stop</md-button>
       </div>
     </md-content>
   </div>
 
+</div>
+
+<div id="info" layout="column" layout-gt-sm="row">
+
+  <div class="md-whiteframe-5dp" layout-padding flex-gt-sm>
+    <img ng-src="assets/img/bmw-i3-{{car.plugged_in && 'pluggedin.jpg' || 'unplugged.jpg'}}"/>
+  </div>
+
+  <div class="md-whiteframe-5dp" ng-controller="actionController" layout-padding flex-gt-sm>
+    <h2>Actions</h2>
+    <md-button class="md-raised md-primary" data-ng-click="togglePlug()">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
+  </div>
 </div>

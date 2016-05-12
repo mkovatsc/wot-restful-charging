@@ -43,6 +43,10 @@ app.factory("tickerService", function ($interval) {
         ticker = undefined;
       }
     },
+    reset : function() {
+      this.stopTicking();
+      tickCount = 0;
+    },
     isRunning : function() {
       return angular.isDefined(ticker);
     },

@@ -6,6 +6,7 @@ var cars = {
       soc : 1,
       charging : false
     },
+    plugged_in : false,
     charging : {
       rates : {
         AC : [12, 16, 32],
