@@ -8,8 +8,13 @@ var cars = {
       charging : false
     },
     plugged_in : false,
+    ready_charge : false,
     charging : {
-      rates : {
+      voltage : {
+        AC : 230,
+        DC : 400
+      },
+      rate : {
         AC : [12, 16, 32],
         DC : [125]
       },
@@ -18,7 +23,8 @@ var cars = {
         bias = 51;
         // TODO Random function, derive model from actual data!
         return 0.222026 * Math.log(0.019663 * (bias + chargingTime));
-      }
+      },
+      complete : false
     }
   }
 };
