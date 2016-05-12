@@ -17,7 +17,9 @@ import com.google.gson.JsonSyntaxException;
 
 import de.uni_passau.fim.bochenek.ma.gui.car.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.lib.car.Car;
+import de.uni_passau.fim.bochenek.ma.lib.car.messages.ActionMessage;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.EventMessage;
+import de.uni_passau.fim.bochenek.ma.lib.car.messages.StatusMessage;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.Message.MessageType;
 
 @WebSocket
@@ -44,7 +46,7 @@ public class AppSocket {
 		Car car = SocketHandler.getInstance().addListener(session);
 		String register = "{\"type\" : \"REGISTER\", \"content\" : {\"uuid\" : \"%s\"}}";
 		car.sendToCar(String.format(register, car.getUuid().toString()));
-		
+
 		// TODO Wait some time to give car the chance to present its UUID
 	}
 
@@ -65,19 +67,35 @@ public class AppSocket {
 			if (msg != null && msg.isJsonObject() && msg.getAsJsonObject().get("type") != null) {
 				try {
 					MessageType type = MessageType.valueOf(msg.getAsJsonObject().get("type").getAsString());
+					Gson gson = new Gson();
+					Car car;
 					switch (type) {
 						case EVENT :
-							Gson gson = new Gson();
 							EventMessage evtMsg = gson.fromJson(msg.getAsJsonObject().get("content"), EventMessage.class);
 
 							// DEBUG
 							logger.log(Level.INFO, "Car plugged in: {0}", new Object[]{evtMsg.isPluggedIn()});
 							SocketHandler.getInstance().pushToCar(session, "Message received.");
 
-							Car car = SocketHandler.getInstance().getCarFor(session);
-							String status = evtMsg.isPluggedIn() ? "Car (%s) plugged in." : "Car (%s) unplugged.";
+							car = SocketHandler.getInstance().getCarFor(session);
+							String plugStatus = evtMsg.isPluggedIn() ? "Car (%s) plugged in." : "Car (%s) unplugged.";
 							String debug = "{\"type\" : \"DEBUG\", \"content\" : {\"message\" : \"%s\"}}";
-							car.sendToCharger(String.format(debug, String.format(status, car.getUuid().toString())));
+							car.sendToCharger(String.format(debug, String.format(plugStatus, car.getUuid().toString())));
+
+							break;
+						case ACTION : // TODO Only debugging right now
+							ActionMessage actMsg = gson.fromJson(msg.getAsJsonObject().get("content"), ActionMessage.class);
+
+							// DEBUG
+							logger.log(Level.INFO, "Action received: {0}", new Object[]{actMsg.getNotify()});
+
+							break;
+						case STATUS :
+							StatusMessage statMsg = gson.fromJson(msg.getAsJsonObject().get("content"), StatusMessage.class);
+
+							car = SocketHandler.getInstance().getCarFor(session);
+							String status = "{\"type\":\"STATUS\",\"content\":{\"se\":{\"presentVoltage\":0,\"presentCurrent\":0,\"currentState\":\"supportedAppProtocol\"},\"ev\":{\"stateOfCharge\":%d,\"maximumVoltageLimit\":400,\"maximumCurrentLimit\":100,\"targetVoltage\":1,\"targetCurrent\":1,\"chargingComplete\":false}}}";
+							car.sendToCharger(String.format(status, statMsg.getStateOfCharge()));
 
 							break;
 						default :
