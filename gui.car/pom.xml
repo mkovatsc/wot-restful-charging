@@ -55,6 +55,8 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<source>${project.build.javaVersion}</source>
+					<target>${project.build.javaVersion}</target>
 				</configuration>
 			</plugin>
 		</plugins>
