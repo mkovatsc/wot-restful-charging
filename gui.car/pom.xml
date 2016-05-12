@@ -12,6 +12,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.uni_passau.fim.bochenek.ma</groupId>
+			<artifactId>lib.charger</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.uni_passau.fim.bochenek.ma</groupId>
 			<artifactId>util.server</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
@@ -19,6 +24,12 @@
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>websocket-server</artifactId>
 			<version>9.3.8.v20160314</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.6.2</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 

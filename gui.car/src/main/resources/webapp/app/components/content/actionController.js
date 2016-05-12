@@ -1,4 +1,4 @@
-app.controller('actionController', function ($scope, $rootScope, tickerService) {
+app.controller('actionController', function ($scope, $rootScope, tickerService, socketService) {
 
   $scope.togglePlug = function() {
     $rootScope.car.plugged_in = !$rootScope.car.plugged_in;

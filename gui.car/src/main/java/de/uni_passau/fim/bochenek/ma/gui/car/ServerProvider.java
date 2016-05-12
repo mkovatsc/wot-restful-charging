@@ -20,10 +20,11 @@ public class ServerProvider {
 
 		// Config
 		int appPort = 8090;
+		int socketPort = 8091;
 		URL appUrl = ServerProvider.class.getResource("/webapp");
 
 		// Start GUI server
-		GuiServer server = new GuiServer(appPort, appUrl);
+		GuiServer server = new GuiServer(appPort, appUrl, socketPort, SocketHandler.getInstance());
 		try {
 			server.start();
 		} catch (Exception e) {
@@ -33,6 +34,7 @@ public class ServerProvider {
 
 		// Debugging information
 		logger.log(Level.INFO, "GuiServer (Application) started on: " + server.getAppPort());
+		logger.log(Level.INFO, "GuiServer (Socket) started on: " + server.getSocketPort());
 	}
 
 }
