@@ -7,3 +7,6 @@
 log/
 target/
 /bin/
+
+# Custom
+Californium.properties

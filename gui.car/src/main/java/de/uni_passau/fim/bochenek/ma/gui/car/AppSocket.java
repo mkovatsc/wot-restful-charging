@@ -16,6 +16,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import de.uni_passau.fim.bochenek.ma.gui.car.SocketHandler;
+import de.uni_passau.fim.bochenek.ma.lib.car.Car;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.EventMessage;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.Message.MessageType;
 
@@ -40,11 +41,15 @@ public class AppSocket {
 		logger.log(Level.INFO, "Connection from: " + session.getRemoteAddress().getAddress());
 
 		// Automatically add client to listeners on connect
-		SocketHandler.getInstance().addListener(session);
+		Car car = SocketHandler.getInstance().addListener(session);
+		String register = "{\"type\" : \"REGISTER\", \"content\" : {\"uuid\" : \"%s\"}}";
+		car.sendToCar(String.format(register, car.getUuid().toString()));
+		
+		// TODO Wait some time to give car the chance to present its UUID
 	}
 
 	@OnWebSocketMessage
-	public void onMessage(String message) {
+	public void onMessage(Session session, String message) {
 		logger.log(Level.INFO, "Message received: " + message);
 
 		if (message != null && !message.equals("")) {
@@ -64,7 +69,16 @@ public class AppSocket {
 						case EVENT :
 							Gson gson = new Gson();
 							EventMessage evtMsg = gson.fromJson(msg.getAsJsonObject().get("content"), EventMessage.class);
-							logger.log(Level.INFO, evtMsg.getMessage());
+
+							// DEBUG
+							logger.log(Level.INFO, "Car plugged in: {0}", new Object[]{evtMsg.isPluggedIn()});
+							SocketHandler.getInstance().pushToCar(session, "Message received.");
+
+							Car car = SocketHandler.getInstance().getCarFor(session);
+							String status = evtMsg.isPluggedIn() ? "Car (%s) plugged in." : "Car (%s) unplugged.";
+							String debug = "{\"type\" : \"DEBUG\", \"content\" : {\"message\" : \"%s\"}}";
+							car.sendToCharger(String.format(debug, String.format(status, car.getUuid().toString())));
+
 							break;
 						default :
 							logger.log(Level.INFO, "No handler found for this type of message. (" + message + ")");

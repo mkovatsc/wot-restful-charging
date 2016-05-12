@@ -8,18 +8,18 @@ package de.uni_passau.fim.bochenek.ma.lib.car.messages;
  */
 public class EventMessage extends Message {
 
-	private String message;
+	private boolean pluggedIn;
 
-	public EventMessage(String message) {
-		this.setMessage(message);
+	public EventMessage(boolean pluggedIn) {
+		this.setPluggedIn(pluggedIn);
 	}
 
-	public String getMessage() {
-		return message;
+	public boolean isPluggedIn() {
+		return pluggedIn;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setPluggedIn(boolean pluggedIn) {
+		this.pluggedIn = pluggedIn;
 	}
 
 }

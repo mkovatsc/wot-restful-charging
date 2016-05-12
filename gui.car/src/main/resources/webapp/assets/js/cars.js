@@ -1,6 +1,7 @@
 var cars = {
   bmw_i3 : {
     name : "BMW i3",
+    uuid : "",
     battery : {
       capacity : 18.8,
       soc : 1,

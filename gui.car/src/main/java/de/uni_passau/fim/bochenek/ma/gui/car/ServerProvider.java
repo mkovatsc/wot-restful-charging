@@ -14,7 +14,7 @@ import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
  */
 public class ServerProvider {
 
-	private static Logger logger = Logger.getLogger(ServerProvider.class.getName());;
+	private static Logger logger = Logger.getLogger(ServerProvider.class.getName());
 
 	public static void main(String[] args) {
 
