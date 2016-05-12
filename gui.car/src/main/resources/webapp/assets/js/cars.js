@@ -11,7 +11,7 @@ var cars = {
     charging : {
       rates : {
         AC : [12, 16, 32],
-        DC : 125
+        DC : [125]
       },
       status : function(startedChargingAt, chargingTime) {
         // TODO Calculate baseline for charging

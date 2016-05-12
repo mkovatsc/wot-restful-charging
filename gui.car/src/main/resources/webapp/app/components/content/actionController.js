@@ -21,7 +21,7 @@ app.controller('actionController', function ($scope, $rootScope, tickerService, 
   socketService.addHandler('REGISTER', registerHandler);
 
   var tickAction = function() {
-    socketService.send('{"type":"STATUS","content":{"stateOfCharge":' + Math.floor($rootScope.car.battery.soc * 100) + ',"maximumVoltageLimit":400,"maximumCurrentLimit":100,"targetVoltage":1,"targetCurrent":1,"chargingComplete":false}}');
+    socketService.send('{"type":"STATUS","content":{"stateOfCharge":' + Math.floor($rootScope.car.battery.soc * 100) + ',"maximumVoltageLimit":400,"maximumCurrentLimit":' + $rootScope.car.charging.rates.DC[0] + ',"targetVoltage":1,"targetCurrent":1,"chargingComplete":false}}');
   }
   tickerService.addCallback(tickAction);
 

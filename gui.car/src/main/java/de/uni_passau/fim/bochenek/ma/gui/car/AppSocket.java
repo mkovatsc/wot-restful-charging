@@ -1,5 +1,6 @@
 package de.uni_passau.fim.bochenek.ma.gui.car;
 
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -94,8 +95,8 @@ public class AppSocket {
 							StatusMessage statMsg = gson.fromJson(msg.getAsJsonObject().get("content"), StatusMessage.class);
 
 							car = SocketHandler.getInstance().getCarFor(session);
-							String status = "{\"type\":\"STATUS\",\"content\":{\"se\":{\"presentVoltage\":0,\"presentCurrent\":0,\"currentState\":\"supportedAppProtocol\"},\"ev\":{\"stateOfCharge\":%d,\"maximumVoltageLimit\":400,\"maximumCurrentLimit\":100,\"targetVoltage\":1,\"targetCurrent\":1,\"chargingComplete\":false}}}";
-							car.sendToCharger(String.format(status, statMsg.getStateOfCharge()));
+							String status = "{\"type\":\"STATUS\",\"content\":{\"se\":{\"presentVoltage\":0,\"presentCurrent\":0,\"currentState\":\"supportedAppProtocol\"},\"ev\":{\"stateOfCharge\":%d,\"maximumVoltageLimit\":400,\"maximumCurrentLimit\":%.2f,\"targetVoltage\":1,\"targetCurrent\":1,\"chargingComplete\":false}}}";
+							car.sendToCharger(String.format(Locale.US, status, statMsg.getStateOfCharge(), statMsg.getMaximumCurrentLimit()));
 
 							break;
 						default :
@@ -105,7 +106,7 @@ public class AppSocket {
 					// TODO Proper handling for invalid contents
 				} catch (IllegalArgumentException iae) {
 					// TODO Find some elegant solution
-					logger.log(Level.WARNING, "No handler found for this type of message. (" + message + ")");
+					logger.log(Level.WARNING, "No valid message type. (" + message + ")");
 				}
 			}
 		}

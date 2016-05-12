@@ -36,7 +36,6 @@ public class Car {
 	public void sendToCharger(String message) {
 		client.setURI(baseURI + "/iamyourcharger");
 		client.post(message, MediaTypeRegistry.TEXT_PLAIN);
-
 	}
 
 	public void sendToCar(String message) {
