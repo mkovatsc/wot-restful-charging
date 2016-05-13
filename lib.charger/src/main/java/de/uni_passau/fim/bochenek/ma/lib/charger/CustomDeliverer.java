@@ -61,8 +61,9 @@ public class CustomDeliverer extends ServerMessageDeliverer {
 	}
 
 	/**
+	 * TODO
 	 * 
-	 * @param name
+	 * @param type
 	 * @param handler
 	 */
 	protected void registerHandler(MessageType type, IHandler handler) {
