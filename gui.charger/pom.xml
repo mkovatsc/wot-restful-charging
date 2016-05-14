@@ -95,7 +95,7 @@
 							<jsSrcDir>${basedir}/src/main/resources/webapp/app</jsSrcDir>
 							<jsTestSrcDir>${basedir}/src/test/resources/webapp</jsTestSrcDir>
 							<preloadSources>
-								<!-- AngualarJS -->
+								<!-- AngularJS -->
 								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular.min.js</source>
 								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-mocks.js</source>
 								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-route.min.js</source>
