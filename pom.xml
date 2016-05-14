@@ -7,6 +7,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.javaVersion>1.8</project.build.javaVersion>
+		<angular.version>1.5.5</angular.version>
+		<angular.skip-tests>false</angular.skip-tests>
+		<angular-material.version>1.1.0-rc4</angular-material.version>
 	</properties>
 
 	<groupId>de.uni_passau.fim.bochenek.ma</groupId>
