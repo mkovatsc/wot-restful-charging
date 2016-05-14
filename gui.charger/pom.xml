@@ -79,22 +79,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>com.github.klieber</groupId>
-				<artifactId>phantomjs-maven-plugin</artifactId>
-				<version>0.7</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>install</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<version>2.1.1</version>
-					<skip>${angular.skip-tests}</skip>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>com.github.searls</groupId>
 				<artifactId>jasmine-maven-plugin</artifactId>
 				<version>2.1</version>
@@ -103,32 +87,28 @@
 						<goals>
 							<goal>test</goal>
 						</goals>
+						<configuration>
+							<phantomjs>
+								<version>2.1.1</version>
+							</phantomjs>
+							<skipJasmineTests>${angular.skip-tests}</skipJasmineTests>
+							<jsSrcDir>${basedir}/src/main/resources/webapp/app</jsSrcDir>
+							<jsTestSrcDir>${basedir}/src/test/resources/webapp</jsTestSrcDir>
+							<preloadSources>
+								<!-- AngualarJS -->
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular.min.js</source>
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-mocks.js</source>
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-route.min.js</source>
+								<!-- Angular Material -->
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-animate.min.js</source>
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-aria.min.js</source>
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-messages.min.js</source>
+								<source>https://ajax.googleapis.com/ajax/libs/angular_material/${angular-material.version}/angular-material.min.js</source>
+								<source>${basedir}/src/main/resources/webapp/app/app.module.js</source>
+							</preloadSources>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<skipJasmineTests>${js-tests.skip}</skipJasmineTests>
-					<webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
-					<webDriverCapabilities>
-						<capability>
-							<name>phantomjs.binary.path</name>
-							<value>${phantomjs.binary}</value>
-						</capability>
-					</webDriverCapabilities>
-					<jsSrcDir>${basedir}/src/main/resources/webapp/app</jsSrcDir>
-					<jsTestSrcDir>${basedir}/src/test/resources/webapp</jsTestSrcDir>
-					<preloadSources>
-						<!-- AngualarJS -->
-						<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular.min.js</source>
-						<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-mocks.js</source>
-						<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-route.min.js</source>
-						<!-- Angular Material -->
-						<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-animate.min.js</source>
-						<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-aria.min.js</source>
-						<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-messages.min.js</source>
-						<source>https://ajax.googleapis.com/ajax/libs/angular_material/${angular-material.version}/angular-material.min.js</source>
-						<source>${basedir}/src/main/resources/webapp/app/app.module.js</source>
-					</preloadSources>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

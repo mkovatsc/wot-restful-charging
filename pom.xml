@@ -5,8 +5,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<properties>
+		<!-- Project -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.javaVersion>1.8</project.build.javaVersion>
+		<!-- AngularJS -->
 		<angular.version>1.5.5</angular.version>
 		<angular.skip-tests>false</angular.skip-tests>
 		<angular-material.version>1.1.0-rc4</angular-material.version>
