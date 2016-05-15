@@ -1,7 +1,7 @@
 var app = angular.module('CarUI', ['ngMaterial', 'ngRoute', 'FSM']);
 
 app.config(['stateMachineProvider', function(stateMachineProvider) {
-  
+
   stateMachineProvider.config({
     init : {
       transitions : {
@@ -30,14 +30,14 @@ app.config(['stateMachineProvider', function(stateMachineProvider) {
       transitions : {
         chargeParameterDiscovery : 'chargeParameterDiscovery',
         powerDeliveryDone : 'currentDemand',
-        powerDeliveryStopW : 'weldingDetection',
-        powerDeliveryStopS : 'sessionStop'
+        powerDeliveryDoneW : 'weldingDetection',
+        powerDeliveryDoneS : 'sessionStop'
       }
     },
     currentDemand : {
       transitions : {
         currentDemand : 'currentDemand',
-        currentDemandStop : 'powerDelivery'
+        currentDemandDone : 'powerDelivery'
       }
     },
     weldingDetection : {
