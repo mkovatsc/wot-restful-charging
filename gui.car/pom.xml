@@ -57,6 +57,41 @@
 					</descriptorRefs>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.github.searls</groupId>
+				<artifactId>jasmine-maven-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<phantomjs>
+								<version>2.1.1</version>
+							</phantomjs>
+							<skipJasmineTests>${angular.skip-tests}</skipJasmineTests>
+							<jsSrcDir>${basedir}/src/main/resources/webapp/app</jsSrcDir>
+							<jsTestSrcDir>${basedir}/src/test/resources/webapp</jsTestSrcDir>
+							<preloadSources>
+								<!-- AngularJS -->
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular.min.js</source>
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-mocks.js</source>
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-route.min.js</source>
+								<!-- Angular Material -->
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-animate.min.js</source>
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-aria.min.js</source>
+								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-messages.min.js</source>
+								<source>https://ajax.googleapis.com/ajax/libs/angular_material/${angular-material.version}/angular-material.min.js</source>
+								<!-- Additional libraries -->
+								<source>${basedir}/src/main/resources/webapp/assets/js/lib/angular-state-machine.min.js</source>
+								<!-- Main module -->
+								<source>${basedir}/src/main/resources/webapp/app/app.module.js</source>
+							</preloadSources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

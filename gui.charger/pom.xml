@@ -88,6 +88,7 @@
 								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-aria.min.js</source>
 								<source>https://ajax.googleapis.com/ajax/libs/angularjs/${angular.version}/angular-messages.min.js</source>
 								<source>https://ajax.googleapis.com/ajax/libs/angular_material/${angular-material.version}/angular-material.min.js</source>
+								<!-- Main module -->
 								<source>${basedir}/src/main/resources/webapp/app/app.module.js</source>
 							</preloadSources>
 						</configuration>
