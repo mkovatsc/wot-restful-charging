@@ -12,7 +12,7 @@ app.controller('tickerController', function ($scope, $rootScope, $interval, tick
   $scope.isRunning = tickerService.isRunning;
 
   $scope.$watch("tickCount", function() {
-    // TODO Place this function somewhere else
+    // TODO Place this function somewhere else, only holds for DC charging at 400V / 125A
     var soc = function(t) { // t in minutes
       return 1 - Math.pow(Math.E, -((t / 10) / $rootScope.car.battery.R_C));
     };
