@@ -12,7 +12,11 @@ app.controller('tickerController', function ($scope, $rootScope, $interval, tick
   $scope.isRunning = tickerService.isRunning;
 
   $scope.$watch("tickCount", function() {
-    $rootScope.car.battery.soc = $rootScope.car.charging.status(1, $scope.tickCount);
+    // TODO Place this function somewhere else
+    var soc = function(t) { // t in minutes
+      return 1 - Math.pow(Math.E, -((t / 10) / $rootScope.car.battery.R_C));
+    };
+    $rootScope.car.battery.soc = soc($scope.tickCount / 60);
   });
 
   tickerService.addCallback(function(){
