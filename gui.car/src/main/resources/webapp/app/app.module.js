@@ -14,21 +14,27 @@ app.config(['stateMachineProvider', function(stateMachineProvider) { // TODO Put
         chargeParameterDiscoveryDone : 'cableCheck'
       },
       action : ['emulationService', function(emulationService) {
-          emulationService.duration = 200;
-          cars.selected.plugged_in = true;
+        cars.selected.plugged_in = true;
+        emulationService.duration = 30;
       }]
     },
     cableCheck : {
       transitions : {
         cableCheck : 'cableCheck',
         cableCheckDone : 'preCharge'
-      }
+      },
+      action : ['emulationService', function(emulationService) {
+        emulationService.duration = 23000;
+      }]
     },
     preCharge : {
       transitions : {
         preCharge : 'preCharge',
         preChargeDone : 'powerDelivery'
-      }
+      },
+      action : ['emulationService', function(emulationService) {
+        emulationService.duration = 3800;
+      }]
     },
     powerDelivery : {
       transitions : {
@@ -36,22 +42,33 @@ app.config(['stateMachineProvider', function(stateMachineProvider) { // TODO Put
         powerDeliveryDone : 'currentDemand',
         powerDeliveryDoneW : 'weldingDetection',
         powerDeliveryDoneS : 'sessionStop'
-      }
+      },
+      action : ['emulationService', function(emulationService) {
+        emulationService.duration = 600;
+      }]
     },
     currentDemand : {
       transitions : {
         currentDemand : 'currentDemand',
         currentDemandDone : 'powerDelivery'
-      }
+      },
+      action : ['emulationService', function(emulationService) {
+        emulationService.duration = 100;
+      }]
     },
     weldingDetection : {
       transitions : {
         weldingDetection : 'weldingDetection',
         weldingDetectionDone : 'sessionStop'
-      }
+      },
+      action : ['emulationService', function(emulationService) {
+        emulationService.duration = 2200;
+      }]
     },
     sessionStop : {
-
+      action : ['emulationService', function(emulationService) {
+        emulationService.duration = 0;
+      }]
     }
   });
 
