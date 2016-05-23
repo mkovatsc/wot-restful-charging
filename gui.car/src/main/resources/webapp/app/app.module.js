@@ -13,9 +13,10 @@ app.config(['stateMachineProvider', function(stateMachineProvider) { // TODO Put
         chargeParameterDiscovery : 'chargeParameterDiscovery',
         chargeParameterDiscoveryDone : 'cableCheck'
       },
-      action : function() {
-        cars.selected.plugged_in = true;
-      }
+      action : ['emulationService', function(emulationService) {
+          emulationService.duration = 200;
+          cars.selected.plugged_in = true;
+      }]
     },
     cableCheck : {
       transitions : {

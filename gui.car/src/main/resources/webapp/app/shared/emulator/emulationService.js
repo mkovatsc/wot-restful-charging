@@ -2,10 +2,12 @@ app.factory("emulationService", function ($log, $rootScope, stateMachine) {
 
   var instance = {};
 
+  instance.duration = 0; // Simulated duration of current state (ms)
+
   instance.update = function() {
     stateMachine.getCurrentState().then(function(res) {
       $rootScope.currentState = res;
-      $log.info("Current state: " + res);
+      $log.info("Current state: " + res + " (" + instance.duration + "ms)");
     });
     stateMachine.available().then(function(res) {
       $rootScope.transitions = res;
