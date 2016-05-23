@@ -1,4 +1,4 @@
-app.controller('actionController', function ($scope, $rootScope, tickerService, socketService) {
+app.controller('actionController', function ($scope, $rootScope, tickerService, socketService, emulationService) {
 
   $scope.togglePlug = function() {
     $rootScope.car.plugged_in = !$rootScope.car.plugged_in;
@@ -6,10 +6,11 @@ app.controller('actionController', function ($scope, $rootScope, tickerService, 
     socketService.send('{"type" : "EVENT", "content" : { "pluggedIn" : ' + $rootScope.car.plugged_in + '}}');
 
     if (!$rootScope.car.plugged_in) {
-      tickerService.reset();
-      // TODO Doesn't refresh on frontend on reset
+      tickerService.reset(); // TODO Doesn't refresh on frontend on reset
+      emulationService.reset();
     } else {
       socketService.send('{"type" : "ACTION", "content" : { "notify" : "charger"}}');
+      emulationService.next('pluggedIn');
     }
 
   };

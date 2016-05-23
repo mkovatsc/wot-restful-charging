@@ -1,4 +1,5 @@
 var cars = {
+  selected : {},
   bmw_i3 : {
     name : "BMW i3",
     uuid : "",

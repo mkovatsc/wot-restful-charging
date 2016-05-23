@@ -1,5 +1,6 @@
-app.controller('tickerController', function ($scope, $rootScope, $interval, tickerService) {
+app.controller('tickerController', function ($scope, $rootScope, $interval, tickerService, emulationService) {
 
+  cars.selected = cars.bmw_i3;
   $rootScope.car = cars.bmw_i3;
 
   $scope.tickCount = tickerService.tickCount();
@@ -10,6 +11,8 @@ app.controller('tickerController', function ($scope, $rootScope, $interval, tick
   $scope.stopTicking= tickerService.stopTicking;
   $scope.tick = tickerService.tick;
   $scope.isRunning = tickerService.isRunning;
+
+  $scope.next = emulationService.next;
 
   $scope.$watch("tickCount", function() {
     // TODO Place this function somewhere else, only holds for DC charging at 400V / 125A

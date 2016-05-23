@@ -1,6 +1,6 @@
 var app = angular.module('CarUI', ['ngMaterial', 'ngRoute', 'FSM']);
 
-app.config(['stateMachineProvider', function(stateMachineProvider) {
+app.config(['stateMachineProvider', function(stateMachineProvider) { // TODO Put somewhere else?
 
   stateMachineProvider.config({
     init : {
@@ -12,6 +12,9 @@ app.config(['stateMachineProvider', function(stateMachineProvider) {
       transitions : {
         chargeParameterDiscovery : 'chargeParameterDiscovery',
         chargeParameterDiscoveryDone : 'cableCheck'
+      },
+      action : function() {
+        cars.selected.plugged_in = true;
       }
     },
     cableCheck : {
