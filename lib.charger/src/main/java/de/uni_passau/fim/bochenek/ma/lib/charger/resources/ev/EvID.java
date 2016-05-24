@@ -53,9 +53,7 @@ public class EvID extends CoapResource implements HalResource {
 		hal.addLink("self", this);
 
 		for (Resource res : this.getChildren()) {
-			if (res.getName().equals("stateOfCharge")) {
-				hal.addLink(res.getName(), (HalResource) res);
-			}
+			hal.addLink(res.getName(), (HalResource) res);
 		}
 
 		return hal;

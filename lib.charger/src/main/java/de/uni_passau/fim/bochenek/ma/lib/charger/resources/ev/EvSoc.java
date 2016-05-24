@@ -16,7 +16,7 @@ import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvSoc extends CoapResource implements HalResource {
 
-	private int stateOfCharge = 42;
+	private int stateOfCharge;
 
 	public EvSoc(String name) {
 		super(name);
