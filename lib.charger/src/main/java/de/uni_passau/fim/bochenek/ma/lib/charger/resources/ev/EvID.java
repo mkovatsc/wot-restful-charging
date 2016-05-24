@@ -51,6 +51,7 @@ public class EvID extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
+		hal.addProperty("id", this.getName());
 
 		for (Resource res : this.getChildren()) {
 			hal.addLink(res.getName(), (HalResource) res);
