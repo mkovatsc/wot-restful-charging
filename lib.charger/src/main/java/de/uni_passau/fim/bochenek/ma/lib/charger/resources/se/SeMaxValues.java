@@ -1,0 +1,12 @@
+package de.uni_passau.fim.bochenek.ma.lib.charger.resources.se;
+
+import org.eclipse.californium.core.CoapResource;
+
+public class SeMaxValues extends CoapResource {
+
+	public SeMaxValues(String name) {
+		super(name);
+		// TODO Auto-generated constructor stub
+	}
+
+}
