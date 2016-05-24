@@ -7,7 +7,12 @@ import org.eclipse.californium.core.server.resources.Resource;
 import de.uni_passau.fim.bochenek.ma.lib.charger.handler.IHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.RootResource;
-import de.uni_passau.fim.bochenek.ma.lib.charger.resources.TestResource;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvRoot;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SeMaxValues;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePilotVoltage;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePresentValues;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SeReadyToCharge;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SeRoot;
 
 /**
  * 
@@ -23,10 +28,14 @@ public class Charger extends CoapServer {
 		CustomDeliverer deliverer = new CustomDeliverer(this.getRoot());
 		this.setMessageDeliverer(deliverer);
 
-		// Add resources
-
-		// TODO Just for testing
-		this.add(new TestResource("iamyourcharger"));
+		// Add initial static resources
+		SeRoot seRoot = new SeRoot("se");
+		seRoot.add(new SeMaxValues("maxValues"));
+		seRoot.add(new SePilotVoltage("pilotVoltage"));
+		seRoot.add(new SePresentValues("presentValues"));
+		seRoot.add(new SeReadyToCharge("readyToCharge"));
+		this.add(seRoot);
+		this.add(new EvRoot("ev"));
 	}
 
 	/**
