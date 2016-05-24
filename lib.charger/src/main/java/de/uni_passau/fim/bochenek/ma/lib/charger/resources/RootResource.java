@@ -1,10 +1,21 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.resources;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.CoAP.ResponseCode;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.eclipse.californium.core.server.resources.Resource;
 
-public class RootResource extends CoapResource {
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import black.door.hate.HalRepresentation;
+import black.door.hate.HalRepresentation.HalRepresentationBuilder;
+import black.door.hate.HalResource;
+
+public class RootResource extends CoapResource implements HalResource {
 
 	public RootResource() {
 		super("");
@@ -12,7 +23,38 @@ public class RootResource extends CoapResource {
 
 	@Override
 	public void handleGET(CoapExchange exchange) {
-		exchange.respond(ResponseCode.SERVICE_UNAVAILABLE);
+		try {
+			exchange.respond(ResponseCode.CONTENT, this.asEmbedded().serialize(), MediaTypeRegistry.APPLICATION_JSON);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public URI location() {
+		try {
+			return new URI("/");
+		} catch (URISyntaxException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public HalRepresentationBuilder representationBuilder() {
+		HalRepresentationBuilder hal = HalRepresentation.builder();
+		hal.addLink("self", this);
+
+		for (Resource res : this.getChildren()) {
+			try {
+				hal.addLink(res.getName(), new URI(res.getURI()));
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return hal;
 	}
 
 }

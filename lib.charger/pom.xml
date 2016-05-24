@@ -21,6 +21,11 @@
 			<version>2.6.2</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>black.door</groupId>
+			<artifactId>hate</artifactId>
+			<version>v1r3t1</version>
+		</dependency>
 	</dependencies>
 
 </project>
