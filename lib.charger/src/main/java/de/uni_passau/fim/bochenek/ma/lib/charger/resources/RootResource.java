@@ -46,11 +46,8 @@ public class RootResource extends CoapResource implements HalResource {
 		hal.addLink("self", this);
 
 		for (Resource res : this.getChildren()) {
-			try {
-				hal.addLink(res.getName(), new URI(res.getURI()));
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (!res.getName().equals(".well-known")) {
+				hal.addLink(res.getName(), (HalResource) res);
 			}
 		}
 
