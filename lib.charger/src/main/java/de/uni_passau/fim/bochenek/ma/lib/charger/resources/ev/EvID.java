@@ -54,7 +54,9 @@ public class EvID extends CoapResource implements HalResource {
 		hal.addProperty("id", this.getName());
 
 		for (Resource res : this.getChildren()) {
-			hal.addLink(res.getName(), (HalResource) res);
+
+			// TODO Maybe to much information due to recursive nature
+			hal.addEmbedded(res.getName(), (HalResource) res);
 		}
 
 		return hal;
