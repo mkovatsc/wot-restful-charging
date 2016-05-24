@@ -3,8 +3,18 @@ app.factory("emulationService", function ($log, $rootScope, stateMachine) {
   var instance = {};
 
   instance.duration = 0; // Simulated duration of current state (ms)
+  instance.defaultSequence = [
+    'pluggedIn',
+    'chargeParameterDiscoveryDone',
+    'cableCheckDone',
+    'preChargeDone',
+    'powerDeliveryDone',
+    'currentDemandDone',
+    'powerDeliveryDoneW',
+    'weldingDetectionDone'
+  ];
 
-  instance.update = function() {
+  var update = function() {
     stateMachine.getCurrentState().then(function(res) {
       $rootScope.currentState = res;
       $log.info("Current state: " + res + " (" + instance.duration + "ms)");
@@ -17,15 +27,15 @@ app.factory("emulationService", function ($log, $rootScope, stateMachine) {
 
   instance.next = function(state) {
     stateMachine.send(state);
-    instance.update();
+    update();
   }
 
   instance.reset = function() {
     stateMachine.initialize();
-    instance.update();
+    update();
   }
 
-  instance.update();
+  update();
 
   return instance;
 
