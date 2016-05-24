@@ -19,7 +19,10 @@
     <md-content layout="column">
       <p>State: {{currentState}}</p>
       <select ng-model="transition" ng-options="t as t for t in transitions"></select>
-      <md-button class="md-raised" data-ng-click="next(transition)" ng-disabled="">Next</md-button>
+      <div layout="row">
+        <md-button class="md-raised" data-ng-click="next(transition)" ng-disabled="">Next</md-button>
+        <md-button class="md-raised" data-ng-click="start()" ng-disabled="">Run</md-button>
+      </div>
 
       <p>Tick: {{tickCount}}</p>
       <select ng-model="tickingSpeed" ng-options="speed.value as speed.name for speed in tickingSpeeds"></select>

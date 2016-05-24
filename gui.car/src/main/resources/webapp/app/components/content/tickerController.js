@@ -1,4 +1,4 @@
-app.controller('tickerController', function ($scope, $rootScope, $interval, tickerService, emulationService) {
+app.controller('tickerController', function ($scope, $rootScope, $interval, $timeout, tickerService, emulationService) {
 
   cars.selected = cars.bmw_i3;
   $rootScope.car = cars.bmw_i3;
@@ -33,5 +33,15 @@ app.controller('tickerController', function ($scope, $rootScope, $interval, tick
   $scope.$watch("tickingSpeed", function(){
     tickerService.updateTicking($scope.tickingSpeed);
   });
+
+  $scope.start = function() {
+    var sequence = emulationService.defaultSequence;
+    for (key in sequence) {
+      emulationService.next(key); // TODO Problem with asynchronity
+      $timeout(function() {
+        console.log("Waiting for " + sequence[key] + "ms.");
+      }, sequence[key]); // TODO Doesn't work!
+    }
+  };
 
 });

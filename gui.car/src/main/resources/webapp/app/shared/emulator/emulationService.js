@@ -3,16 +3,16 @@ app.factory("emulationService", function ($log, $rootScope, stateMachine) {
   var instance = {};
 
   instance.duration = 0; // Simulated duration of current state (ms)
-  instance.defaultSequence = [
-    'pluggedIn',
-    'chargeParameterDiscoveryDone',
-    'cableCheckDone',
-    'preChargeDone',
-    'powerDeliveryDone',
-    'currentDemandDone',
-    'powerDeliveryDoneW',
-    'weldingDetectionDone'
-  ];
+  instance.defaultSequence = { // TODO Ordered?!
+    'pluggedIn'                     : 0,
+    'chargeParameterDiscoveryDone'  : 30,
+    'cableCheckDone'                : 23000,
+    'preChargeDone'                 : 3800,
+    'powerDeliveryDone'             : 600,
+    'currentDemandDone'             : 100,
+    'powerDeliveryDoneW'            : 2200,
+    'weldingDetectionDone'          : 0
+  };
 
   var update = function() {
     stateMachine.getCurrentState().then(function(res) {
