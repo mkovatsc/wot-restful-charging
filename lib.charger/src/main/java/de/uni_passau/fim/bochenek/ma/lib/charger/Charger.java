@@ -2,9 +2,11 @@ package de.uni_passau.fim.bochenek.ma.lib.charger;
 
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.server.MessageDeliverer;
+import org.eclipse.californium.core.server.resources.Resource;
 
 import de.uni_passau.fim.bochenek.ma.lib.charger.handler.IHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.RootResource;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.TestResource;
 
 /**
@@ -22,6 +24,8 @@ public class Charger extends CoapServer {
 		this.setMessageDeliverer(deliverer);
 
 		// Add resources
+
+		// TODO Just for testing
 		this.add(new TestResource("iamyourcharger"));
 	}
 
@@ -38,6 +42,11 @@ public class Charger extends CoapServer {
 	public void setMessageDeliverer(MessageDeliverer deliverer) {
 		// TODO Don't allow setting new deliverer from outside
 		super.setMessageDeliverer(deliverer);
+	}
+
+	@Override
+	protected Resource createRoot() {
+		return new RootResource();
 	}
 
 }
