@@ -17,9 +17,31 @@ Car.Emulator = function(args) {
 
 Car.Emulator.prototype = {
 
-  // Emulate one cylce
-  emulate : function() {
+  // Local flags
+  isRunning : false,
 
+  // Start emulation
+  start : function() {
+    var that = this;
+
+    if (!this.isRunning) {
+      this.isRunning = true;
+
+      this.cycle = setInterval(function () {
+        that.emulate();
+      }, this.config.interval);
+    }
+  },
+
+  // Process one cycle
+  emulate : function() {
+    console.log("HelloWorld!");
+  },
+
+  // Stop emulation
+  stop : function() {
+    clearInterval(this.cycle);
+    this.isRunning = false;
   }
 
 };
