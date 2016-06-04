@@ -1,7 +1,7 @@
 Car.Emulator = function(args) {
 
   this.config = {
-    interval : 1000
+    timeout : 1000
   };
 
   if (typeof args != 'undefined') {
@@ -26,10 +26,17 @@ Car.Emulator.prototype = {
 
     if (!this.isRunning) {
       this.isRunning = true;
+      this.cycle = setTimeout(this.chainTimeouts(), this.config.timeout);
+    }
+  },
 
-      this.cycle = setInterval(function () {
-        that.emulate();
-      }, this.config.interval);
+  // Chain emulation steps
+  chainTimeouts : function() {
+    var that = this;
+
+    return function() {
+      that.emulate();
+      that.cycle = setTimeout(that.chainTimeouts(), that.config.timeout);
     }
   },
 
@@ -40,7 +47,7 @@ Car.Emulator.prototype = {
 
   // Stop emulation
   stop : function() {
-    clearInterval(this.cycle);
+    clearTimeout(this.cycle);
     this.isRunning = false;
   }
 
