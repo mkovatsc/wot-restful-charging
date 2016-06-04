@@ -16,6 +16,7 @@ Car.Emulator = function(args) {
 
 Car.Emulator.prototype = {
   isRunning : false,
+  counter : 0,
   interrupts : [],
 
   // Start emulation
@@ -44,6 +45,8 @@ Car.Emulator.prototype = {
     } else {
       console.log("HelloWorld!");
     }
+
+    this.counter++;
   },
 
   // Add interrupt functions
@@ -55,5 +58,11 @@ Car.Emulator.prototype = {
   stop : function() {
     clearTimeout(this.cycle);
     this.isRunning = false;
+  },
+
+  // Reset the emulator
+  reset : function() {
+    this.stop();
+    this.counter = 0;
   }
 };
