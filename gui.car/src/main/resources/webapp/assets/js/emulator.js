@@ -1,6 +1,7 @@
 Car.Emulator = function(args) {
   this.config = {
-    timeout : 1000
+    timeout : 1000,
+    car : undefined
   };
 
   if (typeof args != 'undefined') {
@@ -19,9 +20,7 @@ Car.Emulator.prototype = {
 
   // Start emulation
   start : function() {
-    var that = this;
-
-    if (!this.isRunning) {
+    if (!this.isRunning && this.config.car != undefined) {
       this.isRunning = true;
       this.cycle = setTimeout(this.chainTimeouts(), this.config.timeout);
     }
@@ -43,7 +42,7 @@ Car.Emulator.prototype = {
       var interrupt = this.interrupts.shift();
       interrupt();
     } else {
-          console.log("HelloWorld!");
+      console.log("HelloWorld!");
     }
   },
 

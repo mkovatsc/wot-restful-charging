@@ -1,5 +1,5 @@
-var Car = function(emulator) {
-  this.emulator = emulator;
+var Car = function() {
+
 };
 
 Car.prototype =  {
