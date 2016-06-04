@@ -17,8 +17,8 @@ Car.Emulator = function(args) {
 
 Car.Emulator.prototype = {
 
-  // Local flags
   isRunning : false,
+  interrupts : [],
 
   // Start emulation
   start : function() {
@@ -42,7 +42,17 @@ Car.Emulator.prototype = {
 
   // Process one cycle
   emulate : function() {
-    console.log("HelloWorld!");
+    if (this.interrupts.length > 0) {
+      var interrupt = this.interrupts.shift();
+      interrupt();
+    } else {
+          console.log("HelloWorld!");
+    }
+  },
+
+  // Add interrupt functions
+  addInterrupt : function(interrupt) {
+    this.interrupts.push(interrupt);
   },
 
   // Stop emulation
