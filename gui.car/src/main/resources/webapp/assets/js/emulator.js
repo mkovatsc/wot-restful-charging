@@ -21,7 +21,7 @@ Car.Emulator.prototype = {
 
   // Start emulation
   start : function() {
-    if (!this.isRunning && this.config.car != undefined) {
+    if (!this.isRunning && typeof this.config.car != 'undefined') {
       this.isRunning = true;
       this.emulation = setTimeout(this.chainTimeouts(), this.config.timeout);
     }
