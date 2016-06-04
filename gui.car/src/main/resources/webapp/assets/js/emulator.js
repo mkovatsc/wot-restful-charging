@@ -1,5 +1,4 @@
 Car.Emulator = function(args) {
-
   this.config = {
     timeout : 1000
   };
@@ -12,11 +11,9 @@ Car.Emulator = function(args) {
       }
     }
   }
-
 };
 
 Car.Emulator.prototype = {
-
   isRunning : false,
   interrupts : [],
 
@@ -60,5 +57,4 @@ Car.Emulator.prototype = {
     clearTimeout(this.cycle);
     this.isRunning = false;
   }
-
 };

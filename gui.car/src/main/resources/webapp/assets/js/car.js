@@ -1,7 +1,5 @@
 var Car = function(emulator) {
-
   this.emulator = emulator;
-
 };
 
 Car.prototype =  {
@@ -28,5 +26,4 @@ Car.prototype =  {
     },
     complete : false
   }
-
 };
