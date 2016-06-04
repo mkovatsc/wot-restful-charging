@@ -25,5 +25,16 @@ Car.prototype =  {
       DC : [0]
     },
     complete : false
+  },
+
+  // Additional functionality
+  plugIn : function() {
+    console.log("Plugging in the car."); // TODO
+    this.plugged_in = true;
+  },
+
+  unplug : function() {
+    console.log("Unplugging car."); // TODO
+    this.plugged_in = false;
   }
 };

@@ -43,7 +43,11 @@ Car.Emulator.prototype = {
       var interrupt = this.interrupts.shift();
       interrupt();
     } else {
-      console.log("HelloWorld!");
+      if(!this.config.car.plugged_in) {
+        this.config.car.plugIn();
+      } else {
+        this.config.car.unplug();
+      }
     }
 
     this.cycles++;
@@ -64,5 +68,6 @@ Car.Emulator.prototype = {
   reset : function() {
     this.stop();
     this.cycles = 0;
+    // TODO reset car states?
   }
 };
