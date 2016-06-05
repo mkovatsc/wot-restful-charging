@@ -49,26 +49,56 @@ Car.Emulator.prototype = {
       car.plugIn();
     } else {
       switch (car.state) {
-        case 'init':
+        case 'pluggedIn':
           car.doChargeParameterDiscovery();
           break;
         case 'chargeParameterDiscovery':
+          car.doChargeParameterDiscovery();
+          break;
+        case 'chargeParameterDiscoveryDone':
           car.doCableCheck();
           break;
         case 'cableCheck':
+          car.doCableCheck();
+          break;
+        case 'cableCheckDone':
           car.doPreCharge();
           break;
         case 'preCharge':
+          car.doPreCharge();
+          break;
+        case 'preChargeDone':
           car.doPowerDelivery();
           break;
         case 'powerDelivery':
+          car.doPowerDelivery();
+          break;
+        case 'powerDeliveryDone':
           car.doCurrentDemand();
+          break;
+        case 'currentDemand':
+          car.doCurrentDemand();
+          break;
+        case 'currentDemandDone':
+          car.doPowerDelivery();
+          break;
+        case 'powerDeliveryDoneS':
+          car.doStopSession();
+          break;
+        case 'powerDeliveryDoneW':
+          car.doWeldingDetection();
+          break;
+        case 'weldingDetection':
+          car.doWeldingDetection();
+          break;
+        case 'weldingDetectionDone':
+          car.doStopSession();
           break;
         case 'sessionStop':
           car.unplug();
           break;
         default:
-          console.log("No action defined for this state."); // TODO proper handling
+          console.log("No action defined for this state. [" + car.state + "]"); // TODO proper handling
       }
     }
 

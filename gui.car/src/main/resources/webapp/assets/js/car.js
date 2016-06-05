@@ -36,7 +36,7 @@ Car.prototype =  {
   plugIn : function() {
     console.log("Plugging in the car."); // TODO
     this.plugged_in = true;
-    this.state = 'init';
+    this.state = 'pluggedIn';
   },
 
   // Charge parameter discovery
@@ -47,7 +47,7 @@ Car.prototype =  {
     if (typeof this.runningProc == 'undefined') {
       var that = this;
       this.runningProc = setTimeout(function() {
-        that.state = 'chargeParameterDiscovery';
+        that.state = 'chargeParameterDiscoveryDone';
         that.runningProc = undefined;
       }, 30); // TODO 30ms in real-time, scale for simulation!
     }
@@ -60,7 +60,7 @@ Car.prototype =  {
     if (typeof this.runningProc == 'undefined') {
       var that = this;
       this.runningProc = setTimeout(function() {
-        that.state = 'cableCheck';
+        that.state = 'cableCheckDone';
         that.runningProc = undefined;
       }, 23000); // TODO 23s in real-time, scale for simulation!
     }
@@ -73,7 +73,7 @@ Car.prototype =  {
     if (typeof this.runningProc == 'undefined') {
       var that = this;
       this.runningProc = setTimeout(function() {
-        that.state = 'preCharge';
+        that.state = 'preChargeDone';
         that.runningProc = undefined;
       }, 3800); // TODO 3.8s in real-time, scale for simulation!
     }
@@ -86,7 +86,12 @@ Car.prototype =  {
     if (typeof this.runningProc == 'undefined') {
       var that = this;
       this.runningProc = setTimeout(function() {
-        that.state = 'powerDelivery';
+        if (that.battery.soc == 100 && that.charging.complete) {
+          that.state = 'powerDeliveryDoneW';
+        } else {
+          that.ready_charge = true; // TODO
+          that.state = 'powerDeliveryDone';
+        }
         that.runningProc = undefined;
       }, 600); // TODO 600ms in real-time, scale for simulation!
     }
@@ -98,9 +103,40 @@ Car.prototype =  {
 
     // TODO base on time / cycles
     if (this.battery.soc < 100) {
+      this.battery.charging = true;
       this.battery.soc++;
+      this.state = 'currentDemand';
     } else {
-      this.state = 'sessionStop';
+      this.battery.charging = false; // TODO maybe define a routine
+      this.ready_charge = false;
+      this.charging.complete = true;
+      this.state = 'currentDemandDone';
+    }
+  },
+
+  // Welding detection
+  doWeldingDetection : function() {
+    console.log("Performing welding detection."); // TODO
+
+    if (typeof this.runningProc == 'undefined') {
+      var that = this;
+      this.runningProc = setTimeout(function() {
+        that.state = 'weldingDetectionDone';
+        that.runningProc = undefined;
+      }, 2200); // TODO 2.2s in real-time, scale for simulation!
+    }
+  },
+
+  // Stop session
+  doStopSession : function() {
+    console.log("Stopping the session"); // TODO
+
+    if (typeof this.runningProc == 'undefined') {
+      var that = this;
+      this.runningProc = setTimeout(function() {
+        that.state = 'sessionStop';
+        that.runningProc = undefined;
+      }, 1000); // TODO realistic value in real-time? scale for simulation!
     }
   },
 
