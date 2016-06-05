@@ -47,16 +47,16 @@ Car.Emulator.prototype = {
       interrupt(); // TODO maybe inject some dependency
     } else if (typeof car.state == 'undefined' && !car.plugged_in) {
       car.plugIn();
-      car.state = 'init'; // TODO proper handling of states, statemachine?
     } else {
       switch (car.state) {
         case 'init':
+          car.doChargeParameterDiscovery();
           break;
         case 'sessionStop':
           car.unplug();
           break;
         default:
-          console.log("No action defined for this state"); // TODO proper handling
+          console.log("No action defined for this state."); // TODO proper handling
       }
     }
 

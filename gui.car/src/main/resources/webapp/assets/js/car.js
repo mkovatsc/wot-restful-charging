@@ -33,12 +33,20 @@ Car.prototype =  {
   plugIn : function() {
     console.log("Plugging in the car."); // TODO
     this.plugged_in = true;
+    this.state = 'init';
+  },
+
+  // Charge parameter discovery
+  doChargeParameterDiscovery : function() {
+    console.log("Running charge parameter discovery."); // TODO
+    this.state = 'sessionStop';
   },
 
   // Unplug the car
   unplug : function() {
     console.log("Unplugging car."); // TODO
     this.plugged_in = false;
+    this.state = undefined;
   },
 
   // Reset the car's state
