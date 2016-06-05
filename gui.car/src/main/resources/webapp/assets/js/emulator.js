@@ -75,8 +75,7 @@ Car.Emulator.prototype = {
 
     var car = this.config.car;
     if(typeof car != 'undefined') {
-      car.plugged_in = false;
+      car.reset();
     }
-    // TODO reset more car states?
   }
 };
