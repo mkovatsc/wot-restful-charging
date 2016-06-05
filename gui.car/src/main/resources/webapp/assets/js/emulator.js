@@ -16,6 +16,7 @@ Car.Emulator = function(args) {
 
 Car.Emulator.prototype = {
   isRunning : false,
+  state : undefined,
   cycles : 0,
   interrupts : [],
 
@@ -41,12 +42,13 @@ Car.Emulator.prototype = {
   emulate : function() {
     if (this.interrupts.length > 0) {
       var interrupt = this.interrupts.shift();
-      interrupt();
+      interrupt(); // TODO maybe inject some dependency
     } else {
-      if(!this.config.car.plugged_in) {
-        this.config.car.plugIn();
+      var car = this.config.car;
+      if(!car.plugged_in) {
+        car.plugIn();
       } else {
-        this.config.car.unplug();
+        car.unplug();
       }
     }
 
@@ -67,7 +69,14 @@ Car.Emulator.prototype = {
   // Reset the emulator
   reset : function() {
     this.stop();
+
     this.cycles = 0;
-    // TODO reset car states?
+    this.state = undefined;
+
+    var car = this.config.car;
+    if(typeof car != 'undefined') {
+      car.plugged_in = false;
+    }
+    // TODO reset more car states?
   }
 };
