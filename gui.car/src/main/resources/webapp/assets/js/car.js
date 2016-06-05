@@ -39,6 +39,18 @@ Car.prototype =  {
   // Charge parameter discovery
   doChargeParameterDiscovery : function() {
     console.log("Running charge parameter discovery."); // TODO
+    this.state = 'chargeParameterDiscovery';
+  },
+
+  // Cable check
+  doCableCheck : function() {
+    console.log("Running the cable check."); // TODO
+    this.state = 'cableCheck';
+  },
+
+  // Pre charge
+  doPreCharge : function() {
+    console.log("Running the pre charge routine."); // TODO
     this.state = 'sessionStop';
   },
 
