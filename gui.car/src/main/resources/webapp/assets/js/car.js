@@ -28,6 +28,9 @@ Car.prototype =  {
     complete : false
   },
 
+  // Additional state information
+  runningProc : undefined,
+
   // Additional functionality
   // Plug the car in
   plugIn : function() {
@@ -39,19 +42,66 @@ Car.prototype =  {
   // Charge parameter discovery
   doChargeParameterDiscovery : function() {
     console.log("Running charge parameter discovery."); // TODO
-    this.state = 'chargeParameterDiscovery';
+
+    // TODO construction used very often, maybe offload? or generic do()?
+    if (typeof this.runningProc == 'undefined') {
+      var that = this;
+      this.runningProc = setTimeout(function() {
+        that.state = 'chargeParameterDiscovery';
+        that.runningProc = undefined;
+      }, 30); // TODO 30ms in real-time, scale for simulation!
+    }
   },
 
   // Cable check
   doCableCheck : function() {
     console.log("Running the cable check."); // TODO
-    this.state = 'cableCheck';
+
+    if (typeof this.runningProc == 'undefined') {
+      var that = this;
+      this.runningProc = setTimeout(function() {
+        that.state = 'cableCheck';
+        that.runningProc = undefined;
+      }, 23000); // TODO 23s in real-time, scale for simulation!
+    }
   },
 
   // Pre charge
   doPreCharge : function() {
     console.log("Running the pre charge routine."); // TODO
-    this.state = 'sessionStop';
+
+    if (typeof this.runningProc == 'undefined') {
+      var that = this;
+      this.runningProc = setTimeout(function() {
+        that.state = 'preCharge';
+        that.runningProc = undefined;
+      }, 3800); // TODO 3.8s in real-time, scale for simulation!
+    }
+  },
+
+  // Power delivery
+  doPowerDelivery : function() {
+    console.log("Asking for power delivery."); // TODO
+
+    if (typeof this.runningProc == 'undefined') {
+      var that = this;
+      this.runningProc = setTimeout(function() {
+        that.state = 'powerDelivery';
+        that.runningProc = undefined;
+      }, 600); // TODO 600ms in real-time, scale for simulation!
+    }
+  },
+
+  // Current demand
+  doCurrentDemand : function() {
+    console.log("Sending current demand."); // TODO
+
+    // TODO base on time / cycles
+    if (this.battery.soc < 100) {
+      this.battery.soc++;
+    } else {
+      this.state = 'sessionStop';
+    }
   },
 
   // Unplug the car

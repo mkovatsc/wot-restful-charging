@@ -58,6 +58,12 @@ Car.Emulator.prototype = {
         case 'cableCheck':
           car.doPreCharge();
           break;
+        case 'preCharge':
+          car.doPowerDelivery();
+          break;
+        case 'powerDelivery':
+          car.doCurrentDemand();
+          break;
         case 'sessionStop':
           car.unplug();
           break;
