@@ -33,7 +33,9 @@ Car.Emulator.prototype = {
 
     return function() {
       that.emulate();
-      that.emulation = setTimeout(that.chainTimeouts(), that.config.timeout);
+      if (that.isRunning) {
+        that.emulation = setTimeout(that.chainTimeouts(), that.config.timeout);
+      }
     }
   },
 
@@ -96,6 +98,7 @@ Car.Emulator.prototype = {
           break;
         case 'sessionStop':
           car.unplug();
+          this.stop(); // Stop emulation after unplugging
           break;
         default:
           console.log("No action defined for this state. [" + car.state + "]"); // TODO proper handling
