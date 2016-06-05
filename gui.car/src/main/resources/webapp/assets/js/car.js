@@ -7,8 +7,9 @@ Car.prototype =  {
   // Basic model description (default: BMW i3)
   name : "BMW i3",
   uuid : "",
+  state : undefined,
   battery : {
-    capacity : 18.8,       // kWh
+    capacity : 18.8,    // kWh
     soc : 5,            // State of charge
     R_C : 1.55,         // charge = U*(1-e^-(t/R*C)) with t in minutes / 10
     charging : false
@@ -40,8 +41,9 @@ Car.prototype =  {
     this.plugged_in = false;
   },
 
-  // Reset the cars state
+  // Reset the car's state
   reset : function() {
+    this.state = undefined;
     this.battery.soc = 5;
     this.battery.charging = false;
     this.plugged_in = false;

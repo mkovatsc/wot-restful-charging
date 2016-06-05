@@ -16,7 +16,6 @@ Car.Emulator = function(args) {
 
 Car.Emulator.prototype = {
   isRunning : false,
-  state : undefined,
   cycles : 0,
   interrupts : [],
 
@@ -40,15 +39,24 @@ Car.Emulator.prototype = {
 
   // Process one cycle
   emulate : function() {
+    // TODO car could be undefined at some points
+    var car = this.config.car;
+
     if (this.interrupts.length > 0) {
       var interrupt = this.interrupts.shift();
       interrupt(); // TODO maybe inject some dependency
+    } else if (typeof car.state == 'undefined' && !car.plugged_in) {
+      car.plugIn();
+      car.state = 'init'; // TODO proper handling of states, statemachine?
     } else {
-      var car = this.config.car;
-      if(!car.plugged_in) {
-        car.plugIn();
-      } else {
-        car.unplug();
+      switch (car.state) {
+        case 'init':
+          break;
+        case 'sessionStop':
+          car.unplug();
+          break;
+        default:
+          console.log("No action defined for this state"); // TODO proper handling
       }
     }
 
@@ -71,10 +79,9 @@ Car.Emulator.prototype = {
     this.stop();
 
     this.cycles = 0;
-    this.state = undefined;
 
     var car = this.config.car;
-    if(typeof car != 'undefined') {
+    if (typeof car != 'undefined') {
       car.reset();
     }
   }
