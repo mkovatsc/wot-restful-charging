@@ -1,9 +1,13 @@
 Car.Emulator = function(args) {
+
+  // Default config values
   this.config = {
     timeout : 1000,
+    speedup : 1.0,    // TODO maybe combine with cycle timeout
     car : undefined
   };
 
+  // Assign given config values
   if (typeof args != 'undefined') {
     var key;
     for (key in this.config) {
@@ -48,56 +52,56 @@ Car.Emulator.prototype = {
       var interrupt = this.interrupts.shift();
       interrupt(); // TODO maybe inject some dependency
     } else if (typeof car.state == 'undefined' && !car.plugged_in) {
-      car.plugIn();
+      car.plugIn(this.config.speedup);
     } else {
       switch (car.state) {
         case 'pluggedIn':
-          car.doChargeParameterDiscovery();
+          car.doChargeParameterDiscovery(this.config.speedup);
           break;
         case 'chargeParameterDiscovery':
-          car.doChargeParameterDiscovery();
+          car.doChargeParameterDiscovery(this.config.speedup);
           break;
         case 'chargeParameterDiscoveryDone':
-          car.doCableCheck();
+          car.doCableCheck(this.config.speedup);
           break;
         case 'cableCheck':
-          car.doCableCheck();
+          car.doCableCheck(this.config.speedup);
           break;
         case 'cableCheckDone':
-          car.doPreCharge();
+          car.doPreCharge(this.config.speedup);
           break;
         case 'preCharge':
-          car.doPreCharge();
+          car.doPreCharge(this.config.speedup);
           break;
         case 'preChargeDone':
-          car.doPowerDelivery();
+          car.doPowerDelivery(this.config.speedup);
           break;
         case 'powerDelivery':
-          car.doPowerDelivery();
+          car.doPowerDelivery(this.config.speedup);
           break;
         case 'powerDeliveryDone':
-          car.doCurrentDemand();
+          car.doCurrentDemand(this.config.speedup);
           break;
         case 'currentDemand':
-          car.doCurrentDemand();
+          car.doCurrentDemand(this.config.speedup);
           break;
         case 'currentDemandDone':
-          car.doPowerDelivery();
+          car.doPowerDelivery(this.config.speedup);
           break;
         case 'powerDeliveryDoneS':
-          car.doStopSession();
+          car.doStopSession(this.config.speedup);
           break;
         case 'powerDeliveryDoneW':
-          car.doWeldingDetection();
+          car.doWeldingDetection(this.config.speedup);
           break;
         case 'weldingDetection':
-          car.doWeldingDetection();
+          car.doWeldingDetection(this.config.speedup);
           break;
         case 'weldingDetectionDone':
-          car.doStopSession();
+          car.doStopSession(this.config.speedup);
           break;
         case 'sessionStop':
-          car.unplug();
+          car.unplug(this.config.speedup);
           this.stop(); // Stop emulation after unplugging
           break;
         default:

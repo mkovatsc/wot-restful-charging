@@ -33,14 +33,16 @@ Car.prototype =  {
 
   // Additional functionality
   // Plug the car in
-  plugIn : function() {
+  plugIn : function(speedup) {
+    console.log("Speedup: " + speedup);
     console.log("Plugging in the car."); // TODO
     this.plugged_in = true;
     this.state = 'pluggedIn';
   },
 
   // Charge parameter discovery
-  doChargeParameterDiscovery : function() {
+  doChargeParameterDiscovery : function(speedup) {
+    var timeout = Math.floor(30 / speedup); // TODO find a more elegant way!
 
     // TODO construction used very often, maybe offload? or generic do()?
     if (typeof this.runningProc == 'undefined') {
@@ -50,12 +52,14 @@ Car.prototype =  {
       this.runningProc = setTimeout(function() {
         that.state = 'chargeParameterDiscoveryDone';
         that.runningProc = undefined;
-      }, 30); // TODO 30ms in real-time, scale for simulation!
+      }, timeout); // TODO 30ms in real-time
     }
   },
 
   // Cable check
-  doCableCheck : function() {
+  doCableCheck : function(speedup) {
+    var timeout = Math.floor(23000 / speedup);
+
     if (typeof this.runningProc == 'undefined') {
       console.log("Running the cable check."); // TODO
 
@@ -63,12 +67,14 @@ Car.prototype =  {
       this.runningProc = setTimeout(function() {
         that.state = 'cableCheckDone';
         that.runningProc = undefined;
-      }, 23000); // TODO 23s in real-time, scale for simulation!
+      }, timeout); // TODO 23s in real-time
     }
   },
 
   // Pre charge
-  doPreCharge : function() {
+  doPreCharge : function(speedup) {
+    var timeout = Math.floor(3800 / speedup);
+
     if (typeof this.runningProc == 'undefined') {
       console.log("Running the pre charge routine."); // TODO
 
@@ -76,12 +82,14 @@ Car.prototype =  {
       this.runningProc = setTimeout(function() {
         that.state = 'preChargeDone';
         that.runningProc = undefined;
-      }, 3800); // TODO 3.8s in real-time, scale for simulation!
+      }, timeout); // TODO 3.8s in real-time
     }
   },
 
   // Power delivery
-  doPowerDelivery : function() {
+  doPowerDelivery : function(speedup) {
+    var timeout = Math.floor(600 / speedup);
+
     if (typeof this.runningProc == 'undefined') {
       console.log("Asking for power delivery."); // TODO
 
@@ -94,12 +102,12 @@ Car.prototype =  {
           that.state = 'powerDeliveryDone';
         }
         that.runningProc = undefined;
-      }, 600); // TODO 600ms in real-time, scale for simulation!
+      }, timeout); // TODO 600ms in real-time
     }
   },
 
   // Current demand
-  doCurrentDemand : function() {
+  doCurrentDemand : function(speedup) {
     console.log("Sending current demand."); // TODO
 
     // TODO base on time / cycles
@@ -116,7 +124,9 @@ Car.prototype =  {
   },
 
   // Welding detection
-  doWeldingDetection : function() {
+  doWeldingDetection : function(speedup) {
+    var timeout = Math.floor(2200 / speedup);
+
     if (typeof this.runningProc == 'undefined') {
       console.log("Performing welding detection."); // TODO
 
@@ -124,12 +134,14 @@ Car.prototype =  {
       this.runningProc = setTimeout(function() {
         that.state = 'weldingDetectionDone';
         that.runningProc = undefined;
-      }, 2200); // TODO 2.2s in real-time, scale for simulation!
+      }, timeout); // TODO 2.2s in real-time
     }
   },
 
   // Stop session
-  doStopSession : function() {
+  doStopSession : function(speedup) {
+    var timeout = Math.floor(1000 / speedup);
+
     if (typeof this.runningProc == 'undefined') {
       console.log("Stopping the session"); // TODO
 
@@ -137,12 +149,12 @@ Car.prototype =  {
       this.runningProc = setTimeout(function() {
         that.state = 'sessionStop';
         that.runningProc = undefined;
-      }, 1000); // TODO realistic value in real-time? scale for simulation!
+      }, timeout); // TODO realistic value in real-time?
     }
   },
 
   // Unplug the car
-  unplug : function() {
+  unplug : function(speedup) {
     console.log("Unplugging car."); // TODO
     this.plugged_in = false;
     this.state = undefined;
