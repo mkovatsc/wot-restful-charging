@@ -41,10 +41,11 @@ Car.prototype =  {
 
   // Charge parameter discovery
   doChargeParameterDiscovery : function() {
-    console.log("Running charge parameter discovery."); // TODO
 
     // TODO construction used very often, maybe offload? or generic do()?
     if (typeof this.runningProc == 'undefined') {
+      console.log("Running charge parameter discovery."); // TODO
+
       var that = this;
       this.runningProc = setTimeout(function() {
         that.state = 'chargeParameterDiscoveryDone';
@@ -55,9 +56,9 @@ Car.prototype =  {
 
   // Cable check
   doCableCheck : function() {
-    console.log("Running the cable check."); // TODO
-
     if (typeof this.runningProc == 'undefined') {
+      console.log("Running the cable check."); // TODO
+
       var that = this;
       this.runningProc = setTimeout(function() {
         that.state = 'cableCheckDone';
@@ -68,9 +69,9 @@ Car.prototype =  {
 
   // Pre charge
   doPreCharge : function() {
-    console.log("Running the pre charge routine."); // TODO
-
     if (typeof this.runningProc == 'undefined') {
+      console.log("Running the pre charge routine."); // TODO
+
       var that = this;
       this.runningProc = setTimeout(function() {
         that.state = 'preChargeDone';
@@ -81,9 +82,9 @@ Car.prototype =  {
 
   // Power delivery
   doPowerDelivery : function() {
-    console.log("Asking for power delivery."); // TODO
-
     if (typeof this.runningProc == 'undefined') {
+      console.log("Asking for power delivery."); // TODO
+
       var that = this;
       this.runningProc = setTimeout(function() {
         if (that.battery.soc == 100 && that.charging.complete) {
@@ -116,9 +117,9 @@ Car.prototype =  {
 
   // Welding detection
   doWeldingDetection : function() {
-    console.log("Performing welding detection."); // TODO
-
     if (typeof this.runningProc == 'undefined') {
+      console.log("Performing welding detection."); // TODO
+
       var that = this;
       this.runningProc = setTimeout(function() {
         that.state = 'weldingDetectionDone';
@@ -129,9 +130,9 @@ Car.prototype =  {
 
   // Stop session
   doStopSession : function() {
-    console.log("Stopping the session"); // TODO
-
     if (typeof this.runningProc == 'undefined') {
+      console.log("Stopping the session"); // TODO
+
       var that = this;
       this.runningProc = setTimeout(function() {
         that.state = 'sessionStop';
