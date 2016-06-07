@@ -1,18 +1,14 @@
 var Car = function (args) {
-  this.connector = undefined;
+  this.config = {
+    socketaddr: undefined
+  };
 
   // Regex for proper websocket URL
   var re = /^((ws\:\/\/)\S+\:([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))$/g;
 
-  // Only try do initialize connector if provided URL is valid
+  // Only accept valid socket URLs
   if ('socketaddr' in args && args['socketaddr'].match(re)) {
-    this.connector = new WebSocket(args['socketaddr']);
-    var that = this;
-    setTimeout(function () {
-      if (that.connector.readyState != 1) {
-        this.connector = undefined;
-      }
-    }, 1000); // Give it a second to get ready
+    this.config.socketaddr = args['socketaddr'];
   }
 };
 
@@ -43,13 +39,50 @@ Car.prototype = {
   },
 
   // Additional state information
+  connector: undefined,
   runningProc: undefined,
 
   // Plug the car in
   plugIn: function (speedup) {
     console.log('Plugging in the car.'); // TODO
     this.plugged_in = true;
-    this.state = 'pluggedIn';
+    // this.state = 'pluggedIn'
+
+    // Try to connect to the charger
+    if (typeof this.config.socketaddr != 'undefined') {
+      var that = this;
+      this.connector = new WebSocket(this.config.socketaddr);
+
+      // TODO define somewhere else
+      this.connector.onconnect = function () {
+        that.state = 'pluggedIn';
+      };
+
+      // TODO define somewhere else!
+      this.connector.onmessage = function (evt) {
+        var msg;
+
+        try {
+          msg = JSON.parse(evt.data);
+        } catch (e) {
+          // TODO
+        }
+
+        if (msg != null && msg.hasOwnProperty('type')) {
+          switch (msg.type) {
+            case 'REGISTER':
+              that.uuid = msg.content.uuid;
+              break;
+            case 'KEEPALIVE':
+              that.sendMsg('Pong!');
+              break;
+            default: // TODO
+          }
+        }
+      };
+    } else {
+      console.log('No connector for charger defined.'); // TODO
+    }
   },
 
   // Charge parameter discovery
@@ -184,7 +217,7 @@ Car.prototype = {
 
   // Send message to the connected charger
   sendMsg: function (msg) {
-    if (typeof this.connector != 'undefined') {
+    if (typeof this.connector != 'undefined' && this.connector.readyState == 1) {
       this.connector.send(msg);
     }
   },
