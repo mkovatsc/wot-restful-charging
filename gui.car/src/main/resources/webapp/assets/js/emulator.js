@@ -1,10 +1,10 @@
-Car.Emulator = function(args) {
+Car.Emulator = function (args) {
 
   // Default config values
   this.config = {
-    timeout : 1000,
-    speedup : 1.0,    // TODO maybe combine with cycle timeout
-    car : undefined
+    timeout: 1000,
+    speedup: 1.0, // TODO maybe combine with cycle timeout
+    car: undefined
   };
 
   // Assign given config values
@@ -19,12 +19,12 @@ Car.Emulator = function(args) {
 };
 
 Car.Emulator.prototype = {
-  isRunning : false,
-  cycles : 0,
-  interrupts : [],
+  isRunning: false,
+  cycles: 0,
+  interrupts: [],
 
   // Start emulation
-  start : function() {
+  start: function () {
     if (!this.isRunning && typeof this.config.car != 'undefined') {
       this.isRunning = true;
       this.emulation = setTimeout(this.chainTimeouts(), this.config.timeout);
@@ -32,19 +32,19 @@ Car.Emulator.prototype = {
   },
 
   // Chain emulation steps
-  chainTimeouts : function() {
+  chainTimeouts: function () {
     var that = this;
 
-    return function() {
+    return function () {
       that.emulate();
       if (that.isRunning) {
         that.emulation = setTimeout(that.chainTimeouts(), that.config.timeout);
       }
-    }
+    };
   },
 
   // Process one cycle
-  emulate : function() {
+  emulate: function () {
     // TODO car could be undefined at some points
     var car = this.config.car;
 
@@ -105,7 +105,7 @@ Car.Emulator.prototype = {
           this.stop(); // Stop emulation after unplugging
           break;
         default:
-          console.log("No action defined for this state. [" + car.state + "]"); // TODO proper handling
+          console.log('No action defined for this state. [' + car.state + ']'); // TODO proper handling
       }
     }
 
@@ -113,18 +113,18 @@ Car.Emulator.prototype = {
   },
 
   // Add interrupt functions
-  addInterrupt : function(interrupt) {
+  addInterrupt: function (interrupt) {
     this.interrupts.push(interrupt);
   },
 
   // Stop emulation
-  stop : function() {
+  stop: function () {
     clearTimeout(this.emulation);
     this.isRunning = false;
   },
 
   // Reset the emulator
-  reset : function() {
+  reset: function () {
     this.stop();
 
     this.cycles = 0;
