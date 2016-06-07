@@ -1,4 +1,20 @@
-var Car = function () {};
+var Car = function (args) {
+  this.connector = undefined;
+
+  // Regex for proper websocket URL
+  var re = /^((ws\:\/\/)\S+\:([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))$/g;
+
+  // Only try do initialize connector if provided URL is valid
+  if ('socketaddr' in args && args['socketaddr'].match(re)) {
+    this.connector = new WebSocket(args['socketaddr']);
+    var that = this;
+    setTimeout(function() {
+      if (that.connector.readyState != 1) {
+        this.connector = undefined;
+      }
+    }, 1000); // Give it a second to get ready
+  }
+};
 
 Car.prototype = {
 
@@ -29,10 +45,8 @@ Car.prototype = {
   // Additional state information
   runningProc: undefined,
 
-  // Additional functionality
   // Plug the car in
   plugIn: function (speedup) {
-    console.log('Speedup: ' + speedup);
     console.log('Plugging in the car.'); // TODO
     this.plugged_in = true;
     this.state = 'pluggedIn';
