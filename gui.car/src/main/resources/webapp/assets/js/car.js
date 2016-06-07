@@ -54,7 +54,7 @@ Car.prototype = {
       this.connector = new WebSocket(this.config.socketaddr);
 
       // TODO define somewhere else
-      this.connector.onconnect = function () {
+      this.connector.onopen = function () {
         that.state = 'pluggedIn';
       };
 
