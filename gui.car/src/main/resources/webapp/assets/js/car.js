@@ -8,7 +8,7 @@ var Car = function (args) {
   if ('socketaddr' in args && args['socketaddr'].match(re)) {
     this.connector = new WebSocket(args['socketaddr']);
     var that = this;
-    setTimeout(function() {
+    setTimeout(function () {
       if (that.connector.readyState != 1) {
         this.connector = undefined;
       }
@@ -180,5 +180,17 @@ Car.prototype = {
     this.plugged_in = false;
     this.ready_charge = false;
     this.charging.complete = false;
+  },
+
+  // Send message to the connected charger
+  sendMsg: function (msg) {
+    if (typeof this.connector != 'undefined') {
+      this.connector.send(msg);
+    }
+  },
+
+  // Send a command to the connected charger
+  sendCmd: function (cmd) {
+    // TODO just a wrapper
   }
 };
