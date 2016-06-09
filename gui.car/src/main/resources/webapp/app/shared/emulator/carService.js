@@ -88,6 +88,7 @@ app.factory('carService', function ($rootScope) {
 
     // Charge parameter discovery
     doChargeParameterDiscovery: function (speedup) {
+      this.changeState('chargeParameterDiscovery');
       var timeout = Math.floor(30 / speedup); // TODO find a more elegant way!
 
       // TODO construction used very often, maybe offload? or generic do()?
@@ -104,6 +105,7 @@ app.factory('carService', function ($rootScope) {
 
     // Cable check
     doCableCheck: function (speedup) {
+      this.changeState('cableCheck');
       var timeout = Math.floor(23000 / speedup);
 
       if (typeof this.runningProc == 'undefined') {
@@ -119,6 +121,7 @@ app.factory('carService', function ($rootScope) {
 
     // Pre charge
     doPreCharge: function (speedup) {
+      this.changeState('preCharge');
       var timeout = Math.floor(3800 / speedup);
 
       if (typeof this.runningProc == 'undefined') {
@@ -134,6 +137,7 @@ app.factory('carService', function ($rootScope) {
 
     // Power delivery
     doPowerDelivery: function (speedup) {
+      this.changeState('powerDelivery');
       var timeout = Math.floor(600 / speedup);
 
       if (typeof this.runningProc == 'undefined') {
@@ -154,6 +158,7 @@ app.factory('carService', function ($rootScope) {
 
     // Current demand
     doCurrentDemand: function (speedup) {
+      this.changeState('currentDemand');
       console.log('Sending current demand.'); // TODO
 
       // TODO base on time / cycles
@@ -171,6 +176,7 @@ app.factory('carService', function ($rootScope) {
 
     // Welding detection
     doWeldingDetection: function (speedup) {
+      this.changeState('weldingDetection');
       var timeout = Math.floor(2200 / speedup);
 
       if (typeof this.runningProc == 'undefined') {
@@ -186,6 +192,7 @@ app.factory('carService', function ($rootScope) {
 
     // Stop session
     doStopSession: function (speedup) {
+      // TODO introduce new state?
       var timeout = Math.floor(1000 / speedup);
 
       if (typeof this.runningProc == 'undefined') {
@@ -220,8 +227,10 @@ app.factory('carService', function ($rootScope) {
 
     // Change state of the car
     changeState: function (newState, args) {
-      this.state = newState;
-      $rootScope.$broadcast('carStateChanged', args);
+      if (this.state != newState) {
+        this.state = newState;
+        $rootScope.$broadcast('carStateChanged', args);
+      }
     },
 
     // Send message to the connected charger
