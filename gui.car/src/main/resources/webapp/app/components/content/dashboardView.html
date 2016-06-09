@@ -34,7 +34,7 @@
     <img ng-src="assets/img/bmw-i3-{{car.plugged_in && 'pluggedin.jpg' || 'unplugged.jpg'}}"/>
   </div>
 
-  <div class="md-whiteframe-5dp" ng-controller="actionController" layout-padding flex-gt-sm>
+  <div class="md-whiteframe-5dp" ng-controller="emulationController" layout-padding flex-gt-sm>
     <h2>Actions</h2>
     <md-button class="md-raised md-primary" data-ng-click="togglePlug()">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
   </div>

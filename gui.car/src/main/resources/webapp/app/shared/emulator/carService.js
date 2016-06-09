@@ -96,7 +96,7 @@ app.factory('carService', function ($rootScope) {
         console.log('Running charge parameter discovery.'); // TODO
 
         var that = this;
-        this.runningProc = setTimeout(function () {
+        this.runningProc = setTimeout(function () { // TODO use AngularJS library for all timeouts
           that.changeState('chargeParameterDiscoveryDone');
           that.runningProc = undefined;
         }, timeout); // TODO 30ms in real-time

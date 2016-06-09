@@ -14,6 +14,14 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
   });
 
   // Define some $scope functions
+  $scope.togglePlug = function () {
+    if (!car.plugged_in) {
+      car.plugIn(emulator.config.speedup);
+    } else {
+      car.unplug(emulator.config.speedup);
+    }
+  };
+
   $scope.start = function () {
     emulator.start();
   };
@@ -29,7 +37,7 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
   // Catch events and handle them
   $rootScope.$on('carStateChanged', function (event, args) {
     if (typeof args == 'undefined' || ('reset' in args && !args['reset'])) {
-      $scope.$apply();
+      $scope.$apply(); // TODO fails is $scope is currently applied elsewhere
     }
     $log.info('Car state changed to: ' + car.state);
   });
