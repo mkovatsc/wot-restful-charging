@@ -208,6 +208,7 @@ app.factory('carService', function ($rootScope) {
 
     // Reset the car's state
     reset: function () {
+      clearTimeout(this.runningProc);
       this.changeState(undefined);
       this.battery.soc = 5;
       this.battery.charging = false;
