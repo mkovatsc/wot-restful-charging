@@ -29,8 +29,8 @@ public class SocketHandler extends WebSocketHandler {
 	// Config
 	private static final String CHARGER_URI = "coap://localhost:5683";
 	private static final int KEEPALIVE_INTERVAL = 15; // Seconds
-	private static final boolean KEEPALIVE_ENABLED = false;
-	private static final String KEEPALIVE_MESSAGE = "Ping!";
+	private static final boolean KEEPALIVE_ENABLED = true;
+	private static final String KEEPALIVE_MESSAGE = "{\"type\" : \"KEEPALIVE\"}";
 
 	private SocketHandler() {
 
