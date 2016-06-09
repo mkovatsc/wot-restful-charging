@@ -1,4 +1,4 @@
-app.factory('emulationService', function ($log, $rootScope, stateMachine) {
+app.factory('emulationService', function ($log, $rootScope) {
   var emulator = function (args) {
 
     // Default config values
