@@ -14,22 +14,12 @@
     </div>
   </div>
 
-  <div id="ticker-box" ng-controller="tickerController" class="md-whiteframe-5dp" layout="column" layout-padding flex-gt-sm>
+  <div id="ticker-box" ng-controller="emulationController" class="md-whiteframe-5dp" layout="column" layout-padding flex-gt-sm>
     <h2>Emulation</h2>
     <md-content layout="column">
       <p>State: {{currentState}}</p>
-      <select ng-model="transition" ng-options="t as t for t in transitions"></select>
       <div layout="row">
-        <md-button class="md-raised" data-ng-click="next(transition)" ng-disabled="">Next</md-button>
-        <md-button class="md-raised" data-ng-click="start()" ng-disabled="">Run</md-button>
-      </div>
-
-      <p>Tick: {{tickCount}}</p>
-      <select ng-model="tickingSpeed" ng-options="speed.value as speed.name for speed in tickingSpeeds"></select>
-      <div layout="row">
-        <md-button class="md-raised" data-ng-click="startTicking()" ng-disabled="!car.plugged_in || isRunning()">Start</md-button>
-        <md-button class="md-raised" data-ng-click="tick()" ng-disabled="!car.plugged_in || isRunning()">Tick</md-button>
-        <md-button class="md-raised md-warn" data-ng-click="stopTicking()" ng-disabled="!car.plugged_in || !isRunning()">Stop</md-button>
+        <md-button class="md-raised" data-ng-click="start()" ng-disabled="">Start</md-button>
       </div>
     </md-content>
   </div>

@@ -1,42 +1,140 @@
-app.factory("emulationService", function ($log, $rootScope, stateMachine) {
+app.factory('emulationService', function ($log, $rootScope, stateMachine) {
+  var emulator = function (args) {
 
-  var instance = {};
+    // Default config values
+    this.config = {
+      timeout: 1000,
+      speedup: 1.0, // TODO maybe combine with cycle timeout
+      car: undefined
+    };
 
-  instance.duration = 0; // Simulated duration of current state (ms)
-  instance.defaultSequence = { // TODO Ordered?!
-    'pluggedIn'                     : 0,
-    'chargeParameterDiscoveryDone'  : 30,
-    'cableCheckDone'                : 23000,
-    'preChargeDone'                 : 3800,
-    'powerDeliveryDone'             : 600,
-    'currentDemandDone'             : 100,
-    'powerDeliveryDoneW'            : 2200,
-    'weldingDetectionDone'          : 0
+    // Assign given config values
+    if (typeof args != 'undefined') {
+      var key;
+      for (key in this.config) {
+        if (typeof args[key] != 'undefined') {
+          this.config[key] = args[key];
+        }
+      }
+    }
   };
 
-  var update = function() {
-    stateMachine.getCurrentState().then(function(res) {
-      $rootScope.currentState = res;
-      $log.info("Current state: " + res + " (" + instance.duration + "ms)");
-    });
-    stateMachine.available().then(function(res) {
-      $rootScope.transitions = res;
-      $rootScope.transition = res[0]; // TODO Doesn't work every time
-    });
-  }
+  emulator.prototype = {
+    isRunning: false,
+    cycles: 0,
+    interrupts: [],
 
-  instance.next = function(state) {
-    stateMachine.send(state);
-    update();
-  }
+    // Start emulation
+    start: function () {
+      if (!this.isRunning && typeof this.config.car != 'undefined') {
+        this.isRunning = true;
+        this.emulation = setTimeout(this.chainTimeouts(), this.config.timeout);
+      }
+    },
 
-  instance.reset = function() {
-    stateMachine.initialize();
-    update();
-  }
+    // Chain emulation steps
+    chainTimeouts: function () {
+      var that = this;
 
-  update();
+      return function () {
+        that.emulate();
+        if (that.isRunning) {
+          that.emulation = setTimeout(that.chainTimeouts(), that.config.timeout);
+        }
+      };
+    },
 
-  return instance;
+    // Process one cycle
+    emulate: function () {
+      // TODO car could be undefined at some points
+      var car = this.config.car;
 
+      if (this.interrupts.length > 0) {
+        var interrupt = this.interrupts.shift();
+        interrupt(); // TODO maybe inject some dependency
+      } else if (typeof car.state == 'undefined' && !car.plugged_in) {
+        car.plugIn(this.config.speedup);
+      } else {
+        switch (car.state) {
+          case 'pluggedIn':
+            car.doChargeParameterDiscovery(this.config.speedup);
+            break;
+          case 'chargeParameterDiscovery':
+            car.doChargeParameterDiscovery(this.config.speedup);
+            break;
+          case 'chargeParameterDiscoveryDone':
+            car.doCableCheck(this.config.speedup);
+            break;
+          case 'cableCheck':
+            car.doCableCheck(this.config.speedup);
+            break;
+          case 'cableCheckDone':
+            car.doPreCharge(this.config.speedup);
+            break;
+          case 'preCharge':
+            car.doPreCharge(this.config.speedup);
+            break;
+          case 'preChargeDone':
+            car.doPowerDelivery(this.config.speedup);
+            break;
+          case 'powerDelivery':
+            car.doPowerDelivery(this.config.speedup);
+            break;
+          case 'powerDeliveryDone':
+            car.doCurrentDemand(this.config.speedup);
+            break;
+          case 'currentDemand':
+            car.doCurrentDemand(this.config.speedup);
+            break;
+          case 'currentDemandDone':
+            car.doPowerDelivery(this.config.speedup);
+            break;
+          case 'powerDeliveryDoneS':
+            car.doStopSession(this.config.speedup);
+            break;
+          case 'powerDeliveryDoneW':
+            car.doWeldingDetection(this.config.speedup);
+            break;
+          case 'weldingDetection':
+            car.doWeldingDetection(this.config.speedup);
+            break;
+          case 'weldingDetectionDone':
+            car.doStopSession(this.config.speedup);
+            break;
+          case 'sessionStop':
+            car.unplug(this.config.speedup);
+            this.stop(); // Stop emulation after unplugging
+            break;
+          default:
+            console.log('No action defined for this state. [' + car.state + ']'); // TODO proper handling
+        }
+      }
+
+      this.cycles++;
+    },
+
+    // Add interrupt functions
+    addInterrupt: function (interrupt) {
+      this.interrupts.push(interrupt);
+    },
+
+    // Stop emulation
+    stop: function () {
+      clearTimeout(this.emulation);
+      this.isRunning = false;
+    },
+
+    // Reset the emulator
+    reset: function () {
+      this.stop();
+      this.cycles = 0;
+
+      var car = this.config.car;
+      if (typeof car != 'undefined') {
+        car.reset();
+      }
+    }
+  };
+
+  return emulator;
 });
