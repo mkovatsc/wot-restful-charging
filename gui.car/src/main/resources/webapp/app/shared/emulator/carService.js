@@ -209,7 +209,8 @@ app.factory('carService', function ($rootScope) {
     // Reset the car's state
     reset: function () {
       clearTimeout(this.runningProc);
-      this.changeState(undefined);
+      this.runningProc = undefined; // TODO there must be a cleaner solution!
+      this.changeState(undefined, {'reset': true});
       this.battery.soc = 5;
       this.battery.charging = false;
       this.plugged_in = false;
@@ -218,9 +219,9 @@ app.factory('carService', function ($rootScope) {
     },
 
     // Change state of the car
-    changeState: function (newState) {
+    changeState: function (newState, args) {
       this.state = newState;
-      $rootScope.$broadcast('carStateChanged');
+      $rootScope.$broadcast('carStateChanged', args);
     },
 
     // Send message to the connected charger

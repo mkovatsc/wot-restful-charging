@@ -18,11 +18,19 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
     emulator.start();
   };
 
-  // Catch events and handle them
-  $rootScope.$on('carStateChanged', function (event) {
-    $scope.currentState = car.state;
-    $scope.$apply();
+  $scope.stop = function () {
+    emulator.stop();
+  };
 
+  $scope.reset = function () {
+    emulator.reset();
+  };
+
+  // Catch events and handle them
+  $rootScope.$on('carStateChanged', function (event, args) {
+    if (typeof args == 'undefined' || ('reset' in args && !args['reset'])) {
+      $scope.$apply();
+    }
     $log.info('Car state changed to: ' + car.state);
   });
 });
