@@ -18,6 +18,7 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
     if (!car.plugged_in) {
       car.plugIn(emulator.config.speedup);
     } else {
+      emulator.stop();
       car.unplug(emulator.config.speedup); // TODO Causes exception on $rootScope ($apply), see $on below
     }
   };
