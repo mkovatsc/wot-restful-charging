@@ -1,5 +1,7 @@
-app.factory('carService', function ($rootScope) {
+app.factory('carService', function ($rootScope, socketService) {
   var car = function (args) {
+    this.uuid = undefined;
+
     this.config = {
       socketaddr: undefined
     };
@@ -10,6 +12,17 @@ app.factory('carService', function ($rootScope) {
     // Only accept valid socket URLs
     if ('socketaddr' in args && args['socketaddr'].match(re)) {
       this.config.socketaddr = args['socketaddr'];
+
+      // Create new socket and register default handlers
+      this.config.socket = new socketService({socketaddr: this.config.socketaddr});
+      var that = this;
+      this.config.socket.addHandler('KEEPALIVE', function () {
+        that.config.socket.send('KEEPALIVE', {});
+      });
+      this.config.socket.addHandler('REGISTER', function (data) {
+        that.uuid = data.uuid;
+        $rootScope.$apply();
+      });
     }
   };
 
@@ -17,7 +30,6 @@ app.factory('carService', function ($rootScope) {
 
     // Basic model description (default: BMW i3)
     name: 'BMW i3',
-    uuid: '',
     state: undefined,
     battery: {
       capacity: 18.8, // kWh
@@ -49,38 +61,9 @@ app.factory('carService', function ($rootScope) {
       this.plugged_in = true;
 
       // Try to connect to the charger
-      if (typeof this.config.socketaddr != 'undefined') {
-        var that = this;
-        this.connector = new WebSocket(this.config.socketaddr);
-
-        // TODO define somewhere else
-        this.connector.onopen = function () {
-          that.changeState('pluggedIn');
-        };
-
-        // TODO define somewhere else!
-        this.connector.onmessage = function (evt) {
-          var msg;
-
-          try {
-            msg = JSON.parse(evt.data);
-          } catch (e) {
-            // TODO
-          }
-
-          if (msg != null && msg.hasOwnProperty('type')) {
-            switch (msg.type) {
-              case 'REGISTER':
-                that.uuid = msg.content.uuid;
-                break;
-              case 'KEEPALIVE':
-                that.sendMsg('Pong!');
-                break;
-              default:
-                console.log('Unknown message type (' + msg.type + ').'); // TODO
-            }
-          }
-        };
+      if (typeof this.config.socket != 'undefined') {
+        this.config.socket.send('ACTION', {what: 'pluggedIn'});
+        this.changeState('pluggedIn'); // TODO First wait for answer from charger
       } else {
         console.log('No connector for charger defined.'); // TODO
       }

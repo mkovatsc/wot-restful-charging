@@ -45,7 +45,7 @@ public class AppSocket {
 
 		// Automatically add client to listeners on connect
 		Car car = SocketHandler.getInstance().addListener(session);
-		String register = "{\"type\" : \"REGISTER\", \"content\" : {\"uuid\" : \"%s\"}}";
+		String register = "{\"type\" : \"REGISTER\", \"data\" : {\"uuid\" : \"%s\"}}";
 		car.sendToCar(String.format(register, car.getUuid().toString()));
 
 		// TODO Wait some time to give car the chance to present its UUID
@@ -72,7 +72,7 @@ public class AppSocket {
 					Car car;
 					switch (type) {
 						case EVENT :
-							EventMessage evtMsg = gson.fromJson(msg.getAsJsonObject().get("content"), EventMessage.class);
+							EventMessage evtMsg = gson.fromJson(msg.getAsJsonObject().get("data"), EventMessage.class);
 
 							// DEBUG
 							logger.log(Level.INFO, "Car plugged in: {0}", new Object[]{evtMsg.isPluggedIn()});
@@ -80,22 +80,22 @@ public class AppSocket {
 
 							car = SocketHandler.getInstance().getCarFor(session);
 							String plugStatus = evtMsg.isPluggedIn() ? "Car (%s) plugged in." : "Car (%s) unplugged.";
-							String debug = "{\"type\" : \"DEBUG\", \"content\" : {\"message\" : \"%s\"}}";
+							String debug = "{\"type\" : \"DEBUG\", \"data\" : {\"message\" : \"%s\"}}";
 							car.sendToCharger(String.format(debug, String.format(plugStatus, car.getUuid().toString())));
 
 							break;
 						case ACTION : // TODO Only debugging right now
-							ActionMessage actMsg = gson.fromJson(msg.getAsJsonObject().get("content"), ActionMessage.class);
+							ActionMessage actMsg = gson.fromJson(msg.getAsJsonObject().get("data"), ActionMessage.class);
 
 							// DEBUG
 							logger.log(Level.INFO, "Action received: {0}", new Object[]{actMsg.getNotify()});
 
 							break;
 						case STATUS :
-							StatusMessage statMsg = gson.fromJson(msg.getAsJsonObject().get("content"), StatusMessage.class);
+							StatusMessage statMsg = gson.fromJson(msg.getAsJsonObject().get("data"), StatusMessage.class);
 
 							car = SocketHandler.getInstance().getCarFor(session);
-							String status = "{\"type\":\"STATUS\",\"content\":{\"se\":{\"presentVoltage\":0,\"presentCurrent\":0,\"currentState\":\"supportedAppProtocol\"},\"ev\":{\"stateOfCharge\":%d,\"maximumVoltageLimit\":400,\"maximumCurrentLimit\":%.2f,\"targetVoltage\":1,\"targetCurrent\":1,\"chargingComplete\":false}}}";
+							String status = "{\"type\":\"STATUS\",\"data\":{\"se\":{\"presentVoltage\":0,\"presentCurrent\":0,\"currentState\":\"supportedAppProtocol\"},\"ev\":{\"stateOfCharge\":%d,\"maximumVoltageLimit\":400,\"maximumCurrentLimit\":%.2f,\"targetVoltage\":1,\"targetCurrent\":1,\"chargingComplete\":false}}}";
 							car.sendToCharger(String.format(Locale.US, status, statMsg.getStateOfCharge(), statMsg.getMaximumCurrentLimit()));
 
 							break;
