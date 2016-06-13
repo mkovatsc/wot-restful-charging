@@ -62,8 +62,8 @@ app.factory('carService', function ($rootScope, socketService) {
 
       // Try to connect to the charger
       if (typeof this.config.socket != 'undefined') {
-        this.config.socket.send('ACTION', {what: 'pluggedIn'});
-        this.changeState('pluggedIn'); // TODO First wait for answer from charger
+        this.config.socket.send('EVENT', {what: 'pluggedIn'});
+        this.changeState('pluggedIn'); // TODO First wait for answer from charger, $apply() exception
       } else {
         console.log('No connector for charger defined.'); // TODO
       }

@@ -99,6 +99,11 @@ public class AppSocket {
 							car.sendToCharger(String.format(Locale.US, status, statMsg.getStateOfCharge(), statMsg.getMaximumCurrentLimit()));
 
 							break;
+						case KEEPALIVE :
+
+							// DEBUG
+							logger.log(Level.INFO, "Answer to keepalive received.");
+							break;
 						default :
 							logger.log(Level.INFO, "No handler found for this type of message. (" + message + ")");
 							break;
