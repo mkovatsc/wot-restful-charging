@@ -30,7 +30,7 @@ app.factory('socketService', function ($timeout, $log) {
 
       var that = this;
       var callHandlers = function (msgType, data) {
-        angular.forEach(that.config.handlers[msgType], function (handler) {
+        angular.forEach(that.config.handlers[msgType], function (handler) { // TODO no handler(s) defined?
           handler(data);
         });
       };
