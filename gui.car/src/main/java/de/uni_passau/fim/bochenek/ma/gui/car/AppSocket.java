@@ -53,6 +53,8 @@ public class AppSocket {
 
 	@OnWebSocketMessage
 	public void onMessage(Session session, String message) {
+		
+		// DEBUG
 		logger.log(Level.INFO, "Message received: " + message);
 
 		if (message != null && !message.equals("")) {
@@ -76,7 +78,6 @@ public class AppSocket {
 
 							// DEBUG
 							logger.log(Level.INFO, "Car plugged in: {0}", new Object[]{evtMsg.isPluggedIn()});
-							SocketHandler.getInstance().pushToCar(session, "Message received.");
 
 							car = SocketHandler.getInstance().getCarFor(session);
 							String plugStatus = evtMsg.isPluggedIn() ? "Car (%s) plugged in." : "Car (%s) unplugged.";

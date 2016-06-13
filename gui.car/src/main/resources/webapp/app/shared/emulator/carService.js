@@ -62,7 +62,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
       // Try to connect to the charger
       if (typeof this.config.socket != 'undefined') {
-        this.config.socket.send('EVENT', {what: 'pluggedIn'});
+        this.config.socket.send('EVENT', {pluggedIn: true});
         this.changeState('pluggedIn'); // TODO First wait for answer from charger, $apply() exception
       } else {
         console.log('No connector for charger defined.'); // TODO
@@ -78,6 +78,19 @@ app.factory('carService', function ($rootScope, socketService) {
       if (typeof this.runningProc == 'undefined') {
         console.log('Running charge parameter discovery.'); // TODO
 
+        if (typeof this.config.socket != 'undefined') { // TODO external function!
+          var data = {
+            do: 'chargeParameterDiscovery',
+            soc: this.battery.soc,
+            maxVoltage: this.charging.voltage.DC,
+            maxCurrent: Math.max.apply(null, this.charging.rate.DC)
+          };
+          this.config.socket.send('ACTION', data);
+        }
+
+        // TODO Register handler for incoming messages?
+
+        // TODO Split timeouts into intervals, regular messages can then be triggered
         var that = this;
         this.runningProc = setTimeout(function () { // TODO use AngularJS library for all timeouts
           that.changeState('chargeParameterDiscoveryDone');
@@ -94,9 +107,20 @@ app.factory('carService', function ($rootScope, socketService) {
       if (typeof this.runningProc == 'undefined') {
         console.log('Running the cable check.'); // TODO
 
+        if (typeof this.config.socket != 'undefined') {
+          var data = {
+            do: 'cableCheck',
+            soc: this.battery.soc
+          };
+          this.config.socket.send('ACTION', data);
+        }
+
+        // TODO Handler for success message
+
         var that = this;
         this.runningProc = setTimeout(function () {
           that.changeState('cableCheckDone');
+          that.ready_charge = true; // TODO if successful?
           that.runningProc = undefined;
         }, timeout); // TODO 23s in real-time
       }
@@ -109,6 +133,17 @@ app.factory('carService', function ($rootScope, socketService) {
 
       if (typeof this.runningProc == 'undefined') {
         console.log('Running the pre charge routine.'); // TODO
+
+        if (typeof this.config.socket != 'undefined') {
+          var data = {
+            do: 'preCharge',
+            targetVoltage: this.charging.voltage.DC,
+            targetCurrent: 0
+          };
+          this.config.socket.send('ACTION', data);
+        }
+
+        // TODO Handler if target values are met by charger
 
         var that = this;
         this.runningProc = setTimeout(function () {
@@ -126,6 +161,17 @@ app.factory('carService', function ($rootScope, socketService) {
       if (typeof this.runningProc == 'undefined') {
         console.log('Asking for power delivery.'); // TODO
 
+        if (typeof this.config.socket != 'undefined') {
+          var data = {
+            do: 'powerDelivery',
+            chargingComplete: this.charging.complete,
+            readyToCharge: this.ready_charge
+          };
+          this.config.socket.send('ACTION', data);
+        }
+
+        // TODO Handler?
+
         var that = this;
         this.runningProc = setTimeout(function () {
           if (that.battery.soc == 100 && that.charging.complete) {
@@ -141,7 +187,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // Current demand
     doCurrentDemand: function (speedup) {
-      this.changeState('currentDemand');
+      // this.changeState('currentDemand')
       console.log('Sending current demand.'); // TODO
 
       // TODO base on time / cycles
@@ -149,11 +195,33 @@ app.factory('carService', function ($rootScope, socketService) {
         this.battery.charging = true;
         this.battery.soc++;
         this.changeState('currentDemand');
+
+        if (typeof this.config.socket != 'undefined') {
+          var data = {
+            do: 'currentDemand',
+            soc: this.battery.soc,
+            targetVoltage: this.charging.voltage.DC,
+            targetCurrent: -1, // TODO Derive from formula!
+            chargingComplete: this.charging.complete
+          };
+          this.config.socket.send('ACTION', data);
+        }
       } else {
         this.battery.charging = false; // TODO maybe define a routine
         this.ready_charge = false;
         this.charging.complete = true;
         this.changeState('currentDemandDone');
+
+        if (typeof this.config.socket != 'undefined') {
+          var data = {
+            do: 'stopCharging',
+            soc: this.battery.soc,
+            targetVoltage: this.charging.voltage.DC,
+            targetCurrent: 0,
+            chargingComplete: this.charging.complete
+          };
+          this.config.socket.send('ACTION', data);
+        }
       }
     },
 
@@ -164,6 +232,15 @@ app.factory('carService', function ($rootScope, socketService) {
 
       if (typeof this.runningProc == 'undefined') {
         console.log('Performing welding detection.'); // TODO
+
+        if (typeof this.config.socket != 'undefined') {
+          var data = {
+            do: 'weldingDetection'
+          };
+          this.config.socket.send('ACTION', data);
+        }
+
+        // TODO Handler?
 
         var that = this;
         this.runningProc = setTimeout(function () {
@@ -181,6 +258,15 @@ app.factory('carService', function ($rootScope, socketService) {
       if (typeof this.runningProc == 'undefined') {
         console.log('Stopping the session'); // TODO
 
+        if (typeof this.config.socket != 'undefined') {
+          var data = {
+            do: 'sessionStop'
+          };
+          this.config.socket.send('ACTION', data);
+        }
+
+        // TODO Handler?
+
         var that = this;
         this.runningProc = setTimeout(function () {
           that.changeState('sessionStop');
@@ -193,6 +279,9 @@ app.factory('carService', function ($rootScope, socketService) {
     unplug: function (speedup) {
       console.log('Unplugging car.'); // TODO
       this.plugged_in = false;
+      if (typeof this.config.socket != 'undefined') {
+        this.config.socket.send('EVENT', {pluggedIn: false});
+      }
       this.changeState(undefined);
     },
 
@@ -214,18 +303,6 @@ app.factory('carService', function ($rootScope, socketService) {
         this.state = newState;
         $rootScope.$broadcast('carStateChanged', args);
       }
-    },
-
-    // Send message to the connected charger
-    sendMsg: function (msg) {
-      if (typeof this.connector != 'undefined' && this.connector.readyState == 1) {
-        this.connector.send(msg);
-      }
-    },
-
-    // Send a command to the connected charger
-    sendCmd: function (cmd) {
-      // TODO just a wrapper
     }
   };
 
