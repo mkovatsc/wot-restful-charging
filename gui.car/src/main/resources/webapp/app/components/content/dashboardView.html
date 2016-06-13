@@ -1,42 +1,46 @@
-<md-content id="control" class="md-padding" layout="column" layout-gt-sm="row">
+<div ng-controller="emulationController">
 
-  <div id="" class="md-whiteframe-5dp" layout-padding flex-gt-sm>
-    <h2>Car Model</h2>
-    <h3>{{car.name}}</h3>
-    <p>{{car.uuid}}</p>
-  </div>
+  <md-content id="control" class="md-padding" layout="column" layout-gt-sm="row">
 
-  <div id="" class="md-whiteframe-5dp" layout-padding flex-gt-sm>
-    <h2>State of Charge</h2>
-    <div>
-      {{car.battery.soc | number : 0}} %
-      <md-progress-linear md-mode="determinate" value="{{car.battery.soc | number : 0}}"></md-progress-linear>
+    <div id="" class="md-whiteframe-5dp" layout-padding flex-gt-sm>
+      <h2>Car Model</h2>
+      <h3>{{car.name}}</h3>
+      <p>{{car.uuid}}</p>
     </div>
-  </div>
 
-  <div id="ticker-box" ng-controller="emulationController" class="md-whiteframe-5dp" layout="column" layout-padding flex-gt-sm>
-    <h2>Emulation</h2>
-    <div layout="column">
-      <p>State: {{car.state || '-'}}</p>
-      <div layout="row">
-        <md-button class="md-raised" data-ng-click="start()" ng-disabled="">Start</md-button>
-        <md-button class="md-raised" data-ng-click="stop()" ng-disabled="">Stop</md-button>
-        <md-button class="md-raised" data-ng-click="reset()" ng-disabled="">Reset</md-button>
+    <div id="" class="md-whiteframe-5dp" layout-padding flex-gt-sm>
+      <h2>State of Charge</h2>
+      <div>
+        {{car.battery.soc | number : 0}} %
+        <md-progress-linear md-mode="determinate" value="{{car.battery.soc | number : 0}}"></md-progress-linear>
       </div>
     </div>
-  </div>
 
-</md-content>
+    <div id="ticker-box" class="md-whiteframe-5dp" layout="column" layout-padding flex-gt-sm>
+      <h2>Emulation</h2>
+      <div layout="column">
+        <p>State: {{car.state || '-'}}</p>
+        <div layout="row">
+          <md-button class="md-raised" data-ng-click="start()" ng-disabled="">Start</md-button>
+          <md-button class="md-raised" data-ng-click="stop()" ng-disabled="">Stop</md-button>
+          <md-button class="md-raised" data-ng-click="reset()" ng-disabled="">Reset</md-button>
+        </div>
+      </div>
+    </div>
 
-<md-content id="info" class="md-padding" layout="column" layout-gt-sm="row">
+  </md-content>
 
-  <div class="md-whiteframe-5dp" layout-padding flex-gt-sm>
-    <img ng-src="assets/img/bmw-i3-{{car.plugged_in && 'pluggedin.jpg' || 'unplugged.jpg'}}"/>
-  </div>
+  <md-content id="info" class="md-padding" layout="column" layout-gt-sm="row">
 
-  <div class="md-whiteframe-5dp" ng-controller="emulationController" layout-padding flex-gt-sm>
-    <h2>Actions</h2>
-    <md-button class="md-raised md-primary" data-ng-click="togglePlug()">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
-  </div>
+    <div class="md-whiteframe-5dp" layout-padding flex-gt-sm>
+      <img ng-src="assets/img/bmw-i3-{{car.plugged_in && 'pluggedin.jpg' || 'unplugged.jpg'}}"/>
+    </div>
 
-</md-content>
+    <div class="md-whiteframe-5dp" layout-padding flex-gt-sm>
+      <h2>Actions</h2>
+      <md-button class="md-raised md-primary" data-ng-click="togglePlug()">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
+    </div>
+
+  </md-content>
+
+</div>

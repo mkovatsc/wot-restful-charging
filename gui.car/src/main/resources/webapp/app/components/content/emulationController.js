@@ -37,7 +37,7 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
   // Catch events and handle them
   $rootScope.$on('carStateChanged', function (event, args) {
     if (typeof args == 'undefined' || ('reset' in args && !args['reset'])) {
-      $scope.$apply(); // TODO fails is $scope is currently applied elsewhere
+      $scope.$apply(); // TODO fails if $scope is currently applied elsewhere
     }
     $log.info('Car state changed to: ' + car.state);
   });
