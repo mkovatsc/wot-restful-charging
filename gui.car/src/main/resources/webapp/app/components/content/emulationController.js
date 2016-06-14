@@ -19,18 +19,21 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
       car.plugIn(emulator.config.speedup);
     } else {
       emulator.stop();
-      car.unplug(emulator.config.speedup); // TODO Causes exception on $rootScope ($apply), see $on below
+      car.unplug(emulator.config.speedup);
     }
   };
 
+  // Start the emulation
   $scope.start = function () {
     emulator.start();
   };
 
+  // Stop / Pause the emulation
   $scope.stop = function () {
     emulator.stop();
   };
 
+  // Reset the emulator
   $scope.reset = function () {
     emulator.reset();
   };
@@ -38,7 +41,7 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
   // Catch events and handle them
   $rootScope.$on('carStateChanged', function (event, args) {
     if (typeof args == 'undefined' || ('reset' in args && !args['reset'])) {
-      $scope.$apply(); // TODO fails if $scope is currently applied elsewhere
+      //event.currentScope.$digest(); // TODO fails if $scope is currently applied elsewhere
     }
     $log.info('Car state changed to: ' + car.state);
   });
