@@ -110,10 +110,10 @@ public class AppSocket {
 									car.powerDelivery();
 									break;
 								case "currentDemand" :
-									car.currentDemand();
+									car.currentDemand(actMsg.getTargetVoltage(), actMsg.getTargetCurrent());
 									break;
 								case "stopCharging" : // TODO Just a special case of currentDemand
-									car.currentDemand();
+									car.currentDemand(0, 0);
 									break;
 								case "weldingDetection" :
 									car.weldingDetection();
