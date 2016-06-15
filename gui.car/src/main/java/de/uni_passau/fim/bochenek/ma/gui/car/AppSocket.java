@@ -52,7 +52,7 @@ public class AppSocket {
 	public void onMessage(Session session, String message) {
 
 		// DEBUG
-		logger.log(Level.INFO, "Message received: " + message);
+		//logger.log(Level.INFO, "Message received: " + message);
 
 		if (message != null && !message.equals("")) {
 			JsonParser parser = new JsonParser();
@@ -69,6 +69,7 @@ public class AppSocket {
 					MessageType type = MessageType.valueOf(msg.getAsJsonObject().get("type").getAsString());
 					Gson gson = new Gson();
 					Car car = SocketHandler.getInstance().getCarFor(session);
+
 					switch (type) {
 						case EVENT :
 							EventMessage evtMsg = gson.fromJson(msg.getAsJsonObject().get("data"), EventMessage.class);
@@ -97,7 +98,7 @@ public class AppSocket {
 							// Handle triggered action
 							switch (actMsg.getAction()) {
 								case "chargeParameterDiscovery" :
-									car.chargeParameterDiscovery();
+									car.chargeParameterDiscovery(actMsg.getSoc(), actMsg.getMaxVoltage(), actMsg.getMaxCurrent());
 									break;
 								case "cableCheck" :
 									car.cableCheck();

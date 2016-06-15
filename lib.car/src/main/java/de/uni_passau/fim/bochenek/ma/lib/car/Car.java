@@ -2,10 +2,10 @@ package de.uni_passau.fim.bochenek.ma.lib.car;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -30,18 +30,24 @@ public class Car implements ICar {
 		baseURI = chargerURI; // TODO check for validity
 
 		// DEBUG
-		logger.log(Level.INFO, "New car connected.");
+		logger.info("New car connected.");
 	}
 
 	@Override
 	public UUID plugIn() {
-		this.uuid = UUID.randomUUID(); // TODO obtain from charger
+		client.setURI("/ev");
+		CoapResponse res = client.post("", MediaTypeRegistry.UNDEFINED);
+
+		this.uuid = UUID.fromString(res.getOptions().getLocationPath().get(1)); // TODO remove magic number
 		return this.uuid;
 	}
 
 	@Override
-	public boolean chargeParameterDiscovery() {
-		// TODO Auto-generated method stub
+	public boolean chargeParameterDiscovery(int soc, double maxVoltage, double maxCurrent) {
+
+		// DEBUG
+		logger.info("Charge parameter discovery triggered.");
+
 		return false;
 	}
 
@@ -83,8 +89,8 @@ public class Car implements ICar {
 
 	@Override
 	public void unplug() {
-		// TODO Auto-generated method stub
-
+		client.setURI("/ev/" + this.uuid);
+		client.delete();
 	}
 
 	public void sendToCharger(String message) {

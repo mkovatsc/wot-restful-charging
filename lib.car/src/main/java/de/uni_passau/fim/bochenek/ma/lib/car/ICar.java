@@ -14,7 +14,7 @@ public interface ICar {
 	public UUID plugIn();
 
 	// TODO Javadoc
-	public boolean chargeParameterDiscovery();
+	public boolean chargeParameterDiscovery(int soc, double maxVoltage, double maxCurrent);
 
 	// TODO Javadoc
 	public boolean cableCheck();

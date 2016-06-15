@@ -44,6 +44,7 @@ public class EvRoot extends CoapResource implements HalResource {
 		ev.add(new EvTargetValues("targetValues"));
 		this.add(ev);
 
+		exchange.setLocationPath("/ev/" + uuid.toString()); // TODO better way?
 		exchange.respond(ResponseCode.CREATED);
 	}
 
