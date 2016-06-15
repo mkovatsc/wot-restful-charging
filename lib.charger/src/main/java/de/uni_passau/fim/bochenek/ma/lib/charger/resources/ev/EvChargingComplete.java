@@ -9,6 +9,9 @@ import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
@@ -31,6 +34,17 @@ public class EvChargingComplete extends CoapResource implements HalResource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void handlePOST(CoapExchange exchange) {
+
+		// TODO not very robust :P
+		Gson gson = new GsonBuilder().create();
+		JsonObject tmp = gson.fromJson(exchange.getRequestText(), JsonObject.class);
+		this.chargingComplete = tmp.get("chargingComplete").getAsBoolean();
+
+		exchange.respond(ResponseCode.CHANGED);
 	}
 
 	@Override

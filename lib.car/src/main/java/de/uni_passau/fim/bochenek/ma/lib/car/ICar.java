@@ -23,7 +23,7 @@ public interface ICar {
 	public boolean preCharge(double targetVoltage, double targetCurrent);
 
 	// TODO Javadoc
-	public boolean powerDelivery();
+	public boolean powerDelivery(boolean chargingComplete, boolean readyToCharge);
 
 	// TODO Javadoc
 	public boolean currentDemand(double targetVoltage, double targetCurrent);

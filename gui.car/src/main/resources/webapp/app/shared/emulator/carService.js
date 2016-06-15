@@ -174,7 +174,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
         var that = this;
         this.runningProc = setTimeout(function () {
-          if (that.battery.soc == 100 && that.charging.complete) {
+          if (that.battery.soc == 100 || that.charging.complete) {
             that.changeState('powerDeliveryDoneW');
           } else {
             that.ready_charge = true; // TODO

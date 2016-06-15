@@ -86,9 +86,23 @@ public class Car implements ICar {
 	}
 
 	@Override
-	public boolean powerDelivery() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean powerDelivery(boolean chargingComplete, boolean readyToCharge) {
+		Gson gson = new GsonBuilder().create();
+
+		JsonObject tmp1 = new JsonObject();
+		tmp1.addProperty("chargingComplete", chargingComplete);
+		client.setURI(baseURI + "/ev/" + this.uuid + "/chargingComplete");
+		client.post(gson.toJson(tmp1), MediaTypeRegistry.APPLICATION_JSON);
+
+		JsonObject tmp2 = new JsonObject();
+		tmp2.addProperty("readyToCharge", readyToCharge);
+		client.setURI(baseURI + "/ev/" + this.uuid + "/readyToCharge");
+		client.post(gson.toJson(tmp2), MediaTypeRegistry.APPLICATION_JSON);
+
+		// DEBUG
+		logger.info("Power delivery triggered.");
+
+		return false; // TODO
 	}
 
 	@Override
