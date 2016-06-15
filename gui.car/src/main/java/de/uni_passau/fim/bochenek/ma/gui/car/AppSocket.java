@@ -1,6 +1,5 @@
 package de.uni_passau.fim.bochenek.ma.gui.car;
 
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +19,6 @@ import de.uni_passau.fim.bochenek.ma.gui.car.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.lib.car.Car;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.ActionMessage;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.EventMessage;
-import de.uni_passau.fim.bochenek.ma.lib.car.messages.StatusMessage;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.Message.MessageType;
 
 @WebSocket
@@ -91,13 +89,6 @@ public class AppSocket {
 							// DEBUG
 							logger.log(Level.INFO, "Action received: {0}", new Object[]{actMsg.getNotify()});
 
-							break;
-						case STATUS :
-							StatusMessage statMsg = gson.fromJson(msg.getAsJsonObject().get("data"), StatusMessage.class);
-
-							car = SocketHandler.getInstance().getCarFor(session);
-							String status = "{\"type\":\"STATUS\",\"data\":{\"se\":{\"presentVoltage\":0,\"presentCurrent\":0,\"currentState\":\"supportedAppProtocol\"},\"ev\":{\"stateOfCharge\":%d,\"maximumVoltageLimit\":400,\"maximumCurrentLimit\":%.2f,\"targetVoltage\":1,\"targetCurrent\":1,\"chargingComplete\":false}}}";
-							car.sendToCharger(String.format(Locale.US, status, statMsg.getStateOfCharge(), statMsg.getMaximumCurrentLimit()));
 
 							break;
 						case KEEPALIVE :
