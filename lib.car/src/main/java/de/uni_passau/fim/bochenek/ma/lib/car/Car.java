@@ -15,7 +15,7 @@ import org.eclipse.jetty.websocket.api.Session;
  * @author Martin Bochenek
  *
  */
-public class Car {
+public class Car implements ICar {
 
 	private UUID uuid;
 	private Session session;
@@ -26,11 +26,65 @@ public class Car {
 	private static Logger logger = Logger.getLogger(Car.class.getName());
 
 	public Car(String chargerURI) {
-		uuid = UUID.randomUUID();
 		client = new CoapClient();
 		baseURI = chargerURI; // TODO check for validity
 
-		logger.log(Level.INFO, "New car with UUID {0} connected.", new Object[]{uuid.toString()});
+		// DEBUG
+		logger.log(Level.INFO, "New car connected.");
+	}
+
+	@Override
+	public UUID plugIn() {
+		this.uuid = UUID.randomUUID(); // TODO obtain from charger
+		return this.uuid;
+	}
+
+	@Override
+	public boolean chargeParameterDiscovery() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean cableCheck() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean preCharge() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean powerDelivery() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean currentDemand() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean weldingDetection() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean stopSession() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void unplug() {
+		// TODO Auto-generated method stub
+
 	}
 
 	public void sendToCharger(String message) {
