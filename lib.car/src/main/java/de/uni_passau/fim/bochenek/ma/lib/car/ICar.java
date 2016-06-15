@@ -20,7 +20,7 @@ public interface ICar {
 	public boolean cableCheck();
 
 	// TODO Javadoc
-	public boolean preCharge();
+	public boolean preCharge(double targetVoltage, double targetCurrent);
 
 	// TODO Javadoc
 	public boolean powerDelivery();

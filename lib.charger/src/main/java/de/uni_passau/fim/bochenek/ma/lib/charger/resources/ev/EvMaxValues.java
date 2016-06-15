@@ -62,8 +62,8 @@ public class EvMaxValues extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
-		hal.addProperty("current", current);
-		hal.addProperty("voltage", voltage);
+		hal.addProperty("voltage", this.voltage);
+		hal.addProperty("current", this.current);
 
 		return hal;
 	}

@@ -74,9 +74,15 @@ public class Car implements ICar {
 	}
 
 	@Override
-	public boolean preCharge() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean preCharge(double targetVoltage, double targetCurrent) {
+		Gson gson = new GsonBuilder().create();
+		JsonObject targetVals = new JsonObject();
+		targetVals.addProperty("targetVoltage", targetVoltage);
+		targetVals.addProperty("targetCurrent", targetCurrent);
+		client.setURI(baseURI + "/ev/" + this.uuid + "/targetValues");
+		client.post(gson.toJson(targetVals), MediaTypeRegistry.APPLICATION_JSON);
+
+		return false; // TODO
 	}
 
 	@Override

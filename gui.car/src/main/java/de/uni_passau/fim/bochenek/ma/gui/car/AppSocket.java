@@ -104,7 +104,7 @@ public class AppSocket {
 									car.cableCheck();
 									break;
 								case "preCharge" :
-									car.preCharge();
+									car.preCharge(actMsg.getTargetVoltage(), actMsg.getTargetCurrent());
 									break;
 								case "powerDelivery" :
 									car.powerDelivery();

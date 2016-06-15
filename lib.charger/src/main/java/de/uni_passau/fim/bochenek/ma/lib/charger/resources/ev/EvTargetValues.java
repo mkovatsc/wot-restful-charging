@@ -9,6 +9,9 @@ import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
@@ -16,8 +19,8 @@ import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvTargetValues extends CoapResource implements HalResource {
 
-	private double current;
 	private double voltage;
+	private double current;
 
 	public EvTargetValues(String name) {
 		super(name);
@@ -35,6 +38,18 @@ public class EvTargetValues extends CoapResource implements HalResource {
 	}
 
 	@Override
+	public void handlePOST(CoapExchange exchange) {
+
+		// TODO not very robust :P
+		Gson gson = new GsonBuilder().create();
+		JsonObject targetVals = gson.fromJson(exchange.getRequestText(), JsonObject.class);
+		this.voltage = targetVals.get("targetVoltage").getAsDouble();
+		this.current = targetVals.get("targetCurrent").getAsDouble();
+
+		exchange.respond(ResponseCode.CHANGED);
+	}
+
+	@Override
 	public URI location() {
 		try {
 			return new URI(this.getURI());
@@ -47,8 +62,8 @@ public class EvTargetValues extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
-		hal.addProperty("current", current);
-		hal.addProperty("voltage", voltage);
+		hal.addProperty("voltage", this.voltage);
+		hal.addProperty("current", this.current);
 
 		return hal;
 	}
