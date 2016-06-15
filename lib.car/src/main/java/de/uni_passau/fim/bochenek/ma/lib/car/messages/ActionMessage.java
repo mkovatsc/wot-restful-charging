@@ -8,18 +8,18 @@ package de.uni_passau.fim.bochenek.ma.lib.car.messages;
  */
 public class ActionMessage {
 
-	private String notify;
+	private String action;
 
 	public ActionMessage(String notify) {
 
 	}
 
-	public String getNotify() {
-		return notify;
+	public String getAction() {
+		return action;
 	}
 
-	public void setNotify(String notify) {
-		this.notify = notify;
+	public void setAction(String notify) {
+		this.action = notify;
 	}
 
 }

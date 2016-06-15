@@ -80,7 +80,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
         if (typeof this.config.socket != 'undefined') { // TODO external function!
           var data = {
-            do: 'chargeParameterDiscovery',
+            action: 'chargeParameterDiscovery',
             soc: this.battery.soc,
             maxVoltage: this.charging.voltage.DC,
             maxCurrent: Math.max.apply(null, this.charging.rate.DC)
@@ -109,7 +109,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
-            do: 'cableCheck',
+            action: 'cableCheck',
             soc: this.battery.soc
           };
           this.config.socket.send('ACTION', data);
@@ -136,7 +136,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
-            do: 'preCharge',
+            action: 'preCharge',
             targetVoltage: this.charging.voltage.DC,
             targetCurrent: 0
           };
@@ -163,7 +163,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
-            do: 'powerDelivery',
+            action: 'powerDelivery',
             chargingComplete: this.charging.complete,
             readyToCharge: this.ready_charge
           };
@@ -198,7 +198,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
-            do: 'currentDemand',
+            action: 'currentDemand',
             soc: this.battery.soc,
             targetVoltage: this.charging.voltage.DC,
             targetCurrent: -1, // TODO Derive from formula!
@@ -214,7 +214,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
-            do: 'stopCharging',
+            action: 'stopCharging',
             soc: this.battery.soc,
             targetVoltage: this.charging.voltage.DC,
             targetCurrent: 0,
@@ -235,7 +235,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
-            do: 'weldingDetection'
+            action: 'weldingDetection'
           };
           this.config.socket.send('ACTION', data);
         }
@@ -260,7 +260,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
-            do: 'sessionStop'
+            action: 'sessionStop'
           };
           this.config.socket.send('ACTION', data);
         }
