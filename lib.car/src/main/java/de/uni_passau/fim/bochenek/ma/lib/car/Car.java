@@ -9,6 +9,10 @@ import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.jetty.websocket.api.Session;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
 /**
  * TODO
  * 
@@ -35,7 +39,7 @@ public class Car implements ICar {
 
 	@Override
 	public UUID plugIn() {
-		client.setURI("/ev");
+		client.setURI(baseURI + "/ev");
 		CoapResponse res = client.post("", MediaTypeRegistry.UNDEFINED);
 
 		this.uuid = UUID.fromString(res.getOptions().getLocationPath().get(1)); // TODO remove magic number
@@ -44,11 +48,23 @@ public class Car implements ICar {
 
 	@Override
 	public boolean chargeParameterDiscovery(int soc, double maxVoltage, double maxCurrent) {
+		Gson gson = new GsonBuilder().create();
+
+		JsonObject stateOfCharge = new JsonObject();
+		stateOfCharge.addProperty("soc", soc);
+		client.setURI(baseURI + "/ev/" + this.uuid + "/stateOfCharge");
+		client.post(gson.toJson(stateOfCharge), MediaTypeRegistry.APPLICATION_JSON);
+
+		JsonObject maxVals = new JsonObject();
+		maxVals.addProperty("maxVoltage", maxVoltage);
+		maxVals.addProperty("maxCurrent", maxCurrent);
+		client.setURI(baseURI + "/ev/" + this.uuid + "/maxValues");
+		client.post(gson.toJson(maxVals), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
 		logger.info("Charge parameter discovery triggered.");
 
-		return false;
+		return false; // TODO
 	}
 
 	@Override
@@ -89,7 +105,7 @@ public class Car implements ICar {
 
 	@Override
 	public void unplug() {
-		client.setURI("/ev/" + this.uuid);
+		client.setURI(baseURI + "/ev/" + this.uuid);
 		client.delete();
 	}
 

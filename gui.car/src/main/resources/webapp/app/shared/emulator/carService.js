@@ -84,7 +84,7 @@ app.factory('carService', function ($rootScope, socketService) {
             soc: this.battery.soc,
             maxVoltage: this.charging.voltage.DC,
             maxCurrent: Math.max.apply(null, this.charging.rate.DC)
-          };
+          }; // TODO maybe missing energy transfer type
           this.config.socket.send('ACTION', data);
         }
 

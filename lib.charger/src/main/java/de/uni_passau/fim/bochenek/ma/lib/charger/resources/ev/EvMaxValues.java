@@ -9,6 +9,9 @@ import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
@@ -16,8 +19,8 @@ import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvMaxValues extends CoapResource implements HalResource {
 
-	private double current;
 	private double voltage;
+	private double current;
 
 	public EvMaxValues(String name) {
 		super(name);
@@ -32,6 +35,18 @@ public class EvMaxValues extends CoapResource implements HalResource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void handlePOST(CoapExchange exchange) {
+
+		// TODO not very robust :P
+		Gson gson = new GsonBuilder().create();
+		JsonObject maxVals = gson.fromJson(exchange.getRequestText(), JsonObject.class);
+		this.voltage = maxVals.get("maxVoltage").getAsDouble();
+		this.current = maxVals.get("maxCurrent").getAsDouble();
+
+		exchange.respond(ResponseCode.CHANGED);
 	}
 
 	@Override
