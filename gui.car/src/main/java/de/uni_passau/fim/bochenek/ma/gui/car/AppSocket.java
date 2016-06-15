@@ -1,5 +1,6 @@
 package de.uni_passau.fim.bochenek.ma.gui.car;
 
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,16 +43,14 @@ public class AppSocket {
 		logger.log(Level.INFO, "Connection from: " + session.getRemoteAddress().getAddress());
 
 		// Automatically add client to listeners on connect
-		Car car = SocketHandler.getInstance().addListener(session);
-		String register = "{\"type\" : \"REGISTER\", \"data\" : {\"uuid\" : \"%s\"}}";
-		car.sendToCar(String.format(register, car.getUuid().toString()));
+		SocketHandler.getInstance().addListener(session);
 
 		// TODO Wait some time to give car the chance to present its UUID
 	}
 
 	@OnWebSocketMessage
 	public void onMessage(Session session, String message) {
-		
+
 		// DEBUG
 		logger.log(Level.INFO, "Message received: " + message);
 
@@ -69,26 +68,53 @@ public class AppSocket {
 				try {
 					MessageType type = MessageType.valueOf(msg.getAsJsonObject().get("type").getAsString());
 					Gson gson = new Gson();
-					Car car;
+					Car car = SocketHandler.getInstance().getCarFor(session);
 					switch (type) {
 						case EVENT :
 							EventMessage evtMsg = gson.fromJson(msg.getAsJsonObject().get("data"), EventMessage.class);
 
-							// DEBUG
-							logger.log(Level.INFO, "Car plugged in: {0}", new Object[]{evtMsg.isPluggedIn()});
+							if (evtMsg.isPluggedIn()) {
+								UUID uuid = car.plugIn();
+								String register = "{\"type\" : \"REGISTER\", \"data\" : {\"uuid\" : \"%s\"}}";
+								car.sendToCar(String.format(register, uuid.toString()));
 
-							car = SocketHandler.getInstance().getCarFor(session);
-							String plugStatus = evtMsg.isPluggedIn() ? "Car (%s) plugged in." : "Car (%s) unplugged.";
-							String debug = "{\"type\" : \"DEBUG\", \"data\" : {\"message\" : \"%s\"}}";
-							car.sendToCharger(String.format(debug, String.format(plugStatus, car.getUuid().toString())));
+								// DEBUG
+								logger.log(Level.INFO, "Car with UUID {0} plugged in.", new Object[]{uuid.toString()});
+							} else {
+								car.unplug();
+
+								// DEBUG
+								logger.log(Level.INFO, "Car with UUID {0} was unplugged.", new Object[]{car.getUuid().toString()});
+							}
 
 							break;
 						case ACTION : // TODO Only debugging right now
 							ActionMessage actMsg = gson.fromJson(msg.getAsJsonObject().get("data"), ActionMessage.class);
 
 							// DEBUG
-							logger.log(Level.INFO, "Action received: {0}", new Object[]{actMsg.getNotify()});
+							logger.log(Level.INFO, "Action received: {0}", new Object[]{actMsg.getAction()});
 
+							// Handle triggered action
+							switch (actMsg.getAction()) {
+								case "chargeParameterDiscovery" :
+									break;
+								case "cableCheck" :
+									break;
+								case "preCharge" :
+									break;
+								case "powerDelivery" :
+									break;
+								case "currentDemand" :
+									break;
+								case "stopCharging" :
+									break;
+								case "weldingDetection" :
+									break;
+								case "sessionStop" :
+									break;
+								default :
+									// TODO
+							}
 
 							break;
 						case KEEPALIVE :
