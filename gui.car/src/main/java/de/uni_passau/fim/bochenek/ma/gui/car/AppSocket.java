@@ -97,20 +97,28 @@ public class AppSocket {
 							// Handle triggered action
 							switch (actMsg.getAction()) {
 								case "chargeParameterDiscovery" :
+									car.chargeParameterDiscovery();
 									break;
 								case "cableCheck" :
+									car.cableCheck();
 									break;
 								case "preCharge" :
+									car.preCharge();
 									break;
 								case "powerDelivery" :
+									car.powerDelivery();
 									break;
 								case "currentDemand" :
+									car.currentDemand();
 									break;
-								case "stopCharging" :
+								case "stopCharging" : // TODO Just a special case of currentDemand
+									car.currentDemand();
 									break;
 								case "weldingDetection" :
+									car.weldingDetection();
 									break;
 								case "sessionStop" :
+									car.stopSession();
 									break;
 								default :
 									// TODO
