@@ -26,7 +26,7 @@ public interface ICar {
 	public boolean powerDelivery(boolean chargingComplete, boolean readyToCharge);
 
 	// TODO Javadoc
-	public boolean currentDemand(double targetVoltage, double targetCurrent);
+	public boolean currentDemand(int soc, double targetVoltage, double targetCurrent);
 
 	// TODO Javadoc
 	public boolean weldingDetection();
