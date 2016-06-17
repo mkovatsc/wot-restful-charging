@@ -16,6 +16,7 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.messages.StatusMessage.EvStatus
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.StatusMessage.SeStatus;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvChargingComplete;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvMaxValues;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvReadyToCharge;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvSoc;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvTargetValues;
 import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
@@ -91,6 +92,9 @@ public class ServerProvider {
 							break;
 						case "chargingComplete" :
 							ev.setChargingComplete(((EvChargingComplete) res2).isChargingComplete());
+							break;
+						case "readyToCharge" :
+							ev.setReadyToCharge(((EvReadyToCharge) res2).isReadyToCharge());
 							break;
 						case "maxValues" :
 							ev.setMaximumVoltage(((EvMaxValues) res2).getVoltage());

@@ -62,6 +62,7 @@ public class StatusMessage extends Message {
 		private double targetVoltage;
 		private double targetCurrent;
 		private boolean chargingComplete;
+		private boolean readyToCharge;
 
 		public EvStatus() {
 
@@ -107,6 +108,14 @@ public class StatusMessage extends Message {
 		}
 		public void setChargingComplete(boolean chargingComplete) {
 			this.chargingComplete = chargingComplete;
+		}
+
+		public boolean isReadyToCharge() {
+			return readyToCharge;
+		}
+
+		public void setReadyToCharge(boolean readyToCharge) {
+			this.readyToCharge = readyToCharge;
 		}
 	}
 

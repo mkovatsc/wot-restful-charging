@@ -65,4 +65,8 @@ public class EvReadyToCharge extends CoapResource implements HalResource {
 		return hal;
 	}
 
+	public boolean isReadyToCharge() {
+		return readyToCharge;
+	}
+
 }
