@@ -46,14 +46,17 @@ public class EvReadyToCharge extends CoapResource implements HalResource {
 		JsonObject tmp = gson.fromJson(exchange.getRequestText(), JsonObject.class);
 		this.readyToCharge = tmp.get("readyToCharge").getAsBoolean();
 
-		// TODO Ugly hack to try something out, there need to be a central entity holding the data
+		// TODO Ugly hack to try something out; there needs to be some central entity to hold the data
+		Resource root = this.getParent().getParent().getParent();
+		SePresentValues presentValues = (SePresentValues) root.getChild("se").getChild("presentValues");
 		if (this.readyToCharge) {
-			Resource root = this.getParent().getParent().getParent();
-			SePresentValues presentValues = (SePresentValues) root.getChild("se").getChild("presentValues");
 			presentValues.setVoltage(400);
 			presentValues.setCurrent(0);
-			presentValues.changed();
+		} else {
+			presentValues.setVoltage(0);
+			presentValues.setCurrent(0);
 		}
+		presentValues.changed();
 
 		exchange.respond(ResponseCode.CHANGED);
 	}
