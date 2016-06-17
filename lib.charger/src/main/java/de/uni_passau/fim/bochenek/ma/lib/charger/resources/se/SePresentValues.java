@@ -21,6 +21,7 @@ public class SePresentValues extends CoapResource implements HalResource {
 
 	public SePresentValues(String name) {
 		super(name);
+		this.setObservable(true); // TODO
 		// TODO Auto-generated constructor stub
 	}
 

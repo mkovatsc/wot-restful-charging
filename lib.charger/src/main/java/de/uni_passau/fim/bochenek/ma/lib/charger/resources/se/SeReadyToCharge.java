@@ -20,6 +20,7 @@ public class SeReadyToCharge extends CoapResource implements HalResource {
 
 	public SeReadyToCharge(String name) {
 		super(name);
+		this.setObservable(true); // TODO
 		// TODO Auto-generated constructor stub
 	}
 

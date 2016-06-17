@@ -52,6 +52,7 @@ public class EvReadyToCharge extends CoapResource implements HalResource {
 			SePresentValues presentValues = (SePresentValues) root.getChild("se").getChild("presentValues");
 			presentValues.setVoltage(400);
 			presentValues.setCurrent(0);
+			presentValues.changed();
 		}
 
 		exchange.respond(ResponseCode.CHANGED);
