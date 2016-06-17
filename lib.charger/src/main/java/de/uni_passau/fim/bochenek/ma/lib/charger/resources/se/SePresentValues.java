@@ -16,8 +16,8 @@ import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class SePresentValues extends CoapResource implements HalResource {
 
-	private double current;
 	private double voltage;
+	private double current;
 
 	public SePresentValues(String name) {
 		super(name);
@@ -51,6 +51,22 @@ public class SePresentValues extends CoapResource implements HalResource {
 		hal.addProperty("voltage", voltage);
 
 		return hal;
+	}
+
+	public double getVoltage() {
+		return voltage;
+	}
+
+	public void setVoltage(double voltage) {
+		this.voltage = voltage;
+	}
+
+	public double getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(double current) {
+		this.current = current;
 	}
 
 }

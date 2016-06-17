@@ -7,6 +7,7 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.eclipse.californium.core.server.resources.Resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
@@ -15,6 +16,7 @@ import com.google.gson.JsonObject;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePresentValues;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvReadyToCharge extends CoapResource implements HalResource {
@@ -43,6 +45,14 @@ public class EvReadyToCharge extends CoapResource implements HalResource {
 		Gson gson = new GsonBuilder().create();
 		JsonObject tmp = gson.fromJson(exchange.getRequestText(), JsonObject.class);
 		this.readyToCharge = tmp.get("readyToCharge").getAsBoolean();
+
+		// TODO Ugly hack to try something out, there need to be a central entity holding the data
+		if (this.readyToCharge) {
+			Resource root = this.getParent().getParent().getParent();
+			SePresentValues presentValues = (SePresentValues) root.getChild("se").getChild("presentValues");
+			presentValues.setVoltage(400);
+			presentValues.setCurrent(0);
+		}
 
 		exchange.respond(ResponseCode.CHANGED);
 	}

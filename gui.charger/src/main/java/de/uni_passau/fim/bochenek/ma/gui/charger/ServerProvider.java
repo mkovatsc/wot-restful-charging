@@ -19,6 +19,7 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvMaxValues;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvReadyToCharge;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvSoc;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvTargetValues;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePresentValues;
 import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
 
 /**
@@ -105,6 +106,15 @@ public class ServerProvider {
 							ev.setTargetCurrent(((EvTargetValues) res2).getCurrent());
 							break;
 					}
+				}
+			}
+
+			for (Resource res : root.getChild("se").getChildren()) {
+				switch (res.getName()) {
+					case "presentValues" :
+						se.setPresentVoltage(((SePresentValues) res).getVoltage());
+						se.setPresentCurrent(((SePresentValues) res).getCurrent());
+						break;
 				}
 			}
 
