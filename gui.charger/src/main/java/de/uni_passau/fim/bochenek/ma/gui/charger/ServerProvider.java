@@ -118,7 +118,10 @@ public class ServerProvider {
 				}
 			}
 
-			SocketHandler.getInstance().pushToListeners(MessageType.STATUS, status);
+			// TODO Only update UI if any car is plugged in
+			if (root.getChild("ev").getChildren().size() > 0) {
+				SocketHandler.getInstance().pushToListeners(MessageType.STATUS, status);
+			}
 		}
 
 	}

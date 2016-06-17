@@ -57,6 +57,7 @@ public class EvReadyToCharge extends CoapResource implements HalResource {
 			presentValues.setCurrent(0);
 		}
 		presentValues.changed();
+		// TODO all of the above should be triggered from the JS emulator
 
 		exchange.respond(ResponseCode.CHANGED);
 	}
