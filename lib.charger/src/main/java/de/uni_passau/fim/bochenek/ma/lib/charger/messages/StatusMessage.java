@@ -57,8 +57,8 @@ public class StatusMessage extends Message {
 	public class EvStatus {
 
 		private int stateOfCharge;
-		private double maximumVoltageLimit;
-		private double maximumCurrentLimit;
+		private double maximumVoltage;
+		private double maximumCurrent;
 		private double targetVoltage;
 		private double targetCurrent;
 		private boolean chargingComplete;
@@ -78,17 +78,17 @@ public class StatusMessage extends Message {
 		public void setStateOfCharge(int stateOfCharge) {
 			this.stateOfCharge = stateOfCharge;
 		}
-		public double getMaximumVoltageLimit() {
-			return maximumVoltageLimit;
+		public double getMaximumVoltage() {
+			return maximumVoltage;
 		}
-		public void setMaximumVoltageLimit(double maximumVoltageLimit) {
-			this.maximumVoltageLimit = maximumVoltageLimit;
+		public void setMaximumVoltage(double maximumVoltageLimit) {
+			this.maximumVoltage = maximumVoltageLimit;
 		}
-		public double getMaximumCurrentLimit() {
-			return maximumCurrentLimit;
+		public double getMaximumCurrent() {
+			return maximumCurrent;
 		}
-		public void setMaximumCurrentLimit(double maximumCurrentLimit) {
-			this.maximumCurrentLimit = maximumCurrentLimit;
+		public void setMaximumCurrent(double maximumCurrentLimit) {
+			this.maximumCurrent = maximumCurrentLimit;
 		}
 		public double getTargetVoltage() {
 			return targetVoltage;

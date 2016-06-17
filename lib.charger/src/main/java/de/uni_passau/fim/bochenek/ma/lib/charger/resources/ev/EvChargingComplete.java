@@ -65,4 +65,8 @@ public class EvChargingComplete extends CoapResource implements HalResource {
 		return hal;
 	}
 
+	public boolean isChargingComplete() {
+		return chargingComplete;
+	}
+
 }

@@ -65,4 +65,8 @@ public class EvSoc extends CoapResource implements HalResource {
 		return hal;
 	}
 
+	public int getStateOfCharge() {
+		return stateOfCharge;
+	}
+
 }

@@ -68,4 +68,12 @@ public class EvTargetValues extends CoapResource implements HalResource {
 		return hal;
 	}
 
+	public double getVoltage() {
+		return voltage;
+	}
+
+	public double getCurrent() {
+		return current;
+	}
+
 }
