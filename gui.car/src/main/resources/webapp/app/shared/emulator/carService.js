@@ -201,7 +201,7 @@ app.factory('carService', function ($rootScope, socketService) {
             action: 'currentDemand',
             soc: this.battery.soc,
             targetVoltage: this.charging.voltage.DC,
-            targetCurrent: -1, // TODO Derive from formula!
+            targetCurrent: this.charging.rate.DC[0] - (this.charging.rate.DC[0] * (this.battery.soc / 100)), // TODO Derive from formula!
             chargingComplete: this.charging.complete
           };
           this.config.socket.send('ACTION', data);

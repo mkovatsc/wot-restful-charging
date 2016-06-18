@@ -47,7 +47,7 @@ public class EvTargetValues extends CoapResource implements HalResource {
 		this.voltage = targetVals.get("targetVoltage").getAsDouble();
 		this.current = targetVals.get("targetCurrent").getAsDouble();
 		
-		// TODO Just for testing purposes, charger sets the requestes values instantly
+		// TODO Just for testing purposes, charger sets the requested values instantly
 		SePresentValues tmp = (SePresentValues) this.getParent().getParent().getParent().getChild("se").getChild("presentValues");
 		tmp.setVoltage(this.voltage);
 		tmp.setCurrent(this.current);
