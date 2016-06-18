@@ -2,6 +2,7 @@ package de.uni_passau.fim.bochenek.ma.lib.car;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.californium.core.CoapClient;
@@ -34,15 +35,18 @@ public class Car implements ICar {
 		baseURI = chargerURI; // TODO check for validity
 
 		// DEBUG
-		logger.info("New car connected.");
+		logger.info("New CarUI established websocket connection.");
 	}
 
 	@Override
 	public UUID plugIn() {
 		client.setURI(baseURI + "/ev");
 		CoapResponse res = client.post("", MediaTypeRegistry.UNDEFINED);
-
 		this.uuid = UUID.fromString(res.getOptions().getLocationPath().get(1)); // TODO remove magic number
+
+		// DEBUG
+		logger.log(Level.INFO, "Car with UUID {0} plugged in.", new Object[]{this.uuid});
+
 		return this.uuid;
 	}
 
@@ -62,7 +66,7 @@ public class Car implements ICar {
 		client.post(gson.toJson(maxVals), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
-		logger.info("Charge parameter discovery triggered.");
+		logger.log(Level.INFO, "{0}: Triggered charge parameter discovery.", new Object[]{this.uuid});
 
 		return false; // TODO
 	}
@@ -70,6 +74,10 @@ public class Car implements ICar {
 	@Override
 	public boolean cableCheck() {
 		// TODO Auto-generated method stub
+
+		// DEBUG
+		logger.log(Level.INFO, "{0}: Initiated cable check.", new Object[]{this.uuid});
+
 		return false;
 	}
 
@@ -81,6 +89,9 @@ public class Car implements ICar {
 		targetVals.addProperty("targetCurrent", targetCurrent);
 		client.setURI(baseURI + "/ev/" + this.uuid + "/targetValues");
 		client.post(gson.toJson(targetVals), MediaTypeRegistry.APPLICATION_JSON);
+
+		// DEBUG
+		logger.log(Level.INFO, "{0}: Sent pre charge request.", new Object[]{this.uuid});
 
 		return false; // TODO
 	}
@@ -100,7 +111,7 @@ public class Car implements ICar {
 		client.post(gson.toJson(tmp2), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
-		logger.info("Power delivery triggered.");
+		logger.log(Level.INFO, "{0}: Requested power delivery.", new Object[]{this.uuid});
 
 		return false; // TODO
 	}
@@ -119,18 +130,29 @@ public class Car implements ICar {
 		client.setURI(baseURI + "/ev/" + this.uuid + "/stateOfCharge");
 		client.post(gson.toJson(stateOfCharge), MediaTypeRegistry.APPLICATION_JSON);
 
+		// DEBUG
+		logger.log(Level.INFO, "{0}: Sent current demand request.", new Object[]{this.uuid});
+
 		return false; // TODO
 	}
 
 	@Override
 	public boolean weldingDetection() {
 		// TODO Auto-generated method stub
+
+		// DEBUG
+		logger.log(Level.INFO, "{0}: Asked for welding detection.", new Object[]{this.uuid});
+
 		return false;
 	}
 
 	@Override
 	public boolean stopSession() {
 		// TODO Auto-generated method stub
+
+		// DEBUG
+		logger.log(Level.INFO, "{0}: Stopped the session.", new Object[]{this.uuid});
+
 		return false;
 	}
 
@@ -138,11 +160,9 @@ public class Car implements ICar {
 	public void unplug() {
 		client.setURI(baseURI + "/ev/" + this.uuid);
 		client.delete();
-	}
 
-	public void sendToCharger(String message) {
-		client.setURI(baseURI + "/iamyourcharger");
-		client.post(message, MediaTypeRegistry.TEXT_PLAIN);
+		// DEBUG
+		logger.log(Level.INFO, "Car with UUID {0} unplugged.", new Object[]{this.uuid});
 	}
 
 	public void sendToCar(String message) {
