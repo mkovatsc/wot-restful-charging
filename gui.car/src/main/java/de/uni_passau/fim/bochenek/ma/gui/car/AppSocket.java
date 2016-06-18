@@ -51,9 +51,6 @@ public class AppSocket {
 	@OnWebSocketMessage
 	public void onMessage(Session session, String message) {
 
-		// DEBUG
-		//logger.log(Level.INFO, "Message received: " + message);
-
 		if (message != null && !message.equals("")) {
 			JsonParser parser = new JsonParser();
 			JsonElement msg = null;
@@ -89,7 +86,7 @@ public class AppSocket {
 							}
 
 							break;
-						case ACTION : // TODO Only debugging right now
+						case ACTION :
 							ActionMessage actMsg = gson.fromJson(msg.getAsJsonObject().get("data"), ActionMessage.class);
 
 							// DEBUG
