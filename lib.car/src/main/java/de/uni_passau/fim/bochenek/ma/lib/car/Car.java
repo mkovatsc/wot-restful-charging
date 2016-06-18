@@ -117,7 +117,7 @@ public class Car implements ICar {
 	}
 
 	@Override
-	public boolean currentDemand(int soc, double targetVoltage, double targetCurrent) {
+	public boolean currentDemand(int soc, double targetVoltage, double targetCurrent, boolean chargingComplete) {
 		Gson gson = new GsonBuilder().create();
 		JsonObject targetVals = new JsonObject();
 		targetVals.addProperty("targetVoltage", targetVoltage);
