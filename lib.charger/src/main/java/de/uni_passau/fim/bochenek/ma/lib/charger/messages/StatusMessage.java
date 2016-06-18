@@ -1,5 +1,7 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.messages;
 
+import java.util.UUID;
+
 public class StatusMessage extends Message {
 
 	private SeStatus se;
@@ -56,6 +58,7 @@ public class StatusMessage extends Message {
 
 	public class EvStatus {
 
+		private UUID uuid;
 		private int stateOfCharge;
 		private double maximumVoltage;
 		private double maximumCurrent;
@@ -71,6 +74,14 @@ public class StatusMessage extends Message {
 		public EvStatus(int stateOfCharge, boolean chargingComplete) {
 			this.stateOfCharge = stateOfCharge;
 			this.chargingComplete = chargingComplete;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		public void setUuid(UUID uuid) {
+			this.uuid = uuid;
 		}
 
 		public int getStateOfCharge() {

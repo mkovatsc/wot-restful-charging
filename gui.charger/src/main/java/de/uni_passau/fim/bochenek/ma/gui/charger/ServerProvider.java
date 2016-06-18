@@ -3,6 +3,7 @@ package de.uni_passau.fim.bochenek.ma.gui.charger;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -86,6 +87,8 @@ public class ServerProvider {
 
 			// TODO what if there is more than just one EV connected?
 			for (Resource res1 : root.getChild("ev").getChildren()) {
+				ev.setUuid(UUID.fromString(res1.getName()));
+
 				for (Resource res2 : res1.getChildren()) {
 					switch (res2.getName()) {
 						case "stateOfCharge" :
