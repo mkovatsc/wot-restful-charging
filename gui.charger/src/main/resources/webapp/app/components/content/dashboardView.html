@@ -1,4 +1,4 @@
-<div ng-controller="statusController" layout="row" layout-xs="column">
+<div ng-controller="emulationController" layout="row" layout-xs="column">
 
   <div id="se-box" class="md-whiteframe-5dp" layout="column" flex-gt-xs>
     <md-toolbar layout-padding>
@@ -10,8 +10,8 @@
         <md-tabs md-dynamic-height md-border-bottom>
           <md-tab label="present">
             <md-content class="md-padding">
-              <p>Voltage: {{se.data.presentVoltage || 'N/A'}}</p>
-              <p>Current: {{se.data.presentCurrent || 'N/A'}}</p>
+              <p>Voltage: {{charger.status.se.presentVoltage || 'N/A'}}</p>
+              <p>Current: {{charger.status.se.presentCurrent || 'N/A'}}</p>
             </md-content>
           </md-tab>
           <md-tab label="maximum">
@@ -23,7 +23,7 @@
       </div>
       <div class="state">
         <h3>State Machine</h3>
-        <p>{{se.data.currentState}}</p>
+        <p>{{charger.status.se.currentState}}</p>
       </div>
     </md-content>
   </div>
@@ -34,26 +34,26 @@
     </md-toolbar>
     <md-content layout="column" layout-padding>
       <div class="charging-param">
-        <p>UUID: {{ev.data.uuid || 'N/A'}}</p>
+        <p>UUID: {{charger.status.ev.uuid || 'N/A'}}</p>
         <h3>Charging Parameters</h3>
         <md-tabs md-dynamic-height md-border-bottom>
           <md-tab label="target">
             <md-content class="md-padding">
-              <p>Voltage: {{ev.data.targetVoltage || 'N/A'}}</p>
-              <p>Current: {{ev.data.targetCurrent || 'N/A'}}</p>
+              <p>Voltage: {{charger.status.ev.targetVoltage || 'N/A'}}</p>
+              <p>Current: {{charger.status.ev.targetCurrent || 'N/A'}}</p>
             </md-content>
           </md-tab>
           <md-tab label="maximum">
             <md-content class="md-padding">
-              <p>Voltage: {{ev.data.maximumVoltage || 'N/A'}}</p>
-              <p>Current: {{ev.data.maximumCurrent || 'N/A'}}</p>
+              <p>Voltage: {{charger.status.ev.maximumVoltage || 'N/A'}}</p>
+              <p>Current: {{charger.status.ev.maximumCurrent || 'N/A'}}</p>
             </md-content>
           </md-tab>
         </md-tabs>
       </div>
       <div class="soc">
         <h3>
-          State of Charge ( {{ev.data.stateOfCharge || '-'}} % )
+          State of Charge ( {{charger.status.ev.stateOfCharge || '-'}} % )
           <img ng-src="assets/img/icons/{{ev.data.chargingComplete && 'ic_check_black_24px.svg' || 'ic_sync_black_24px.svg'}}"/>
         </h3>
         <md-progress-linear md-mode="determinate" value="{{ev.data.stateOfCharge}}"></md-progress-linear>

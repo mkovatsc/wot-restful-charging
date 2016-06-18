@@ -8,5 +8,5 @@ app.controller('statusController', function ($scope, socketService, statusServic
     $scope.$apply();
   };
 
-  socketService.addHandler('STATUS', statusHandler);
+  //socketService.addHandler('STATUS', statusHandler);
 });

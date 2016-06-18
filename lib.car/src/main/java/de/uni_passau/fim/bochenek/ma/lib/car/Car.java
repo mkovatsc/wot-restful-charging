@@ -20,7 +20,7 @@ import com.google.gson.JsonObject;
  * @author Martin Bochenek
  *
  */
-public class Car implements ICar {
+public class Car implements ICar { // TODO Extend CoapClient?
 
 	private UUID uuid;
 	private Session session;

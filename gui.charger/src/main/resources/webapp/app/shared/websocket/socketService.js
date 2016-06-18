@@ -1,63 +1,64 @@
-app.factory("socketService", function ($window, $timeout, $log) {
-  // TODO switch to Socket.io?
-  // TODO Config -> provider()
-  var socket = new WebSocket("ws://localhost:8081");
-  $timeout(function() {
-    if (socket.readyState == 3) {
-      $window.alert("Socket could not be opened.");
+app.factory('socketService', function ($timeout, $log) {
+  var socket = function (args) {
+    this.config = {
+      socketaddr: undefined,
+      handlers: {}
+    };
+
+    // Regex for proper websocket URL
+    var re = /^((ws\:\/\/)\S+\:([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))$/g;
+
+    // Only accept valid socket URLs
+    if ('socketaddr' in args && args['socketaddr'].match(re)) {
+      this.config.socketaddr = args['socketaddr'];
+
+      // Initialize websocket connection
+      this.config.websocket = new WebSocket(this.config.socketaddr);
+
+      // TODO Anything to do here other then some debugging?
+      this.config.websocket.onopen = function () {
+        $log.info('Socket successfully opened.');
+      };
+
+      this.config.websocket.onclose = function () {
+        $log.info('Socket closed.');
+      };
+
+      this.config.websocket.onerror = function (error) {
+        $log.error('Socket error.');
+      };
+
+      var that = this;
+      var callHandlers = function (msgType, data) {
+        angular.forEach(that.config.handlers[msgType], function (handler) { // TODO no handler(s) defined?
+          handler(data);
+        });
+      };
+
+      this.config.websocket.onmessage = function (evt) {
+        var json = JSON.parse(evt.data); // TODO Catch if invalid JSON received
+        callHandlers(json.type, json.data);
+      };
     }
-  }, 2500);
-
-  var handlers = {};
-
-  socket.onopen = function() {
-    $log.info("Socket successfully opened.");
   };
 
-  socket.onclose = function() {
-    $log.info("Socket closed.");
-  }
-
-  socket.onerror = function(error) {
-    $log.error("Socket error.");
-  };
-
-  socket.onmessage = function(evt) {
-    $log.debug("Socket received: " + evt.data);
-
-    var msg;
-    try {
-      msg = JSON.parse(evt.data);
-    } catch (e) {
-      $log.info("No valid JSON message received.");
-    }
-
-    if (msg != null) {
-      if (msg.hasOwnProperty('type') && msg.type in handlers) {
-        handlers[msg.type](msg.content);
-      } else {
-        $log.error("No callback registered for received message!");
-      }
-    } else {
-      if (evt.data == "Ping!") { // Keepalive
-        socket.send("Pong!");
-      }
-    }
-  }
-
-  sockServ = {
+  socket.prototype = {
     addHandler: function (msgType, handler) {
-      handlers[msgType] = handler;
+      this.config.handlers[msgType] = this.config.handlers[msgType] || [];
+      this.config.handlers[msgType].push(handler);
     },
-    send: function(msg) {
-      if (socket.readyState == 1) {
-        $log.debug("Sending message to server: " + msg);
-        socket.send(msg);
-      } else {
-        $log.error("Message could not be sent. Socket not ready.");
-      }
+
+    send: function (msgType, msgData) {
+      var that = this;
+      $timeout(function () {
+        if (that.config.websocket.readyState == 1) {
+          that.config.websocket.send(JSON.stringify({type: msgType, data: msgData}));
+        } else {
+          that.send(msgType, msgData);
+        }
+      }, 10); // TODO max retries?
     }
   };
 
-  return sockServ;
+  return socket;
 });
