@@ -5,4 +5,5 @@ app.controller('emulationController', function ($log, $rootScope, $scope, charge
     socketaddr: 'ws://localhost:8081'
   });
   $rootScope.charger = charger;
+
 });

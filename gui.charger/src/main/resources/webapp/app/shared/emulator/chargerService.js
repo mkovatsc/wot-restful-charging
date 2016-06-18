@@ -1,4 +1,4 @@
-app.factory('chargerService', function ($rootScope, socketService) {
+app.factory('chargerService', function ($rootScope, $interval, socketService) {
   var charger = function (args) {
     this.status = {
       se: {},
@@ -30,7 +30,17 @@ app.factory('chargerService', function ($rootScope, socketService) {
     }
   };
 
-  charger.prototype = {};
+  charger.prototype = {
+
+    // Set charger to EV target values
+    prepare: function (speedup, voltage, current) {
+      var that = this;
+      $interval(function () {
+        if (that.status.se.voltage <= that.status.ev.targetVoltage - 100)
+          that.status.se.voltage += 100;
+      }, 500, 5);
+    }
+  };
 
   return charger;
 });

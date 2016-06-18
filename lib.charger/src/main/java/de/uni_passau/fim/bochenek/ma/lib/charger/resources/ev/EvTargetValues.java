@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePresentValues;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvTargetValues extends CoapResource implements HalResource {
@@ -45,6 +46,11 @@ public class EvTargetValues extends CoapResource implements HalResource {
 		JsonObject targetVals = gson.fromJson(exchange.getRequestText(), JsonObject.class);
 		this.voltage = targetVals.get("targetVoltage").getAsDouble();
 		this.current = targetVals.get("targetCurrent").getAsDouble();
+		
+		// TODO Just for testing purposes, charger sets the requestes values instantly
+		SePresentValues tmp = (SePresentValues) this.getParent().getParent().getParent().getChild("se").getChild("presentValues");
+		tmp.setVoltage(this.voltage);
+		tmp.setCurrent(this.current);
 
 		exchange.respond(ResponseCode.CHANGED);
 	}
