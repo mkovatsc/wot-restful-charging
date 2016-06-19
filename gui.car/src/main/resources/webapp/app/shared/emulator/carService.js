@@ -128,6 +128,16 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // Pre charge
     doPreCharge: function (speedup) {
+      var that = this;
+      if (this.state == 'cableCheckDone') {
+        this.config.socket.addHandler('SEVALUES', function (data) {
+          if (that.state == 'preCharge' && data.voltage == 400) {
+            console.log('SE set requested values!');
+            that.changeState('preChargeDone');
+          }
+        });
+      }
+
       this.changeState('preCharge');
       var timeout = Math.floor(3800 / speedup);
 
@@ -142,14 +152,6 @@ app.factory('carService', function ($rootScope, socketService) {
           };
           this.config.socket.send('ACTION', data);
         }
-
-        // TODO Handler if target values are met by charger
-
-        var that = this;
-        this.runningProc = setTimeout(function () {
-          that.changeState('preChargeDone');
-          that.runningProc = undefined;
-        }, timeout); // TODO 3.8s in real-time
       }
     },
 

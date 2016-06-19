@@ -1,11 +1,13 @@
 package de.uni_passau.fim.bochenek.ma.lib.car;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.jetty.websocket.api.Session;
@@ -83,6 +85,26 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	@Override
 	public boolean preCharge(double targetVoltage, double targetCurrent) {
+		CoapHandler handler = new CoapHandler() {
+
+			@Override
+			public void onLoad(CoapResponse response) {
+				JsonObject json = new Gson().fromJson(response.getResponseText(), JsonObject.class);
+				String tmp = String.format(Locale.US, "{\"voltage\": %.2f, \"current\": %.2f}", json.get("voltage").getAsFloat(), json.get("current").getAsFloat());
+				sendToCar("SEVALUES", tmp);
+				
+				// TODO Cancel OBSERVE?
+			}
+
+			@Override
+			public void onError() {
+				// TODO Auto-generated method stub
+				System.out.println("Failed to observe!");
+			}
+		};
+		client.setURI(baseURI + "/se/presentValues");
+		client.observeAndWait(handler);
+
 		Gson gson = new GsonBuilder().create();
 		JsonObject targetVals = new JsonObject();
 		targetVals.addProperty("targetVoltage", targetVoltage);
@@ -172,6 +194,11 @@ public class Car implements ICar { // TODO Extend CoapClient?
 			// TODO Session invalid? Store cars?
 			e.printStackTrace();
 		}
+	}
+
+	private void sendToCar(String type, String data) {
+		String tmp = String.format("{\"type\":\"%s\", \"data\": %s}", type, data); // TODO
+		this.sendToCar(tmp);
 	}
 
 	public UUID getUuid() {

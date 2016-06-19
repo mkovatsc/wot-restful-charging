@@ -31,6 +31,7 @@ public class SocketHandler extends WebSocketHandler {
 	private static final int KEEPALIVE_INTERVAL = 15; // Seconds
 	private static final boolean KEEPALIVE_ENABLED = true;
 	private static final String KEEPALIVE_MESSAGE = "{\"type\" : \"KEEPALIVE\"}";
+	// TODO Use .properties-file
 
 	private SocketHandler() {
 
