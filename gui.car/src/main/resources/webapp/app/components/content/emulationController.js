@@ -9,7 +9,7 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
   // Create a new emulator for the car
   var emulator = new emulationService({
     timeout: 500,
-    speedup: 1.0,
+    speedup: 2.5,
     car: car
   });
 

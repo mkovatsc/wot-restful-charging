@@ -132,7 +132,6 @@ app.factory('carService', function ($rootScope, socketService) {
       if (this.state == 'cableCheckDone') {
         this.config.socket.addHandler('SEVALUES', function (data) {
           if (that.state == 'preCharge' && data.voltage == that.charging.voltage.DC) { // TODO Allow also for narrow voltage range?
-            console.log('SE set requested values!');
             that.changeState('preChargeDone');
           }
         });
