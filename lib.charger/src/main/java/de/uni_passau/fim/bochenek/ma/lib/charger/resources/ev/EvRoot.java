@@ -2,6 +2,8 @@ package de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.eclipse.californium.core.CoapResource;
@@ -14,6 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
+import black.door.hate.LinkOrResource;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvRoot extends CoapResource implements HalResource {
@@ -35,17 +38,34 @@ public class EvRoot extends CoapResource implements HalResource {
 
 	@Override
 	public void handlePOST(CoapExchange exchange) {
-		UUID uuid = UUID.randomUUID();
+		UUID uuid = UUID.randomUUID(); // TODO has to be done in the emulator!
+
+		Map<String, CoapResource> resources = new HashMap<String, CoapResource>();
+		resources.put("chargingComplete", new EvChargingComplete("chargingComplete"));
+		resources.put("maxValues", new EvMaxValues("maxValues"));
+		resources.put("readyToCharge", new EvReadyToCharge("readyToCharge"));
+		resources.put("stateOfCharge", new EvSoc("stateOfCharge"));
+		resources.put("targetValues", new EvTargetValues("targetValues"));
+
+		String actionResult = null;
+		HalRepresentationBuilder result = HalRepresentation.builder();
 		EvID ev = new EvID(uuid.toString());
-		ev.add(new EvChargingComplete("chargingComplete"));
-		ev.add(new EvMaxValues("maxValues"));
-		ev.add(new EvReadyToCharge("readyToCharge"));
-		ev.add(new EvSoc("stateOfCharge"));
-		ev.add(new EvTargetValues("targetValues"));
+
+		for (Map.Entry<String, CoapResource> res : resources.entrySet()) {
+			ev.add(res.getValue());
+			result.addLink(res.getKey(), (LinkOrResource) res.getValue());
+		}
+
 		this.add(ev);
+		try {
+			actionResult = result.build().serialize();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		exchange.setLocationPath("/ev/" + uuid.toString()); // TODO better way?
-		exchange.respond(ResponseCode.CREATED);
+		exchange.respond(ResponseCode.CREATED, actionResult, MediaTypeRegistry.APPLICATION_JSON);
 	}
 
 	@Override

@@ -68,6 +68,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 		this.uuid = UUID.fromString(res.getOptions().getLocationPath().get(1)); // TODO remove magic number
 		resMap.put("ev_self", "/" + res.getOptions().getLocationPathString());
+		resolveAndAddRel(res.getResponseText(), "stateOfCharge", "maxValues");
 
 		// DEBUG
 		logger.log(Level.INFO, "Car with UUID {0} plugged in.", new Object[]{this.uuid});
@@ -81,13 +82,13 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 		JsonObject stateOfCharge = new JsonObject();
 		stateOfCharge.addProperty("soc", soc);
-		client.setURI(resMap.get("ev_self") + "/stateOfCharge");
+		client.setURI(resMap.get("stateOfCharge"));
 		client.post(gson.toJson(stateOfCharge), MediaTypeRegistry.APPLICATION_JSON);
 
 		JsonObject maxVals = new JsonObject();
 		maxVals.addProperty("maxVoltage", maxVoltage);
 		maxVals.addProperty("maxCurrent", maxCurrent);
-		client.setURI(resMap.get("ev_self") + "/maxValues");
+		client.setURI(resMap.get("maxValues"));
 		client.post(gson.toJson(maxVals), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
@@ -177,7 +178,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 		JsonObject stateOfCharge = new JsonObject();
 		stateOfCharge.addProperty("soc", soc);
-		client.setURI(resMap.get("ev_self") + "/stateOfCharge");
+		client.setURI(resMap.get("stateOfCharge"));
 		client.post(gson.toJson(stateOfCharge), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
@@ -227,6 +228,30 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	private void sendToCar(String type, String data) {
 		String tmp = String.format("{\"type\":\"%s\", \"data\": %s}", type, data); // TODO
 		this.sendToCar(tmp);
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param rel
+	 */
+	private void resolveAndAddRel(String response, String rel) {
+		JsonObject links = new Gson().fromJson(response, JsonObject.class).getAsJsonObject("_links"); // TODO
+		if (links.has(rel)) {
+			this.resMap.put(rel, links.getAsJsonObject(rel).get("href").getAsString());
+		}
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param response
+	 * @param rels
+	 */
+	private void resolveAndAddRel(String response, String... rels) {
+		for (String rel : rels) {
+			this.resolveAndAddRel(response, rel); // TODO Inefficient, improve!
+		}
 	}
 
 	public UUID getUuid() {
