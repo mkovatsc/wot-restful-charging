@@ -31,14 +31,24 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	private String baseURI;
 	private CoapClient client;
+	private HashMap<String, String> resMap;
 	private HashMap<String, CoapObserveRelation> observed; // TODO Better index
 
 	private static Logger logger = Logger.getLogger(Car.class.getName());
 
 	public Car(String chargerURI) {
-		client = new CoapClient();
-		observed = new HashMap<String, CoapObserveRelation>();
 		baseURI = chargerURI; // TODO check for validity
+
+		client = new CoapClient(chargerURI);
+		resMap = new HashMap<String, String>();
+		observed = new HashMap<String, CoapObserveRelation>();
+
+		// Discover the URL for EVs
+		JsonObject rootHal = new Gson().fromJson(client.get().getResponseText(), JsonObject.class); // TODO invalid JSON?
+		JsonObject links = rootHal.getAsJsonObject("_links");
+		if (links.get("ev") != null) {
+			resMap.put("ev", links.getAsJsonObject("ev").get("href").getAsString());
+		}
 
 		// DEBUG
 		logger.info("New CarUI established websocket connection.");
@@ -46,7 +56,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	@Override
 	public UUID plugIn() {
-		client.setURI(baseURI + "/ev");
+		client.setURI(baseURI + resMap.get("ev"));
 		CoapResponse res = client.post("", MediaTypeRegistry.UNDEFINED);
 		this.uuid = UUID.fromString(res.getOptions().getLocationPath().get(1)); // TODO remove magic number
 
