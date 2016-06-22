@@ -2,6 +2,8 @@ package de.uni_passau.fim.bochenek.ma.lib.car;
 
 import java.util.UUID;
 
+import de.uni_passau.fim.bochenek.ma.lib.car.enums.ChargingType;
+
 /**
  * TODO Handler / Callbacks for CoAP responses etc.
  * 
@@ -11,7 +13,7 @@ import java.util.UUID;
 public interface ICar {
 
 	// TODO Javadoc
-	public UUID plugIn();
+	public UUID plugIn(ChargingType chargingType, int soc, double maxVoltage, double maxCurrent);
 
 	// TODO Javadoc
 	public boolean chargeParameterDiscovery(int soc, double maxVoltage, double maxCurrent);

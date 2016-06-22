@@ -72,7 +72,9 @@ public class AppSocket {
 							EventMessage evtMsg = gson.fromJson(msg.getAsJsonObject().get("data"), EventMessage.class);
 
 							if (evtMsg.isPluggedIn()) {
-								UUID uuid = car.plugIn();
+
+								// TODO Use Message objects as POJOs
+								UUID uuid = car.plugIn(evtMsg.getChargingType(), evtMsg.getSoc(), evtMsg.getMaxVoltage(), evtMsg.getMaxCurrent());
 								String register = "{\"type\" : \"REGISTER\", \"data\" : {\"uuid\" : \"%s\"}}";
 								car.sendToCar(String.format(register, uuid.toString()));
 

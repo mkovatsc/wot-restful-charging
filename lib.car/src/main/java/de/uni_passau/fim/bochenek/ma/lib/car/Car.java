@@ -18,8 +18,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import de.uni_passau.fim.bochenek.ma.lib.car.enums.ChargingType;
+
 /**
- * TODO
+ * TODO Implement some kind of state machine to "force" the right order for
+ * method calls
  * 
  * @author Martin Bochenek
  *
@@ -29,7 +32,6 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	private UUID uuid;
 	private Session session;
 
-	private String baseURI;
 	private CoapClient client;
 	private HashMap<String, String> resMap;
 	private HashMap<String, CoapObserveRelation> observed; // TODO Better index
@@ -37,8 +39,6 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	private static Logger logger = Logger.getLogger(Car.class.getName());
 
 	public Car(String chargerURI) {
-		baseURI = chargerURI; // TODO check for validity
-
 		client = new CoapClient(chargerURI);
 		resMap = new HashMap<String, String>();
 		observed = new HashMap<String, CoapObserveRelation>();
@@ -55,9 +55,17 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	}
 
 	@Override
-	public UUID plugIn() {
-		client.setURI(baseURI + resMap.get("ev"));
-		CoapResponse res = client.post("", MediaTypeRegistry.UNDEFINED);
+	public UUID plugIn(ChargingType chargingType, int soc, double maxVoltage, double maxCurrent) {
+		Gson gson = new GsonBuilder().create();
+
+		JsonObject basicInfo = new JsonObject();
+		basicInfo.addProperty("chargingType", chargingType.toString());
+		basicInfo.addProperty("soc", soc);
+		basicInfo.addProperty("maxVoltage", maxVoltage);
+		basicInfo.addProperty("maxCurrent", maxCurrent);
+		client.setURI(resMap.get("ev"));
+		CoapResponse res = client.post(gson.toJson(basicInfo), MediaTypeRegistry.APPLICATION_JSON);
+
 		this.uuid = UUID.fromString(res.getOptions().getLocationPath().get(1)); // TODO remove magic number
 		resMap.put("ev_self", "/" + res.getOptions().getLocationPathString());
 
@@ -73,13 +81,13 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 		JsonObject stateOfCharge = new JsonObject();
 		stateOfCharge.addProperty("soc", soc);
-		client.setURI(baseURI + resMap.get("ev_self") + "/stateOfCharge");
+		client.setURI(resMap.get("ev_self") + "/stateOfCharge");
 		client.post(gson.toJson(stateOfCharge), MediaTypeRegistry.APPLICATION_JSON);
 
 		JsonObject maxVals = new JsonObject();
 		maxVals.addProperty("maxVoltage", maxVoltage);
 		maxVals.addProperty("maxCurrent", maxCurrent);
-		client.setURI(baseURI + "/ev/" + this.uuid + "/maxValues");
+		client.setURI(resMap.get("ev_self") + "/maxValues");
 		client.post(gson.toJson(maxVals), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
@@ -122,14 +130,14 @@ public class Car implements ICar { // TODO Extend CoapClient?
 				logger.info("Failed to observe resource!");
 			}
 		};
-		client.setURI(baseURI + "/se/presentValues");
+		client.setURI("/se/presentValues");
 		observed.put("preCharge", client.observeAndWait(handler));
 
 		Gson gson = new GsonBuilder().create();
 		JsonObject targetVals = new JsonObject();
 		targetVals.addProperty("targetVoltage", targetVoltage);
 		targetVals.addProperty("targetCurrent", targetCurrent);
-		client.setURI(baseURI + resMap.get("ev_self") + "/targetValues");
+		client.setURI(resMap.get("ev_self") + "/targetValues");
 		client.post(gson.toJson(targetVals), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
@@ -144,12 +152,12 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 		JsonObject tmp1 = new JsonObject();
 		tmp1.addProperty("chargingComplete", chargingComplete);
-		client.setURI(baseURI + resMap.get("ev_self") + "/chargingComplete");
+		client.setURI(resMap.get("ev_self") + "/chargingComplete");
 		client.post(gson.toJson(tmp1), MediaTypeRegistry.APPLICATION_JSON);
 
 		JsonObject tmp2 = new JsonObject();
 		tmp2.addProperty("readyToCharge", readyToCharge);
-		client.setURI(baseURI + resMap.get("ev_self") + "/readyToCharge");
+		client.setURI(resMap.get("ev_self") + "/readyToCharge");
 		client.post(gson.toJson(tmp2), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
@@ -164,12 +172,12 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		JsonObject targetVals = new JsonObject();
 		targetVals.addProperty("targetVoltage", targetVoltage);
 		targetVals.addProperty("targetCurrent", targetCurrent);
-		client.setURI(baseURI + resMap.get("ev_self") + "/targetValues");
+		client.setURI(resMap.get("ev_self") + "/targetValues");
 		client.post(gson.toJson(targetVals), MediaTypeRegistry.APPLICATION_JSON);
 
 		JsonObject stateOfCharge = new JsonObject();
 		stateOfCharge.addProperty("soc", soc);
-		client.setURI(baseURI + resMap.get("ev_self") + "/stateOfCharge");
+		client.setURI(resMap.get("ev_self") + "/stateOfCharge");
 		client.post(gson.toJson(stateOfCharge), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
@@ -185,7 +193,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		// DEBUG
 		logger.log(Level.INFO, "{0}: Asked for welding detection.", new Object[]{this.uuid});
 
-		return false;
+		return false; // TODO
 	}
 
 	@Override
@@ -195,12 +203,12 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		// DEBUG
 		logger.log(Level.INFO, "{0}: Stopped the session.", new Object[]{this.uuid});
 
-		return false;
+		return false; // TODO
 	}
 
 	@Override
 	public void unplug() {
-		client.setURI(baseURI + resMap.get("ev_self"));
+		client.setURI(resMap.get("ev_self"));
 		client.delete();
 
 		// DEBUG
