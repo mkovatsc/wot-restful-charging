@@ -59,6 +59,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		client.setURI(baseURI + resMap.get("ev"));
 		CoapResponse res = client.post("", MediaTypeRegistry.UNDEFINED);
 		this.uuid = UUID.fromString(res.getOptions().getLocationPath().get(1)); // TODO remove magic number
+		resMap.put("ev_self", "/" + res.getOptions().getLocationPathString());
 
 		// DEBUG
 		logger.log(Level.INFO, "Car with UUID {0} plugged in.", new Object[]{this.uuid});
@@ -72,7 +73,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 		JsonObject stateOfCharge = new JsonObject();
 		stateOfCharge.addProperty("soc", soc);
-		client.setURI(baseURI + "/ev/" + this.uuid + "/stateOfCharge");
+		client.setURI(baseURI + resMap.get("ev_self") + "/stateOfCharge");
 		client.post(gson.toJson(stateOfCharge), MediaTypeRegistry.APPLICATION_JSON);
 
 		JsonObject maxVals = new JsonObject();
@@ -128,7 +129,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		JsonObject targetVals = new JsonObject();
 		targetVals.addProperty("targetVoltage", targetVoltage);
 		targetVals.addProperty("targetCurrent", targetCurrent);
-		client.setURI(baseURI + "/ev/" + this.uuid + "/targetValues");
+		client.setURI(baseURI + resMap.get("ev_self") + "/targetValues");
 		client.post(gson.toJson(targetVals), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
@@ -143,12 +144,12 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 		JsonObject tmp1 = new JsonObject();
 		tmp1.addProperty("chargingComplete", chargingComplete);
-		client.setURI(baseURI + "/ev/" + this.uuid + "/chargingComplete");
+		client.setURI(baseURI + resMap.get("ev_self") + "/chargingComplete");
 		client.post(gson.toJson(tmp1), MediaTypeRegistry.APPLICATION_JSON);
 
 		JsonObject tmp2 = new JsonObject();
 		tmp2.addProperty("readyToCharge", readyToCharge);
-		client.setURI(baseURI + "/ev/" + this.uuid + "/readyToCharge");
+		client.setURI(baseURI + resMap.get("ev_self") + "/readyToCharge");
 		client.post(gson.toJson(tmp2), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
@@ -163,12 +164,12 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		JsonObject targetVals = new JsonObject();
 		targetVals.addProperty("targetVoltage", targetVoltage);
 		targetVals.addProperty("targetCurrent", targetCurrent);
-		client.setURI(baseURI + "/ev/" + this.uuid + "/targetValues");
+		client.setURI(baseURI + resMap.get("ev_self") + "/targetValues");
 		client.post(gson.toJson(targetVals), MediaTypeRegistry.APPLICATION_JSON);
 
 		JsonObject stateOfCharge = new JsonObject();
 		stateOfCharge.addProperty("soc", soc);
-		client.setURI(baseURI + "/ev/" + this.uuid + "/stateOfCharge");
+		client.setURI(baseURI + resMap.get("ev_self") + "/stateOfCharge");
 		client.post(gson.toJson(stateOfCharge), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
@@ -199,7 +200,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	@Override
 	public void unplug() {
-		client.setURI(baseURI + "/ev/" + this.uuid);
+		client.setURI(baseURI + resMap.get("ev_self"));
 		client.delete();
 
 		// DEBUG
