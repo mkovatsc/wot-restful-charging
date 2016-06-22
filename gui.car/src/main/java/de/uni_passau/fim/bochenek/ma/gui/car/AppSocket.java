@@ -121,7 +121,6 @@ public class AppSocket {
 								default :
 									// TODO
 							}
-
 							break;
 						case KEEPALIVE :
 

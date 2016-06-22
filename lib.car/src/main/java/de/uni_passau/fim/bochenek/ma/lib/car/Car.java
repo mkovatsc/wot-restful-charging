@@ -1,6 +1,7 @@
 package de.uni_passau.fim.bochenek.ma.lib.car;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -8,6 +9,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
+import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.jetty.websocket.api.Session;
@@ -29,11 +31,13 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	private String baseURI;
 	private CoapClient client;
+	private HashMap<String, CoapObserveRelation> observed; // TODO Better index
 
 	private static Logger logger = Logger.getLogger(Car.class.getName());
 
 	public Car(String chargerURI) {
 		client = new CoapClient();
+		observed = new HashMap<String, CoapObserveRelation>();
 		baseURI = chargerURI; // TODO check for validity
 
 		// DEBUG
@@ -85,6 +89,8 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	@Override
 	public boolean preCharge(double targetVoltage, double targetCurrent) {
+
+		// Establish observe relation to charger values
 		CoapHandler handler = new CoapHandler() {
 
 			@Override
@@ -92,18 +98,21 @@ public class Car implements ICar { // TODO Extend CoapClient?
 				JsonObject json = new Gson().fromJson(response.getResponseText(), JsonObject.class);
 				String tmp = String.format(Locale.US, "{\"voltage\": %.2f, \"current\": %.2f}", json.get("voltage").getAsFloat(), json.get("current").getAsFloat());
 				sendToCar("SEVALUES", tmp);
-				
-				// TODO Cancel OBSERVE?
+
+				// Cancel observe and remove from maps
+				CoapObserveRelation rel = observed.remove("preCharge");
+				if (rel != null) {
+					rel.reactiveCancel();
+				}
 			}
 
 			@Override
 			public void onError() {
-				// TODO Auto-generated method stub
-				System.out.println("Failed to observe!");
+				logger.info("Failed to observe resource!");
 			}
 		};
 		client.setURI(baseURI + "/se/presentValues");
-		client.observeAndWait(handler);
+		observed.put("preCharge", client.observeAndWait(handler));
 
 		Gson gson = new GsonBuilder().create();
 		JsonObject targetVals = new JsonObject();
