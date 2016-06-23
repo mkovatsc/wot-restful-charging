@@ -90,7 +90,9 @@ public class ServerProvider {
 			SeStatus se = status.getSeStatus();
 
 			// TODO what if there is more than just one EV connected?
-			for (CarData car : cars.values()) {
+			for (Map.Entry<UUID, CarData> entry : cars.entrySet()) {
+				CarData car = entry.getValue();
+				ev.setUuid(entry.getKey());
 				ev.setStateOfCharge(car.getSoc());
 				ev.setMaximumVoltage(car.getMaxVoltage());
 				ev.setMaximumCurrent(car.getMaxCurrent());
@@ -100,7 +102,7 @@ public class ServerProvider {
 
 			se.setPresentVoltage(charger.getPresentVoltage());
 			se.setPresentCurrent(charger.getPresentCurrent());
-			
+
 			// TODO Only update UI if any car is plugged in
 			if (cars.size() > 0) {
 				SocketHandler.getInstance().pushToListeners(MessageType.STATUS, status);
