@@ -25,7 +25,7 @@ import de.uni_passau.fim.bochenek.ma.lib.car.messages.Message.MessageType;
 @WebSocket
 public class AppSocket {
 
-	private Logger logger = Logger.getLogger(AppSocket.class.getName());;
+	private Logger logger = Logger.getLogger(AppSocket.class.getName());
 
 	@OnWebSocketClose
 	public void onClose(int statusCode, String reason) {

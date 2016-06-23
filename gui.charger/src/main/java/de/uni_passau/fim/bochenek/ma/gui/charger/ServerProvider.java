@@ -1,6 +1,8 @@
 package de.uni_passau.fim.bochenek.ma.gui.charger;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -22,6 +24,8 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvSoc;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvTargetValues;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePresentValues;
 import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
+import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
+import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
 /**
  * TODO
@@ -49,8 +53,12 @@ public class ServerProvider {
 			e.printStackTrace();
 		}
 
+		// Prepare data POJOs for charger and connected cars
+		ChargerData chargerData = new ChargerData();
+		Map<UUID, CarData> carData = new HashMap<UUID, CarData>();
+
 		// Setup and start charger
-		Charger charger = new Charger();
+		Charger charger = new Charger(chargerData, carData);
 		MessageHandler handler = new MessageHandler();
 		charger.registerHandler(MessageType.DEBUG, handler);
 		charger.registerHandler(MessageType.STATUS, handler);
@@ -63,6 +71,8 @@ public class ServerProvider {
 		// Start regular interface update
 		Timer timer = new Timer();
 		timer.schedule(new InterfaceUpdate(charger.getRoot()), 0, 1000); // TODO find a better solution!
+
+		// TODO maybe use POJOs for UI update
 	}
 
 	/**

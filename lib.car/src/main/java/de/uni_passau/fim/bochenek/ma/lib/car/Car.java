@@ -18,8 +18,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
+import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 
 /**
  * TODO Implement some kind of state machine to "force" the right order for
@@ -270,10 +270,6 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	public CarData getData() {
 		return data;
-	}
-
-	public void setData(CarData data) {
-		this.data = data;
 	}
 
 }

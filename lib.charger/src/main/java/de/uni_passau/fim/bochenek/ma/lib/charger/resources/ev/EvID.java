@@ -35,7 +35,7 @@ public class EvID extends CoapResource implements HalResource {
 
 	@Override
 	public void handleDELETE(CoapExchange exchange) {
-		this.delete();
+		this.delete(); // TODO Also delete from Map
 		exchange.respond(ResponseCode.DELETED);
 	}
 

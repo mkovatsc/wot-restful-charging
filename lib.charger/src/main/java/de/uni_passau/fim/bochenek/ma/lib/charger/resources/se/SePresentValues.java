@@ -13,16 +13,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
+import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
 public class SePresentValues extends CoapResource implements HalResource {
 
+	private ChargerData data;
 	private double voltage;
 	private double current;
 
-	public SePresentValues(String name) {
+	public SePresentValues(String name, ChargerData data) {
 		super(name);
 		this.setObservable(true); // TODO
-		// TODO Auto-generated constructor stub
+		this.data = data;
 	}
 
 	@Override
@@ -48,8 +50,8 @@ public class SePresentValues extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
-		hal.addProperty("current", current);
-		hal.addProperty("voltage", voltage);
+		hal.addProperty("voltage", this.data.getPresentVoltage());
+		hal.addProperty("current", this.data.getPresentCurrent());
 
 		return hal;
 	}

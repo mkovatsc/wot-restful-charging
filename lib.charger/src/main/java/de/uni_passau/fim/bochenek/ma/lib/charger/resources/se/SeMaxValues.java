@@ -13,15 +13,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 import black.door.hate.HalResource;
+import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
 public class SeMaxValues extends CoapResource implements HalResource {
 
-	private double current;
-	private double voltage;
+	private ChargerData data;
 
-	public SeMaxValues(String name) {
+	public SeMaxValues(String name, ChargerData data) {
 		super(name);
-		// TODO Auto-generated constructor stub
+		this.data = data;
 	}
 
 	@Override
@@ -47,8 +47,8 @@ public class SeMaxValues extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
-		hal.addProperty("current", current);
-		hal.addProperty("voltage", voltage);
+		hal.addProperty("voltage", this.data.getMaxVoltage());
+		hal.addProperty("current", this.data.getMaxCurrent());
 
 		return hal;
 	}

@@ -24,10 +24,9 @@ public class EvRoot extends CoapResource implements HalResource {
 
 	private Map<UUID, CarData> cars;
 
-	public EvRoot(String name) {
+	public EvRoot(String name, Map<UUID, CarData> cars) {
 		super(name);
-		cars = new HashMap<UUID, CarData>();
-		// TODO Auto-generated constructor stub
+		this.cars = cars;
 	}
 
 	@Override
