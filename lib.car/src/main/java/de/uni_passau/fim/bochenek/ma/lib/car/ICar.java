@@ -2,7 +2,7 @@ package de.uni_passau.fim.bochenek.ma.lib.car;
 
 import java.util.UUID;
 
-import de.uni_passau.fim.bochenek.ma.lib.car.enums.ChargingType;
+import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 
 /**
  * TODO Handler / Callbacks for CoAP responses etc.

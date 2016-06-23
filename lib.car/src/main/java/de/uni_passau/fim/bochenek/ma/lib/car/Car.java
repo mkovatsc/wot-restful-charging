@@ -18,7 +18,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import de.uni_passau.fim.bochenek.ma.lib.car.enums.ChargingType;
+import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
+import de.uni_passau.fim.bochenek.ma.util.server.CarData;
 
 /**
  * TODO Implement some kind of state machine to "force" the right order for
@@ -31,6 +32,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	private UUID uuid;
 	private Session session;
+	private CarData data; // TODO Think about dependency injection!
 
 	private CoapClient client;
 	private HashMap<String, String> resMap;
@@ -39,11 +41,11 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	private static Logger logger = Logger.getLogger(Car.class.getName());
 
 	public Car(String chargerURI) {
-		client = new CoapClient(chargerURI);
+		client = new CoapClient(chargerURI); // TODO Server not available?
 		resMap = new HashMap<String, String>();
 		observed = new HashMap<String, CoapObserveRelation>();
 
-		// Discover the URL for EVs
+		// Discover the entry URL for EVs
 		JsonObject rootHal = new Gson().fromJson(client.get().getResponseText(), JsonObject.class); // TODO invalid JSON?
 		JsonObject links = rootHal.getAsJsonObject("_links");
 		if (links.get("ev") != null) {
@@ -104,7 +106,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		// DEBUG
 		logger.log(Level.INFO, "{0}: Initiated cable check.", new Object[]{this.uuid});
 
-		return false;
+		return false; // TODO
 	}
 
 	@Override
@@ -264,6 +266,14 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	public void setSession(Session session) {
 		this.session = session;
+	}
+
+	public CarData getData() {
+		return data;
+	}
+
+	public void setData(CarData data) {
+		this.data = data;
 	}
 
 }

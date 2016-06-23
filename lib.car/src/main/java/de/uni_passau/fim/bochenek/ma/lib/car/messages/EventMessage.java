@@ -1,6 +1,6 @@
 package de.uni_passau.fim.bochenek.ma.lib.car.messages;
 
-import de.uni_passau.fim.bochenek.ma.lib.car.enums.ChargingType;
+import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 
 /**
  * TODO Define actual EventMessage
