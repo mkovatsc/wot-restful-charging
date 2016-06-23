@@ -48,7 +48,6 @@ public class EvRoot extends CoapResource implements HalResource {
 		Map<String, CoapResource> resources = new HashMap<String, CoapResource>();
 		resources.put("chargingComplete", new EvChargingComplete("chargingComplete", data));
 		resources.put("maxValues", new EvMaxValues("maxValues", data));
-		resources.put("readyToCharge", new EvReadyToCharge("readyToCharge", data));
 		resources.put("stateOfCharge", new EvSoc("stateOfCharge", data));
 		resources.put("targetValues", new EvTargetValues("targetValues", data));
 
