@@ -63,12 +63,10 @@ public class ServerProvider {
 		// Start regular interface update
 		Timer timer = new Timer();
 		timer.schedule(new InterfaceUpdate(chargerData, carData), 0, 1000);
-
-		// TODO maybe use POJOs for UI update
 	}
 
 	/**
-	 * TODO doing it this way is so f***ing wrong...
+	 * TODO
 	 * 
 	 * @author Martin Bochenek
 	 *
@@ -103,7 +101,7 @@ public class ServerProvider {
 			se.setPresentVoltage(charger.getPresentVoltage());
 			se.setPresentCurrent(charger.getPresentCurrent());
 
-			// TODO Only update UI if any car is plugged in
+			// Only update UI if at least one car is plugged in
 			if (cars.size() > 0) {
 				SocketHandler.getInstance().pushToListeners(MessageType.STATUS, status);
 			}
