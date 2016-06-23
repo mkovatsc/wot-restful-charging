@@ -1,4 +1,4 @@
-package de.uni_passau.fim.bochenek.ma.util.server;
+package de.uni_passau.fim.bochenek.ma.util.server.data;
 
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 
