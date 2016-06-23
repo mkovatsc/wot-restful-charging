@@ -17,12 +17,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
 import black.door.hate.LinkOrResource;
+import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvRoot extends CoapResource implements HalResource {
 
+	private Map<UUID, CarData> cars;
+
 	public EvRoot(String name) {
 		super(name);
+		cars = new HashMap<UUID, CarData>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -38,18 +42,20 @@ public class EvRoot extends CoapResource implements HalResource {
 
 	@Override
 	public void handlePOST(CoapExchange exchange) {
+		CarData data = new CarData();
 		UUID uuid = UUID.randomUUID(); // TODO has to be done in the emulator!
+		this.cars.put(uuid, data);
 
 		Map<String, CoapResource> resources = new HashMap<String, CoapResource>();
-		resources.put("chargingComplete", new EvChargingComplete("chargingComplete"));
-		resources.put("maxValues", new EvMaxValues("maxValues"));
-		resources.put("readyToCharge", new EvReadyToCharge("readyToCharge"));
-		resources.put("stateOfCharge", new EvSoc("stateOfCharge"));
-		resources.put("targetValues", new EvTargetValues("targetValues"));
+		resources.put("chargingComplete", new EvChargingComplete("chargingComplete", data));
+		resources.put("maxValues", new EvMaxValues("maxValues", data));
+		resources.put("readyToCharge", new EvReadyToCharge("readyToCharge", data));
+		resources.put("stateOfCharge", new EvSoc("stateOfCharge", data));
+		resources.put("targetValues", new EvTargetValues("targetValues", data));
 
 		String actionResult = null;
 		HalRepresentationBuilder result = HalRepresentation.builder();
-		EvID ev = new EvID(uuid.toString());
+		EvID ev = new EvID(uuid.toString(), data);
 
 		for (Map.Entry<String, CoapResource> res : resources.entrySet()) {
 			ev.add(res.getValue());

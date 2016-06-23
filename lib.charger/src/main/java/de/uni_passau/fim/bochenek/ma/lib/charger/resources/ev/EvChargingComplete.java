@@ -15,14 +15,17 @@ import com.google.gson.JsonObject;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
+import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvChargingComplete extends CoapResource implements HalResource {
 
-	private boolean chargingComplete;
+	private CarData data;
+	private boolean chargingComplete; // TODO remove! see also other resources
 
-	public EvChargingComplete(String name) {
+	public EvChargingComplete(String name, CarData data) {
 		super(name);
+		this.data = data;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -42,6 +45,7 @@ public class EvChargingComplete extends CoapResource implements HalResource {
 		// TODO not very robust :P
 		Gson gson = new GsonBuilder().create();
 		JsonObject tmp = gson.fromJson(exchange.getRequestText(), JsonObject.class);
+		this.data.setChargingComplete(tmp.get("chargingComplete").getAsBoolean());
 		this.chargingComplete = tmp.get("chargingComplete").getAsBoolean();
 
 		exchange.respond(ResponseCode.CHANGED);
@@ -60,7 +64,7 @@ public class EvChargingComplete extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
-		hal.addProperty("chargingComplete", chargingComplete);
+		hal.addProperty("chargingComplete", data.isChargingComplete());
 
 		return hal;
 	}

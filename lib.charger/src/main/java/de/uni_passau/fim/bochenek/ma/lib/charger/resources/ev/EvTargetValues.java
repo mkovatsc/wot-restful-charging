@@ -16,15 +16,18 @@ import com.google.gson.JsonObject;
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePresentValues;
+import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvTargetValues extends CoapResource implements HalResource {
 
+	private CarData data;
 	private double voltage;
 	private double current;
 
-	public EvTargetValues(String name) {
+	public EvTargetValues(String name, CarData data) {
 		super(name);
+		this.data = data;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -44,6 +47,8 @@ public class EvTargetValues extends CoapResource implements HalResource {
 		// TODO not very robust :P
 		Gson gson = new GsonBuilder().create();
 		JsonObject targetVals = gson.fromJson(exchange.getRequestText(), JsonObject.class);
+		this.data.setTargetVoltage(targetVals.get("targetVoltage").getAsDouble());
+		this.data.setTargetCurrent(targetVals.get("targetCurrent").getAsDouble());
 		this.voltage = targetVals.get("targetVoltage").getAsDouble();
 		this.current = targetVals.get("targetCurrent").getAsDouble();
 
@@ -69,8 +74,8 @@ public class EvTargetValues extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
-		hal.addProperty("voltage", this.voltage);
-		hal.addProperty("current", this.current);
+		hal.addProperty("voltage", this.data.getTargetVoltage());
+		hal.addProperty("current", this.data.getTargetCurrent());
 
 		return hal;
 	}

@@ -13,11 +13,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
+import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvID extends CoapResource implements HalResource {
 
-	public EvID(String name) {
+	public EvID(String name, CarData data) {
 		super(name);
 		// TODO Auto-generated constructor stub
 	}

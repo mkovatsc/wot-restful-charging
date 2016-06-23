@@ -15,15 +15,18 @@ import com.google.gson.JsonObject;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
+import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvMaxValues extends CoapResource implements HalResource {
 
+	private CarData data;
 	private double voltage;
 	private double current;
 
-	public EvMaxValues(String name) {
+	public EvMaxValues(String name, CarData data) {
 		super(name);
+		this.data = data;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -43,6 +46,8 @@ public class EvMaxValues extends CoapResource implements HalResource {
 		// TODO not very robust :P
 		Gson gson = new GsonBuilder().create();
 		JsonObject maxVals = gson.fromJson(exchange.getRequestText(), JsonObject.class);
+		this.data.setMaxVoltage(maxVals.get("maxVoltage").getAsDouble());
+		this.data.setMaxCurrent(maxVals.get("maxCurrent").getAsDouble());
 		this.voltage = maxVals.get("maxVoltage").getAsDouble();
 		this.current = maxVals.get("maxCurrent").getAsDouble();
 
@@ -62,8 +67,8 @@ public class EvMaxValues extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
-		hal.addProperty("voltage", this.voltage);
-		hal.addProperty("current", this.current);
+		hal.addProperty("voltage", this.data.getMaxVoltage());
+		hal.addProperty("current", this.data.getMaxCurrent());
 
 		return hal;
 	}

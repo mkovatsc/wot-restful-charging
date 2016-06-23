@@ -16,13 +16,16 @@ import com.google.gson.JsonObject;
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
+import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 
 public class EvSoc extends CoapResource implements HalResource {
 
+	private CarData data;
 	private int stateOfCharge;
 
-	public EvSoc(String name) {
+	public EvSoc(String name, CarData data) {
 		super(name);
+		this.data = data;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -42,6 +45,7 @@ public class EvSoc extends CoapResource implements HalResource {
 		// TODO not very robust :P
 		Gson gson = new GsonBuilder().create();
 		JsonObject soc = gson.fromJson(exchange.getRequestText(), JsonObject.class);
+		this.data.setSoc(soc.get("soc").getAsInt());
 		this.stateOfCharge = soc.get("soc").getAsInt();
 
 		exchange.respond(ResponseCode.CHANGED);
@@ -60,7 +64,7 @@ public class EvSoc extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
-		hal.addProperty("stateOfCharge", stateOfCharge);
+		hal.addProperty("stateOfCharge", this.data.getSoc());
 
 		return hal;
 	}

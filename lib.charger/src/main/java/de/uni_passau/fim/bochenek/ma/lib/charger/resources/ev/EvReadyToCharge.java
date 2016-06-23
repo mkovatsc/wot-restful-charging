@@ -17,14 +17,17 @@ import com.google.gson.JsonObject;
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePresentValues;
+import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvReadyToCharge extends CoapResource implements HalResource {
 
+	private CarData data;
 	private boolean readyToCharge;
 
-	public EvReadyToCharge(String name) {
+	public EvReadyToCharge(String name, CarData data) {
 		super(name);
+		this.data = data;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -44,6 +47,7 @@ public class EvReadyToCharge extends CoapResource implements HalResource {
 		// TODO not very robust :P
 		Gson gson = new GsonBuilder().create();
 		JsonObject tmp = gson.fromJson(exchange.getRequestText(), JsonObject.class);
+		this.data.setReadyToCharge(tmp.get("readyToCharge").getAsBoolean());
 		this.readyToCharge = tmp.get("readyToCharge").getAsBoolean();
 
 		// TODO Ugly hack to try something out; there needs to be some central entity to hold the data
@@ -75,7 +79,7 @@ public class EvReadyToCharge extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
-		hal.addProperty("readyToCharge", readyToCharge);
+		hal.addProperty("readyToCharge", this.data.isReadyToCharge());
 
 		return hal;
 	}
