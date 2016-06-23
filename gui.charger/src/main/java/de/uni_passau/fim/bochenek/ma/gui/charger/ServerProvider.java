@@ -9,20 +9,12 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.californium.core.server.resources.Resource;
-
 import de.uni_passau.fim.bochenek.ma.gui.charger.handler.MessageHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.Charger;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.StatusMessage;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.StatusMessage.EvStatus;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.StatusMessage.SeStatus;
-import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvChargingComplete;
-import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvMaxValues;
-import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvReadyToCharge;
-import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvSoc;
-import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvTargetValues;
-import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePresentValues;
 import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
@@ -70,7 +62,7 @@ public class ServerProvider {
 
 		// Start regular interface update
 		Timer timer = new Timer();
-		timer.schedule(new InterfaceUpdate(charger.getRoot()), 0, 1000); // TODO find a better solution!
+		timer.schedule(new InterfaceUpdate(chargerData, carData), 0, 1000);
 
 		// TODO maybe use POJOs for UI update
 	}
@@ -83,10 +75,12 @@ public class ServerProvider {
 	 */
 	static class InterfaceUpdate extends TimerTask {
 
-		private Resource root;
+		private ChargerData charger;
+		private Map<UUID, CarData> cars;
 
-		public InterfaceUpdate(Resource root) {
-			this.root = root;
+		public InterfaceUpdate(ChargerData charger, Map<UUID, CarData> cars) {
+			this.charger = charger;
+			this.cars = cars;
 		}
 
 		@Override
@@ -96,43 +90,19 @@ public class ServerProvider {
 			SeStatus se = status.getSeStatus();
 
 			// TODO what if there is more than just one EV connected?
-			for (Resource res1 : root.getChild("ev").getChildren()) {
-				ev.setUuid(UUID.fromString(res1.getName()));
-
-				for (Resource res2 : res1.getChildren()) {
-					switch (res2.getName()) {
-						case "stateOfCharge" :
-							ev.setStateOfCharge(((EvSoc) res2).getStateOfCharge());
-							break;
-						case "chargingComplete" :
-							ev.setChargingComplete(((EvChargingComplete) res2).isChargingComplete());
-							break;
-						case "readyToCharge" :
-							ev.setReadyToCharge(((EvReadyToCharge) res2).isReadyToCharge());
-							break;
-						case "maxValues" :
-							ev.setMaximumVoltage(((EvMaxValues) res2).getVoltage());
-							ev.setMaximumCurrent(((EvMaxValues) res2).getCurrent());
-							break;
-						case "targetValues" :
-							ev.setTargetVoltage(((EvTargetValues) res2).getVoltage());
-							ev.setTargetCurrent(((EvTargetValues) res2).getCurrent());
-							break;
-					}
-				}
+			for (CarData car : cars.values()) {
+				ev.setStateOfCharge(car.getSoc());
+				ev.setMaximumVoltage(car.getMaxVoltage());
+				ev.setMaximumCurrent(car.getMaxCurrent());
+				ev.setTargetVoltage(car.getTargetVoltage());
+				ev.setTargetCurrent(car.getTargetCurrent());
 			}
 
-			for (Resource res : root.getChild("se").getChildren()) {
-				switch (res.getName()) {
-					case "presentValues" :
-						se.setPresentVoltage(((SePresentValues) res).getVoltage());
-						se.setPresentCurrent(((SePresentValues) res).getCurrent());
-						break;
-				}
-			}
-
+			se.setPresentVoltage(charger.getPresentVoltage());
+			se.setPresentCurrent(charger.getPresentCurrent());
+			
 			// TODO Only update UI if any car is plugged in
-			if (root.getChild("ev").getChildren().size() > 0) {
+			if (cars.size() > 0) {
 				SocketHandler.getInstance().pushToListeners(MessageType.STATUS, status);
 			}
 		}

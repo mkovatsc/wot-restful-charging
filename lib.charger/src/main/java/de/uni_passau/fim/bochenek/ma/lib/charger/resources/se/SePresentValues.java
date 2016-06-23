@@ -18,8 +18,6 @@ import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 public class SePresentValues extends CoapResource implements HalResource {
 
 	private ChargerData data;
-	private double voltage;
-	private double current;
 
 	public SePresentValues(String name, ChargerData data) {
 		super(name);
@@ -56,20 +54,12 @@ public class SePresentValues extends CoapResource implements HalResource {
 		return hal;
 	}
 
-	public double getVoltage() {
-		return voltage;
-	}
-
 	public void setVoltage(double voltage) {
-		this.voltage = voltage;
-	}
-
-	public double getCurrent() {
-		return current;
+		this.data.setPresentVoltage(voltage);
 	}
 
 	public void setCurrent(double current) {
-		this.current = current;
+		this.data.setPresentCurrent(current);
 	}
 
 }
