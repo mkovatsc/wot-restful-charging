@@ -22,13 +22,10 @@ import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 public class EvTargetValues extends CoapResource implements HalResource {
 
 	private CarData data;
-	private double voltage;
-	private double current;
 
 	public EvTargetValues(String name, CarData data) {
 		super(name);
 		this.data = data;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -49,13 +46,11 @@ public class EvTargetValues extends CoapResource implements HalResource {
 		JsonObject targetVals = gson.fromJson(exchange.getRequestText(), JsonObject.class);
 		this.data.setTargetVoltage(targetVals.get("targetVoltage").getAsDouble());
 		this.data.setTargetCurrent(targetVals.get("targetCurrent").getAsDouble());
-		this.voltage = targetVals.get("targetVoltage").getAsDouble();
-		this.current = targetVals.get("targetCurrent").getAsDouble();
 
 		// TODO Just for testing purposes, charger sets the requested values instantly
 		SePresentValues tmp = (SePresentValues) this.getParent().getParent().getParent().getChild("se").getChild("presentValues");
-		tmp.setVoltage(this.voltage);
-		tmp.setCurrent(this.current);
+		tmp.setVoltage(this.data.getTargetVoltage());
+		tmp.setCurrent(this.data.getTargetCurrent());
 		tmp.changed();
 
 		exchange.respond(ResponseCode.CHANGED);
@@ -78,14 +73,6 @@ public class EvTargetValues extends CoapResource implements HalResource {
 		hal.addProperty("current", this.data.getTargetCurrent());
 
 		return hal;
-	}
-
-	public double getVoltage() {
-		return voltage;
-	}
-
-	public double getCurrent() {
-		return current;
 	}
 
 }

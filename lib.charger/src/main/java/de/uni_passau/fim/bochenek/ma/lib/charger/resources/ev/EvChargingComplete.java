@@ -21,12 +21,10 @@ import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 public class EvChargingComplete extends CoapResource implements HalResource {
 
 	private CarData data;
-	private boolean chargingComplete; // TODO remove! see also other resources
 
 	public EvChargingComplete(String name, CarData data) {
 		super(name);
 		this.data = data;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -46,7 +44,6 @@ public class EvChargingComplete extends CoapResource implements HalResource {
 		Gson gson = new GsonBuilder().create();
 		JsonObject tmp = gson.fromJson(exchange.getRequestText(), JsonObject.class);
 		this.data.setChargingComplete(tmp.get("chargingComplete").getAsBoolean());
-		this.chargingComplete = tmp.get("chargingComplete").getAsBoolean();
 
 		exchange.respond(ResponseCode.CHANGED);
 	}
@@ -64,13 +61,9 @@ public class EvChargingComplete extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
-		hal.addProperty("chargingComplete", data.isChargingComplete());
+		hal.addProperty("chargingComplete", this.data.isChargingComplete());
 
 		return hal;
-	}
-
-	public boolean isChargingComplete() {
-		return chargingComplete;
 	}
 
 }

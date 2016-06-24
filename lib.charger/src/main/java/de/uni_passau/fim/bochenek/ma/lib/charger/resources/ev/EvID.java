@@ -20,7 +20,6 @@ public class EvID extends CoapResource implements HalResource {
 
 	public EvID(String name, CarData data) {
 		super(name);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

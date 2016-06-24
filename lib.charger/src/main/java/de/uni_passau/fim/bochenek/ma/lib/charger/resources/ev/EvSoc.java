@@ -21,7 +21,6 @@ import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 public class EvSoc extends CoapResource implements HalResource {
 
 	private CarData data;
-	private int stateOfCharge;
 
 	public EvSoc(String name, CarData data) {
 		super(name);
@@ -46,7 +45,6 @@ public class EvSoc extends CoapResource implements HalResource {
 		Gson gson = new GsonBuilder().create();
 		JsonObject soc = gson.fromJson(exchange.getRequestText(), JsonObject.class);
 		this.data.setSoc(soc.get("soc").getAsInt());
-		this.stateOfCharge = soc.get("soc").getAsInt();
 
 		exchange.respond(ResponseCode.CHANGED);
 	}
@@ -67,10 +65,6 @@ public class EvSoc extends CoapResource implements HalResource {
 		hal.addProperty("stateOfCharge", this.data.getSoc());
 
 		return hal;
-	}
-
-	public int getStateOfCharge() {
-		return stateOfCharge;
 	}
 
 }

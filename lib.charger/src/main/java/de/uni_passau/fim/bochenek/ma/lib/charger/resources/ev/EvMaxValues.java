@@ -21,13 +21,10 @@ import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 public class EvMaxValues extends CoapResource implements HalResource {
 
 	private CarData data;
-	private double voltage;
-	private double current;
 
 	public EvMaxValues(String name, CarData data) {
 		super(name);
 		this.data = data;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -48,8 +45,6 @@ public class EvMaxValues extends CoapResource implements HalResource {
 		JsonObject maxVals = gson.fromJson(exchange.getRequestText(), JsonObject.class);
 		this.data.setMaxVoltage(maxVals.get("maxVoltage").getAsDouble());
 		this.data.setMaxCurrent(maxVals.get("maxCurrent").getAsDouble());
-		this.voltage = maxVals.get("maxVoltage").getAsDouble();
-		this.current = maxVals.get("maxCurrent").getAsDouble();
 
 		exchange.respond(ResponseCode.CHANGED);
 	}
@@ -71,14 +66,6 @@ public class EvMaxValues extends CoapResource implements HalResource {
 		hal.addProperty("current", this.data.getMaxCurrent());
 
 		return hal;
-	}
-
-	public double getVoltage() {
-		return voltage;
-	}
-
-	public double getCurrent() {
-		return current;
 	}
 
 }
