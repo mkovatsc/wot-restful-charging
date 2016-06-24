@@ -235,24 +235,15 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	/**
 	 * TODO
 	 * 
-	 * @param rel
-	 */
-	private void resolveAndAddRel(String response, String rel) {
-		JsonObject links = new Gson().fromJson(response, JsonObject.class).getAsJsonObject("_links"); // TODO
-		if (links.has(rel)) {
-			this.resMap.put(rel, links.getAsJsonObject(rel).get("href").getAsString());
-		}
-	}
-
-	/**
-	 * TODO
-	 * 
 	 * @param response
 	 * @param rels
 	 */
 	private void resolveAndAddRel(String response, String... rels) {
+		JsonObject links = new Gson().fromJson(response, JsonObject.class).getAsJsonObject("_links");
 		for (String rel : rels) {
-			this.resolveAndAddRel(response, rel); // TODO Inefficient, improve!
+			if (links.has(rel)) {
+				this.resMap.put(rel, links.getAsJsonObject(rel).get("href").getAsString());
+			}
 		}
 	}
 
