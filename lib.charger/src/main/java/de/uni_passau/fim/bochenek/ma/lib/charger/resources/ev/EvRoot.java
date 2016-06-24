@@ -13,11 +13,15 @@ import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.Resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
 import black.door.hate.LinkOrResource;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
+import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvRoot extends CoapResource implements HalResource {
@@ -44,6 +48,14 @@ public class EvRoot extends CoapResource implements HalResource {
 		CarData data = new CarData();
 		UUID uuid = UUID.randomUUID(); // TODO has to be done in the emulator!
 		this.cars.put(uuid, data);
+
+		// TODO not very robust :P
+		Gson gson = new GsonBuilder().create();
+		JsonObject basicInfo = gson.fromJson(exchange.getRequestText(), JsonObject.class);
+		data.setSoc(basicInfo.get("soc").getAsInt());
+		data.setMaxVoltage(basicInfo.get("maxVoltage").getAsDouble());
+		data.setMaxCurrent(basicInfo.get("maxCurrent").getAsDouble());
+		data.setChargingType(ChargingType.valueOf(basicInfo.get("chargingType").getAsString()));
 
 		Map<String, CoapResource> resources = new HashMap<String, CoapResource>();
 		resources.put("chargingComplete", new EvChargingComplete("chargingComplete", data));
