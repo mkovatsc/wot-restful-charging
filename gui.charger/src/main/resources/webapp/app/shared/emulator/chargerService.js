@@ -27,6 +27,10 @@ app.factory('chargerService', function ($rootScope, $interval, socketService) {
         that.status.ev = data.ev;
         $rootScope.$apply();
       });
+      this.config.socket.addHandler('EVENT', function (data) {
+        // TODO
+        console.log(data);
+      });
     }
   };
 

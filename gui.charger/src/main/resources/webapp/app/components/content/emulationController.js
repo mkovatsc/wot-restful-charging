@@ -21,11 +21,4 @@ app.controller('emulationController', function ($log, $rootScope, $scope, charge
   };
   charger.config.socket.addHandler('DEBUG', debugHandler);
 
-  // Create and add event handler
-  var eventHandler = function(json) {
-    // TODO
-    $log.info(json);
-  };
-  charger.config.socket.addHandler('EVENT', eventHandler);
-
 });
