@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.uni_passau.fim.bochenek.ma.lib.charger.Charger;
+import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.StatusMessage;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.StatusMessage.EvStatus;

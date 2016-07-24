@@ -1,4 +1,4 @@
-package de.uni_passau.fim.bochenek.ma.gui.charger;
+package de.uni_passau.fim.bochenek.ma.lib.charger;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,6 +9,8 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+
+import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
 
 @WebSocket
 public class AppSocket {

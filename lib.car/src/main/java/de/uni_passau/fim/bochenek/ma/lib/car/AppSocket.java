@@ -1,4 +1,4 @@
-package de.uni_passau.fim.bochenek.ma.gui.car;
+package de.uni_passau.fim.bochenek.ma.lib.car;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -16,8 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-import de.uni_passau.fim.bochenek.ma.gui.car.SocketHandler;
-import de.uni_passau.fim.bochenek.ma.lib.car.Car;
+import de.uni_passau.fim.bochenek.ma.lib.car.handler.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.ActionMessage;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.EventMessage;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.Message.MessageType;

@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.uni_passau.fim.bochenek.ma.lib.car.handler.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
 
 /**

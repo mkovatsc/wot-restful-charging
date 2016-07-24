@@ -1,4 +1,4 @@
-package de.uni_passau.fim.bochenek.ma.gui.car;
+package de.uni_passau.fim.bochenek.ma.lib.car.handler;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -10,7 +10,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
-import de.uni_passau.fim.bochenek.ma.gui.car.AppSocket;
+import de.uni_passau.fim.bochenek.ma.lib.car.AppSocket;
 import de.uni_passau.fim.bochenek.ma.lib.car.Car;
 
 /**

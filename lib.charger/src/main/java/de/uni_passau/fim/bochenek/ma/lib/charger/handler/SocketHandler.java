@@ -1,4 +1,4 @@
-package de.uni_passau.fim.bochenek.ma.gui.charger;
+package de.uni_passau.fim.bochenek.ma.lib.charger.handler;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -12,6 +12,7 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 import com.google.gson.Gson;
 
+import de.uni_passau.fim.bochenek.ma.lib.charger.AppSocket;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 
