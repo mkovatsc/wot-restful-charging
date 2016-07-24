@@ -67,7 +67,7 @@
   <md-tabs md-dynamic-height md-border-bottom>
     <md-tab label="debug">
       <md-content class="md-padding">
-        <md-virtual-repeat-container ng-controller="debugController" id="debug-msg-container">
+        <md-virtual-repeat-container id="debug-msg-container">
           <div md-virtual-repeat="message in debugmsgs" class="debug-msg" flex>
             {{ message.time }} - {{ message.message }}
           </div>
