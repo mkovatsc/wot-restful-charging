@@ -20,6 +20,9 @@ import com.google.gson.JsonObject;
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
 import black.door.hate.LinkOrResource;
+import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
@@ -79,6 +82,10 @@ public class EvRoot extends CoapResource implements HalResource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		// DEBUG
+		SocketHandler socket = SocketHandler.getInstance();
+		socket.pushToListeners(MessageType.DEBUG, new Message("New car connected. Cable check should be started!"));
 
 		exchange.setLocationPath("/ev/" + uuid.toString()); // TODO better way?
 		exchange.respond(ResponseCode.CREATED, actionResult, MediaTypeRegistry.APPLICATION_JSON);
