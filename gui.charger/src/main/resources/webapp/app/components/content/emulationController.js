@@ -6,6 +6,9 @@ app.controller('emulationController', function ($log, $rootScope, $scope, charge
   });
   $rootScope.charger = charger;
 
+  // Assign debug messages to rootScope
+  $rootScope.debugmsgs = debugService.messages;
+
   // Create and add debug message handler to charger
   var debugHandler = function(json) {
     var currentdate = new Date();
@@ -16,8 +19,13 @@ app.controller('emulationController', function ($log, $rootScope, $scope, charge
     debugService.pushMsg(datetime, json.message);
     $rootScope.$apply();
   };
-
   charger.config.socket.addHandler('DEBUG', debugHandler);
-  $rootScope.debugmsgs = debugService.messages;
+
+  // Create and add event handler
+  var eventHandler = function(json) {
+    // TODO
+    $log.info(json);
+  };
+  charger.config.socket.addHandler('EVENT', eventHandler);
 
 });
