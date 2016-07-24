@@ -21,10 +21,16 @@
           </md-tab>
         </md-tabs>
       </div>
+      <div class="cablecheck">
+        <h3>Cable check status</h3>
+        <p>{{charger.status.cableCheck || 'N/A'}}</p>
+      </div>
+      <!--
       <div class="state">
         <h3>State Machine</h3>
         <p>{{charger.status.se.currentState}}</p>
       </div>
+      -->
     </md-content>
   </div>
 

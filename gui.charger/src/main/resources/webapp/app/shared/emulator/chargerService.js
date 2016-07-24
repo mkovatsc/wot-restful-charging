@@ -2,7 +2,8 @@ app.factory('chargerService', function ($rootScope, $interval, socketService) {
   var charger = function (args) {
     this.status = {
       se: {},
-      ev: {}
+      ev: {},
+      cableCheck: ''
     };
 
     this.config = {
@@ -28,8 +29,11 @@ app.factory('chargerService', function ($rootScope, $interval, socketService) {
         $rootScope.$apply();
       });
       this.config.socket.addHandler('EVENT', function (data) {
-        // TODO
-        console.log(data);
+        if ('pluggedIn' in data && data['pluggedIn']) {
+          // TODO Start cable check
+          that.status.cableCheck = 'running';
+          $rootScope.$apply();
+        }
       });
     }
   };

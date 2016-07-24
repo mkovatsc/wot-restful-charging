@@ -21,6 +21,7 @@ import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
 import black.door.hate.LinkOrResource;
 import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.EventMessage;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
@@ -86,6 +87,7 @@ public class EvRoot extends CoapResource implements HalResource {
 		// DEBUG
 		SocketHandler socket = SocketHandler.getInstance();
 		socket.pushToListeners(MessageType.DEBUG, new Message("New car connected. Cable check should be started!"));
+		socket.pushToListeners(MessageType.EVENT, new EventMessage(true));
 
 		exchange.setLocationPath("/ev/" + uuid.toString()); // TODO better way?
 		exchange.respond(ResponseCode.CREATED, actionResult, MediaTypeRegistry.APPLICATION_JSON);
