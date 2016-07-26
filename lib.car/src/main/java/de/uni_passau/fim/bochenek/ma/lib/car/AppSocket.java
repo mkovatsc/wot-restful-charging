@@ -95,6 +95,9 @@ public class AppSocket {
 
 							// Handle triggered action
 							switch (actMsg.getAction()) {
+								case "checkAvailableActions" :
+									car.checkAvailabeActions();
+									break;
 								case "chargeParameterDiscovery" :
 									car.chargeParameterDiscovery(actMsg.getSoc(), actMsg.getMaxVoltage(), actMsg.getMaxCurrent());
 									break;

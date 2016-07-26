@@ -57,6 +57,10 @@ app.factory('emulationService', function ($log, $rootScope) {
       } else {
         switch (car.state) {
           case 'pluggedIn':
+            car.checkAvailableActions(this.config.speedup);
+            break;
+/*
+          case 'pluggedIn':
             car.doChargeParameterDiscovery(this.config.speedup);
             break;
           case 'chargeParameterDiscovery':
@@ -95,6 +99,7 @@ app.factory('emulationService', function ($log, $rootScope) {
           case 'powerDeliveryDoneW':
             car.doWeldingDetection(this.config.speedup);
             break;
+*/
           case 'weldingDetection':
             car.doWeldingDetection(this.config.speedup);
             break;

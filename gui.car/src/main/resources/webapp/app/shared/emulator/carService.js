@@ -76,6 +76,19 @@ app.factory('carService', function ($rootScope, socketService) {
       }
     },
 
+    // TODO Check available actions
+    checkAvailableActions: function (speedup) {
+      console.log("Checking for available actions.");
+
+      if (typeof this.config.socket != 'undefined') { // TODO external function!
+        var data = {
+          action: 'checkAvailableActions'
+          // TODO
+        };
+        this.config.socket.send('ACTION', data);
+      }
+    },
+
     // Charge parameter discovery
     doChargeParameterDiscovery: function (speedup) {
       this.changeState('chargeParameterDiscovery');

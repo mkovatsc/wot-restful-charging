@@ -79,6 +79,13 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	}
 
 	@Override
+	public void checkAvailabeActions() { // TODO
+		client.setURI(resMap.get("ev_self"));
+		CoapResponse res = client.get();
+		logger.info(res.getResponseText());
+	}
+
+	@Override
 	public boolean chargeParameterDiscovery(int soc, double maxVoltage, double maxCurrent) {
 		Gson gson = new GsonBuilder().create();
 
