@@ -2,6 +2,7 @@ package de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
@@ -13,13 +14,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
+import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.EventMessage;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvID extends CoapResource implements HalResource {
 
 	public EvID(String name, CarData data) {
-		super(name);
+		super(name); // TODO Do something with CarData?!
 	}
 
 	@Override
@@ -34,7 +38,9 @@ public class EvID extends CoapResource implements HalResource {
 
 	@Override
 	public void handleDELETE(CoapExchange exchange) {
-		this.delete(); // TODO Also delete from Map
+		((EvRoot) this.getParent()).removeCar(UUID.fromString(this.getName()));
+		this.delete();
+		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, new EventMessage(null, false)); // TODO Provide UUID?
 		exchange.respond(ResponseCode.DELETED);
 	}
 

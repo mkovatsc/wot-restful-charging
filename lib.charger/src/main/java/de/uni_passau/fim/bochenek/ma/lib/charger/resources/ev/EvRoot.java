@@ -86,8 +86,8 @@ public class EvRoot extends CoapResource implements HalResource {
 
 		// DEBUG
 		SocketHandler socket = SocketHandler.getInstance();
-		socket.pushToListeners(MessageType.DEBUG, new Message("New car connected. Cable check should be started!"));
-		socket.pushToListeners(MessageType.EVENT, new EventMessage(true));
+		socket.pushToListeners(MessageType.DEBUG, new Message("New car (" + uuid + ") connected. Cable check should be started!"));
+		socket.pushToListeners(MessageType.EVENT, new EventMessage(uuid, true));
 
 		exchange.setLocationPath("/ev/" + uuid.toString()); // TODO better way?
 		exchange.respond(ResponseCode.CREATED, actionResult, MediaTypeRegistry.APPLICATION_JSON);
@@ -112,6 +112,15 @@ public class EvRoot extends CoapResource implements HalResource {
 		}
 
 		return hal;
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param uuid
+	 */
+	protected void removeCar(UUID uuid) {
+		this.cars.remove(uuid);
 	}
 
 }

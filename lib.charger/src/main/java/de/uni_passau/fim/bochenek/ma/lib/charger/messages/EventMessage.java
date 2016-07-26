@@ -1,5 +1,7 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.messages;
 
+import java.util.UUID;
+
 /**
  * TODO Define actual EventMessage
  * 
@@ -8,9 +10,10 @@ package de.uni_passau.fim.bochenek.ma.lib.charger.messages;
  */
 public class EventMessage extends Message {
 
+	private UUID uuid;
 	private boolean pluggedIn;
 
-	public EventMessage(boolean pluggedIn) {
+	public EventMessage(UUID uuid, boolean pluggedIn) {
 		this.setPluggedIn(pluggedIn);
 	}
 
@@ -20,6 +23,14 @@ public class EventMessage extends Message {
 
 	public void setPluggedIn(boolean pluggedIn) {
 		this.pluggedIn = pluggedIn;
+	}
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 }

@@ -1,4 +1,4 @@
-app.factory('chargerService', function ($rootScope, $interval, socketService) {
+app.factory('chargerService', function ($log, $rootScope, $interval, socketService) {
   var charger = function (args) {
     this.status = {
       se: {},
@@ -24,14 +24,25 @@ app.factory('chargerService', function ($rootScope, $interval, socketService) {
         that.config.socket.send('KEEPALIVE', {});
       });
       this.config.socket.addHandler('STATUS', function (data) {
+        $log.info(data); // TODO DEBUG
+
         that.status.se = data.se;
         that.status.ev = data.ev;
         $rootScope.$apply();
       });
-      this.config.socket.addHandler('EVENT', function (data) {
+      this.config.socket.addHandler('EVENT', function (data) { // TODO This section needs a complete rework, just hacked together!
+        $log.info(data); // TODO DEBUG
+
         if ('pluggedIn' in data && data['pluggedIn']) {
           // TODO Start cable check
           that.status.cableCheck = 'running';
+          $rootScope.$apply();
+        } else if ('pluggedIn' in data && !data['pluggedIn']) {
+          that.status = {
+            se: {},
+            ev: {},
+            cableCheck: ''
+          };
           $rootScope.$apply();
         }
       });
