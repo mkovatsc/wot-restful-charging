@@ -1,4 +1,4 @@
-app.factory('chargerService', function ($log, $rootScope, $interval, socketService) {
+app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, socketService) {
   var charger = function (args) {
     this.status = {
       se: {},
@@ -37,6 +37,10 @@ app.factory('chargerService', function ($log, $rootScope, $interval, socketServi
           // TODO Start cable check
           that.status.cableCheck = 'running';
           $rootScope.$apply();
+          $timeout(function () {
+            that.status.cableCheck = 'finished';
+            $rootScope.$apply();
+          }, 5000);
         } else if ('pluggedIn' in data && !data['pluggedIn']) {
           that.status = {
             se: {},

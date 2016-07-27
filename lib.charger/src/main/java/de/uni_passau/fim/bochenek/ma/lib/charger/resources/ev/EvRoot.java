@@ -25,15 +25,18 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.messages.EventMessage;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
+import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvRoot extends CoapResource implements HalResource {
 
+	private ChargerData chargerData;
 	private Map<UUID, CarData> cars;
 
-	public EvRoot(String name, Map<UUID, CarData> cars) {
+	public EvRoot(String name, ChargerData chargerData, Map<UUID, CarData> cars) {
 		super(name);
+		this.chargerData = chargerData;
 		this.cars = cars;
 	}
 
@@ -49,27 +52,27 @@ public class EvRoot extends CoapResource implements HalResource {
 
 	@Override
 	public void handlePOST(CoapExchange exchange) {
-		CarData data = new CarData();
+		CarData carData = new CarData();
 		UUID uuid = UUID.randomUUID(); // TODO has to be done in the emulator!
-		this.cars.put(uuid, data);
+		this.cars.put(uuid, carData);
 
 		// TODO not very robust :P
 		Gson gson = new GsonBuilder().create();
 		JsonObject basicInfo = gson.fromJson(exchange.getRequestText(), JsonObject.class);
-		data.setSoc(basicInfo.get("soc").getAsInt());
-		data.setMaxVoltage(basicInfo.get("maxVoltage").getAsDouble());
-		data.setMaxCurrent(basicInfo.get("maxCurrent").getAsDouble());
-		data.setChargingType(ChargingType.valueOf(basicInfo.get("chargingType").getAsString()));
+		carData.setSoc(basicInfo.get("soc").getAsInt());
+		carData.setMaxVoltage(basicInfo.get("maxVoltage").getAsDouble());
+		carData.setMaxCurrent(basicInfo.get("maxCurrent").getAsDouble());
+		carData.setChargingType(ChargingType.valueOf(basicInfo.get("chargingType").getAsString()));
 
 		Map<String, CoapResource> resources = new HashMap<String, CoapResource>();
-		resources.put("chargingComplete", new EvChargingComplete("chargingComplete", data));
-		resources.put("maxValues", new EvMaxValues("maxValues", data));
-		resources.put("stateOfCharge", new EvSoc("stateOfCharge", data));
-		resources.put("targetValues", new EvTargetValues("targetValues", data));
+		resources.put("chargingComplete", new EvChargingComplete("chargingComplete", carData));
+		resources.put("maxValues", new EvMaxValues("maxValues", carData));
+		resources.put("stateOfCharge", new EvSoc("stateOfCharge", carData));
+		resources.put("targetValues", new EvTargetValues("targetValues", carData));
 
 		String actionResult = null;
 		HalRepresentationBuilder result = HalRepresentation.builder();
-		EvID ev = new EvID(uuid.toString(), data);
+		EvID ev = new EvID(uuid.toString(), carData, chargerData);
 
 		for (Map.Entry<String, CoapResource> res : resources.entrySet()) {
 			ev.add(res.getValue());

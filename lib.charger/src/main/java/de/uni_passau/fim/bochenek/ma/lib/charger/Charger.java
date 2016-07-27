@@ -29,7 +29,7 @@ public class Charger extends CoapServer {
 		seRoot.add(new SeMaxValues("maxValues", chargerData));
 		seRoot.add(new SePresentValues("presentValues", chargerData));
 		this.add(seRoot);
-		this.add(new EvRoot("ev", carData));
+		this.add(new EvRoot("ev", chargerData, carData));
 	}
 
 	@Override

@@ -6,6 +6,7 @@ public class ChargerData {
 	private double maxCurrent;
 	private double presentVoltage;
 	private double presentCurrent;
+	private int cableCheckStatus; // TODO Remove magic numbers, make ENUM! 0 (not running), 1 (running), 2 (completed successful), 3 (error)
 	private String currentState; // TODO make ENUM
 
 	public ChargerData() {
@@ -28,14 +29,6 @@ public class ChargerData {
 		this.presentCurrent = presentCurrent;
 	}
 
-	public synchronized String getCurrentState() {
-		return currentState;
-	}
-
-	public synchronized void setCurrentState(String state) {
-		this.currentState = state;
-	}
-
 	public synchronized double getMaxVoltage() {
 		return maxVoltage;
 	}
@@ -50,6 +43,22 @@ public class ChargerData {
 
 	public synchronized void setMaxCurrent(double maxCurrent) {
 		this.maxCurrent = maxCurrent;
+	}
+
+	public int getCableCheckStatus() {
+		return cableCheckStatus;
+	}
+
+	public void setCableCheckStatus(int cableCheckStatus) {
+		this.cableCheckStatus = cableCheckStatus;
+	}
+
+	public synchronized String getCurrentState() {
+		return currentState;
+	}
+
+	public synchronized void setCurrentState(String state) {
+		this.currentState = state;
 	}
 
 }

@@ -18,12 +18,16 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.EventMessage;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
+import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvID extends CoapResource implements HalResource {
 
-	public EvID(String name, CarData data) {
+	private ChargerData chargerData;
+
+	public EvID(String name, CarData data, ChargerData chargerData) {
 		super(name); // TODO Do something with CarData?!
+		this.chargerData = chargerData;
 	}
 
 	@Override
@@ -58,6 +62,11 @@ public class EvID extends CoapResource implements HalResource {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
 		hal.addProperty("id", this.getName());
+
+		// Add link to charging, if cable check was successfully completed
+		if (chargerData.getCableCheckStatus() == 2) {
+			hal.addLink("charge", this); // TODO
+		}
 
 		for (Resource res : this.getChildren()) {
 
