@@ -47,6 +47,7 @@ public class ServerProvider {
 
 		// Prepare data POJOs for charger and connected cars
 		ChargerData chargerData = new ChargerData();
+		SocketHandler.getInstance().setChargerData(chargerData); // TODO Part of a ugly hack...
 		Map<UUID, CarData> carData = new HashMap<UUID, CarData>();
 
 		// Setup and start charger

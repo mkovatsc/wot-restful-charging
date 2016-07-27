@@ -27,7 +27,7 @@ public class Message {
 	}
 
 	public enum MessageType {
-		DEBUG, STATUS, EVENT;
+		DEBUG, STATUS, EVENT, ACTION;
 	}
 
 }

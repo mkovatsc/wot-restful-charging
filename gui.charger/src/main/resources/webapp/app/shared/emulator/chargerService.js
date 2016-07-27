@@ -36,9 +36,28 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
         if ('pluggedIn' in data && data['pluggedIn']) {
           // TODO Start cable check
           that.status.cableCheck = 'running';
+
+          // Tell CoAP server about that change
+          if (typeof that.config.socket != 'undefined') { // TODO external function!
+            var data = {
+              action: 'updateCableCheckStatus',
+              cableCheckStatus: 1
+            };
+            that.config.socket.send('ACTION', data);
+          }
+
           $rootScope.$apply();
           $timeout(function () {
             that.status.cableCheck = 'finished';
+
+            // Tell CoAP server about that change
+            if (typeof that.config.socket != 'undefined') { // TODO external function!
+              var data = {
+                action: 'updateCableCheckStatus',
+                cableCheckStatus: 2
+              };
+              that.config.socket.send('ACTION', data);
+            }
             $rootScope.$apply();
           }, 5000);
         } else if ('pluggedIn' in data && !data['pluggedIn']) {

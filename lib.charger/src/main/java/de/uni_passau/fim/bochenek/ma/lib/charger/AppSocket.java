@@ -10,7 +10,15 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.ActionMessage;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
+import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
 @WebSocket
 public class AppSocket {
@@ -38,7 +46,58 @@ public class AppSocket {
 
 	@OnWebSocketMessage
 	public void onMessage(String message) {
-		logger.log(Level.INFO, "Message received: " + message);
+
+		// TODO Copied from lib.car -> find a better solution!
+		if (message != null && !message.equals("")) {
+			JsonParser parser = new JsonParser();
+			JsonElement msg = null;
+			try {
+				msg = parser.parse(message);
+			} catch (JsonSyntaxException jse) {
+				// TODO Something to do here?
+				logger.log(Level.WARNING, "No valid JSON received. (" + message + ")");
+			}
+
+			if (msg != null && msg.isJsonObject() && msg.getAsJsonObject().get("type") != null) {
+				try {
+					MessageType type = MessageType.valueOf(msg.getAsJsonObject().get("type").getAsString());
+					Gson gson = new Gson();
+					ChargerData chargerData = SocketHandler.getInstance().getChargerData();
+
+					switch (type) {
+						case EVENT : // TODO
+							break;
+						case ACTION :
+							ActionMessage actMsg = gson.fromJson(msg.getAsJsonObject().get("data"), ActionMessage.class);
+
+							// DEBUG
+							logger.log(Level.INFO, "Action received: {0}", new Object[]{actMsg.getAction()});
+
+							// Handle triggered action
+							switch (actMsg.getAction()) {
+								case "updateCableCheckStatus" :
+									chargerData.setCableCheckStatus(actMsg.getCableCheckStatus());
+									break;
+								default :
+									// TODO
+							}
+							break;
+						//						case KEEPALIVE :
+						//
+						//							// DEBUG
+						//							logger.log(Level.INFO, "Answer to keepalive received.");
+						//							break;
+						default :
+							logger.log(Level.INFO, "No handler found for this type of message. (" + message + ")");
+							break;
+					}
+					// TODO Proper handling for invalid contents
+				} catch (IllegalArgumentException iae) {
+					// TODO Find some elegant solution
+					logger.log(Level.WARNING, "No valid message type. (" + message + ")");
+				}
+			}
+		}
 	}
 
 }

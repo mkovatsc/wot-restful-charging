@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import de.uni_passau.fim.bochenek.ma.lib.charger.AppSocket;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
+import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
 /**
  * TODO
@@ -28,6 +29,7 @@ public class SocketHandler extends WebSocketHandler {
 	private static SocketHandler instance;
 
 	private static List<Session> listeners;
+	private ChargerData chargerData; // TODO Ugly hack, to be removed...
 
 	// Config
 	private static final int KEEPALIVE_INTERVAL = 15; // Seconds
@@ -51,6 +53,14 @@ public class SocketHandler extends WebSocketHandler {
 			}
 		}
 		return SocketHandler.instance;
+	}
+
+	public ChargerData getChargerData() {
+		return chargerData;
+	}
+
+	public void setChargerData(ChargerData chargerData) {
+		this.chargerData = chargerData;
 	}
 
 	@Override
