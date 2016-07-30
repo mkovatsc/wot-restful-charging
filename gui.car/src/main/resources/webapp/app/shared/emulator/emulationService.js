@@ -1,4 +1,4 @@
-app.factory('emulationService', function ($log, $rootScope) {
+app.factory('emulationService', function ($log, $rootScope, $q) {
   var emulator = function (args) {
 
     // Default config values
@@ -39,7 +39,9 @@ app.factory('emulationService', function ($log, $rootScope) {
       return function () {
         that.emulate();
         if (that.isRunning) {
-          that.emulation = setTimeout(that.chainTimeouts(), that.config.timeout);
+          $q.when(that.emulation).then(function() {
+            that.emulation = setTimeout(that.chainTimeouts(), that.config.timeout);
+          });
         }
       };
     },
