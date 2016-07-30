@@ -8,7 +8,7 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-import org.eclipse.californium.core.server.resources.Resource;
+//import org.eclipse.californium.core.server.resources.Resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -68,11 +68,11 @@ public class EvID extends CoapResource implements HalResource {
 			hal.addLink("charge", this); // TODO
 		}
 
-		for (Resource res : this.getChildren()) {
-
-			// TODO Maybe to much information due to recursive nature
-			hal.addEmbedded(res.getName(), (HalResource) res);
-		}
+		//		for (Resource res : this.getChildren()) {
+		//
+		//			// TODO Maybe to much information due to recursive nature
+		//			hal.addEmbedded(res.getName(), (HalResource) res);
+		//		}
 
 		return hal;
 	}

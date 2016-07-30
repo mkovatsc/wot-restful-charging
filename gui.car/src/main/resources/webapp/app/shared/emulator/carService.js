@@ -23,6 +23,9 @@ app.factory('carService', function ($rootScope, socketService) {
         that.uuid = data.uuid;
         $rootScope.$apply();
       });
+      this.config.socket.addHandler('DEBUG', function (data) { // TODO
+        console.log(data);
+      });
     }
   };
 

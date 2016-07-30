@@ -2,7 +2,11 @@ package de.uni_passau.fim.bochenek.ma.lib.car;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +20,9 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
@@ -35,6 +41,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	private CarData data; // TODO Think about dependency injection!
 
 	private CoapClient client;
+	private String currentRes; // TODO always now where in the graph we are
 	private HashMap<String, String> resMap;
 	private HashMap<String, CoapObserveRelation> observed; // TODO Better index
 
@@ -79,10 +86,22 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	}
 
 	@Override
-	public void checkAvailabeActions() { // TODO
-		client.setURI(resMap.get("ev_self"));
+	public List<String> checkAvailabeActions() {
+		client.setURI(resMap.get("ev_self")); // TODO what if key doesn't exist?
 		CoapResponse res = client.get();
-		logger.info(res.getResponseText());
+
+		JsonParser parser = new JsonParser();
+		JsonObject tmp = parser.parse(res.getResponseText()).getAsJsonObject();
+
+		List<String> refs = new LinkedList<String>();
+
+		if (tmp.has("_links")) {
+			JsonObject links = tmp.getAsJsonObject("_links");
+			links.entrySet().forEach(e -> refs.add(e.getKey()));
+		}
+
+		logger.info(refs.toString());
+		return refs;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package de.uni_passau.fim.bochenek.ma.lib.car;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,7 +75,7 @@ public class AppSocket {
 
 								// TODO Use Message objects as POJOs
 								UUID uuid = car.plugIn(evtMsg.getChargingType(), evtMsg.getSoc(), evtMsg.getMaxVoltage(), evtMsg.getMaxCurrent());
-								String register = "{\"type\" : \"REGISTER\", \"data\" : {\"uuid\" : \"%s\"}}";
+								String register = "{\"type\" : \"REGISTER\", \"data\" : {\"uuid\" : \"%s\"}}"; // TODO Use POJOs an Gson! (Same below.)
 								car.sendToCar(String.format(register, uuid.toString()));
 
 								// DEBUG
@@ -96,7 +97,9 @@ public class AppSocket {
 							// Handle triggered action
 							switch (actMsg.getAction()) {
 								case "checkAvailableActions" :
-									car.checkAvailabeActions();
+									List<String> actions = car.checkAvailabeActions();
+									String debug = "{\"type\" : \"DEBUG\", \"data\" : {\"message\" : \"%s\"}}";
+									car.sendToCar(String.format(debug, actions.toString())); // TODO
 									break;
 								case "chargeParameterDiscovery" :
 									car.chargeParameterDiscovery(actMsg.getSoc(), actMsg.getMaxVoltage(), actMsg.getMaxCurrent());

@@ -1,7 +1,7 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.messages;
 
 /**
- * TODO
+ * TODO Could this be combined with messages from lib.car?
  * 
  * @author Martin Bochenek
  *
