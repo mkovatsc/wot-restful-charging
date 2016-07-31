@@ -313,7 +313,7 @@ app.factory('carService', function ($rootScope, socketService) {
     reset: function () {
       clearTimeout(this.runningProc);
       this.runningProc = undefined; // TODO there must be a cleaner solution!
-      this.changeState(undefined, {'reset': true});
+      this.unplug(1);
       this.battery.soc = 5;
       this.battery.charging = false;
       this.plugged_in = false;
