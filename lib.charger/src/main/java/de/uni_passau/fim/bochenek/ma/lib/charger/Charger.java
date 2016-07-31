@@ -7,6 +7,7 @@ import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.server.resources.Resource;
 
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.RootResource;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.charge.SeCharge;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvRoot;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SeMaxValues;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePresentValues;
@@ -29,6 +30,7 @@ public class Charger extends CoapServer {
 		seRoot.add(new SeMaxValues("maxValues", chargerData));
 		seRoot.add(new SePresentValues("presentValues", chargerData));
 		this.add(seRoot);
+		this.add(new SeCharge("charge", chargerData));
 		this.add(new EvRoot("ev", chargerData, carData));
 	}
 

@@ -23,6 +23,8 @@ import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
 public class EvID extends CoapResource implements HalResource {
 
+	private boolean chargingInit = false;
+
 	private ChargerData chargerData;
 
 	public EvID(String name, CarData data, ChargerData chargerData) {
@@ -64,8 +66,11 @@ public class EvID extends CoapResource implements HalResource {
 		hal.addProperty("id", this.getName());
 
 		// Add link to charging, if cable check was successfully completed
-		if (chargerData.getCableCheckStatus() == 2) {
-			hal.addLink("charge", this); // TODO
+		if (chargerData.getCableCheckStatus() == 2 && !chargingInit) {
+			EvCharge charge = new EvCharge(this.getName(), chargerData);
+			this.getParent().getParent().getChild("charge").add(charge); // TODO
+			hal.addLink("charge", charge);
+			chargingInit = true;
 		}
 
 		//		for (Resource res : this.getChildren()) {
