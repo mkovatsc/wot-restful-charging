@@ -13,6 +13,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 import black.door.hate.HalResource;
+import ch.ethz.inf.vs.hypermedia.corehal.FormList;
+import ch.ethz.inf.vs.hypermedia.corehal.model.Form;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
 public class EvCharge extends CoapResource implements HalResource {
@@ -47,6 +49,16 @@ public class EvCharge extends CoapResource implements HalResource {
 	public HalRepresentationBuilder representationBuilder() {
 		HalRepresentationBuilder hal = HalRepresentation.builder();
 		hal.addLink("self", this);
+
+		if (data.getCableCheckStatus() == 2) {
+			FormList forms = new FormList();
+
+			// TODO Just debugging
+			Form form = new Form("POST", "/blablubb", "application/json");
+			form.setNames("test");
+			forms.add(form);
+			hal.addProperty("_forms", forms);
+		}
 
 		return hal;
 	}

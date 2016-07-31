@@ -45,7 +45,7 @@ public class EvID extends CoapResource implements HalResource {
 
 	@Override
 	public void handleDELETE(CoapExchange exchange) {
-		((EvRoot) this.getParent()).removeCar(UUID.fromString(this.getName()));
+		((EvRoot) this.getParent()).removeCar(UUID.fromString(this.getName())); // TODO maybe make this methods of the model and inject
 		this.delete();
 		evCharge.delete();
 		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, new EventMessage(null, false)); // TODO Provide UUID?
