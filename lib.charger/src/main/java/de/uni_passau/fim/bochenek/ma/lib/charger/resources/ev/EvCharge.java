@@ -57,6 +57,9 @@ public class EvCharge extends CoapResource implements HalResource {
 			Form form = new Form("POST", "/blablubb", "application/json");
 			form.setNames("test");
 			forms.add(form);
+
+			// TODO Implement FormSerializer to be used with FormListDeserializer?
+
 			hal.addProperty("_forms", forms);
 		}
 
