@@ -47,6 +47,7 @@ public class EvID extends CoapResource implements HalResource {
 	public void handleDELETE(CoapExchange exchange) {
 		((EvRoot) this.getParent()).removeCar(UUID.fromString(this.getName()));
 		this.delete();
+		evCharge.delete();
 		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, new EventMessage(null, false)); // TODO Provide UUID?
 		exchange.respond(ResponseCode.DELETED);
 	}
