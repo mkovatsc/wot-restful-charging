@@ -39,7 +39,7 @@ app.factory('emulationService', function ($log, $rootScope, $q) {
       return function () {
         that.emulate();
         if (that.isRunning) {
-          $q.when(that.emulation).then(function() {
+          $q.when(that.emulation).then(function () {
             that.emulation = setTimeout(that.chainTimeouts(), that.config.timeout);
           });
         }
@@ -61,53 +61,56 @@ app.factory('emulationService', function ($log, $rootScope, $q) {
           case 'pluggedIn':
             car.checkAvailableActions(this.config.speedup);
             break;
-/*
-          case 'pluggedIn':
-            car.doChargeParameterDiscovery(this.config.speedup);
+          case 'readyToCharge':
+            console.log('Ready to charge.');
             break;
-          case 'chargeParameterDiscovery':
-            car.doChargeParameterDiscovery(this.config.speedup);
-            break;
-          case 'chargeParameterDiscoveryDone':
-            car.doCableCheck(this.config.speedup);
-            break;
-          case 'cableCheck':
-            car.doCableCheck(this.config.speedup);
-            break;
-          case 'cableCheckDone':
-            car.doPreCharge(this.config.speedup);
-            break;
-          case 'preCharge':
-            car.doPreCharge(this.config.speedup);
-            break;
-          case 'preChargeDone':
-            car.doPowerDelivery(this.config.speedup);
-            break;
-          case 'powerDelivery':
-            car.doPowerDelivery(this.config.speedup);
-            break;
-          case 'powerDeliveryDone':
-            car.doCurrentDemand(this.config.speedup);
-            break;
-          case 'currentDemand':
-            car.doCurrentDemand(this.config.speedup);
-            break;
-          case 'currentDemandDone':
-            car.doPowerDelivery(this.config.speedup);
-            break;
-          case 'powerDeliveryDoneS':
-            car.doStopSession(this.config.speedup);
-            break;
-          case 'powerDeliveryDoneW':
-            car.doWeldingDetection(this.config.speedup);
-            break;
-*/
-          case 'weldingDetection':
-            car.doWeldingDetection(this.config.speedup);
-            break;
-          case 'weldingDetectionDone':
-            car.doStopSession(this.config.speedup);
-            break;
+          /*
+                    case 'pluggedIn':
+                      car.doChargeParameterDiscovery(this.config.speedup)
+                      break
+                    case 'chargeParameterDiscovery':
+                      car.doChargeParameterDiscovery(this.config.speedup)
+                      break
+                    case 'chargeParameterDiscoveryDone':
+                      car.doCableCheck(this.config.speedup)
+                      break
+                    case 'cableCheck':
+                      car.doCableCheck(this.config.speedup)
+                      break
+                    case 'cableCheckDone':
+                      car.doPreCharge(this.config.speedup)
+                      break
+                    case 'preCharge':
+                      car.doPreCharge(this.config.speedup)
+                      break
+                    case 'preChargeDone':
+                      car.doPowerDelivery(this.config.speedup)
+                      break
+                    case 'powerDelivery':
+                      car.doPowerDelivery(this.config.speedup)
+                      break
+                    case 'powerDeliveryDone':
+                      car.doCurrentDemand(this.config.speedup)
+                      break
+                    case 'currentDemand':
+                      car.doCurrentDemand(this.config.speedup)
+                      break
+                    case 'currentDemandDone':
+                      car.doPowerDelivery(this.config.speedup)
+                      break
+                    case 'powerDeliveryDoneS':
+                      car.doStopSession(this.config.speedup)
+                      break
+                    case 'powerDeliveryDoneW':
+                      car.doWeldingDetection(this.config.speedup)
+                      break
+                    case 'weldingDetection':
+                      car.doWeldingDetection(this.config.speedup)
+                      break
+                    case 'weldingDetectionDone':
+                      car.doStopSession(this.config.speedup)
+                      break
+          */
           case 'sessionStop':
             car.unplug(this.config.speedup);
             this.stop(); // Stop emulation after unplugging

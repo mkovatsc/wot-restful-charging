@@ -98,6 +98,9 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		if (tmp.has("_links")) {
 			JsonObject links = tmp.getAsJsonObject("_links");
 			links.entrySet().forEach(e -> refs.add(e.getKey()));
+
+			links.entrySet().removeIf(entry -> entry.getKey().equals("self")); // We should know this already
+			links.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString())); // TODO ugly
 		}
 
 		logger.info(refs.toString());

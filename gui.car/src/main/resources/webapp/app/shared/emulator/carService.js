@@ -81,12 +81,23 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // TODO Check available actions
     checkAvailableActions: function (speedup) {
-      console.log("Checking for available actions.");
+      console.log('Checking for available actions.');
+
+      // Register a handler to wait asynchronously for an answer
+      if (!this.config.socket.hasHandler('ANSWER')) { // TODO external function?
+        var that = this;
+        this.config.socket.addHandler('ANSWER', function (data) {
+          console.log('Answer received.');
+          if (data.actions.indexOf('charge') != -1) {
+            that.changeState('readyToCharge');
+            that.config.socket.clearHandler('ANSWER');
+          }
+        });
+      }
 
       if (typeof this.config.socket != 'undefined') { // TODO external function!
         var data = {
           action: 'checkAvailableActions'
-          // TODO
         };
         this.config.socket.send('ACTION', data);
       }

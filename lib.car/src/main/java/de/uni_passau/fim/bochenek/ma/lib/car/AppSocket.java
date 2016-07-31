@@ -98,8 +98,13 @@ public class AppSocket {
 							switch (actMsg.getAction()) {
 								case "checkAvailableActions" :
 									List<String> actions = car.checkAvailabeActions();
-									String debug = "{\"type\" : \"DEBUG\", \"data\" : {\"message\" : \"%s\"}}";
-									car.sendToCar(String.format(debug, actions.toString())); // TODO
+									String answer = "{\"type\" : \"ANSWER\", \"data\" : {\"actions\" : %s}}"; // TODO Use Gson instead!
+									StringBuilder tmp = new StringBuilder();
+									tmp.append('[');
+									actions.forEach(action -> tmp.append('"' + action + "\","));
+									tmp.deleteCharAt(tmp.length() - 1); // TODO Ugly hack...
+									tmp.append(']');
+									car.sendToCar(String.format(answer, tmp.toString()));
 									break;
 								case "chargeParameterDiscovery" :
 									car.chargeParameterDiscovery(actMsg.getSoc(), actMsg.getMaxVoltage(), actMsg.getMaxCurrent());
