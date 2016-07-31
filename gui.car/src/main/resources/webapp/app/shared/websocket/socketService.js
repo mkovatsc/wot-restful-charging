@@ -43,9 +43,17 @@ app.factory('socketService', function ($timeout, $log) {
   };
 
   socket.prototype = {
+    hasHandler: function(msgType) {
+      return msgType in this.config.handlers;
+    },
+
     addHandler: function (msgType, handler) {
       this.config.handlers[msgType] = this.config.handlers[msgType] || [];
       this.config.handlers[msgType].push(handler);
+    },
+
+    clearHandler: function(msgType) {
+      delete this.config.handlers[msgType];
     },
 
     send: function (msgType, msgData) {
