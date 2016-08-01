@@ -147,6 +147,8 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		client.setURI(resMap.get("chargeProc"));
 		client.delete();
 
+		resMap.remove("chargeProc");
+
 		return false; // TODO
 	}
 
@@ -285,6 +287,8 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	public void unplug() {
 		client.setURI(resMap.get("ev_self"));
 		client.delete();
+
+		resMap.remove("ev_self");
 
 		// DEBUG
 		logger.log(Level.INFO, "Car with UUID {0} unplugged.", new Object[]{this.uuid});
