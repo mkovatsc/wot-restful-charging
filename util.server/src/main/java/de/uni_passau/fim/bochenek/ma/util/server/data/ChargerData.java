@@ -1,5 +1,11 @@
 package de.uni_passau.fim.bochenek.ma.util.server.data;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.eclipse.californium.core.CoapResource;
+
 public class ChargerData {
 
 	private double maxVoltage;
@@ -11,8 +17,10 @@ public class ChargerData {
 	private int cableCheckStatus; // TODO Remove magic numbers, make ENUM! 0 (not running), 1 (running), 2 (completed successful), 3 (error)
 	private String currentState; // TODO make ENUM
 
+	private HashMap<String, List<CoapResource>> subscribers;
+
 	public ChargerData() {
-		// TODO
+		subscribers = new HashMap<String, List<CoapResource>>();
 	}
 
 	public synchronized double getMaxVoltage() {
@@ -21,6 +29,7 @@ public class ChargerData {
 
 	public synchronized void setMaxVoltage(double maxVoltage) {
 		this.maxVoltage = maxVoltage;
+		notifySubscribers("maxVoltage");
 	}
 
 	public synchronized double getMaxCurrent() {
@@ -29,6 +38,7 @@ public class ChargerData {
 
 	public synchronized void setMaxCurrent(double maxCurrent) {
 		this.maxCurrent = maxCurrent;
+		notifySubscribers("maxCurrent");
 	}
 
 	public synchronized double getTargetVoltage() {
@@ -37,6 +47,7 @@ public class ChargerData {
 
 	public synchronized void setTargetVoltage(double targetVoltage) {
 		this.targetVoltage = targetVoltage;
+		notifySubscribers("targetVoltage");
 	}
 
 	public synchronized double getTargetCurrent() {
@@ -45,6 +56,7 @@ public class ChargerData {
 
 	public synchronized void setTargetCurrent(double targetCurrent) {
 		this.targetCurrent = targetCurrent;
+		notifySubscribers("targetCurrent");
 	}
 
 	public synchronized double getPresentVoltage() {
@@ -53,6 +65,7 @@ public class ChargerData {
 
 	public synchronized void setPresentVoltage(double presentVoltage) {
 		this.presentVoltage = presentVoltage;
+		notifySubscribers("presentVoltage");
 	}
 
 	public synchronized double getPresentCurrent() {
@@ -61,6 +74,7 @@ public class ChargerData {
 
 	public synchronized void setPresentCurrent(double presentCurrent) {
 		this.presentCurrent = presentCurrent;
+		notifySubscribers("presentCurrent");
 	}
 
 	public synchronized int getCableCheckStatus() {
@@ -69,6 +83,7 @@ public class ChargerData {
 
 	public synchronized void setCableCheckStatus(int cableCheckStatus) {
 		this.cableCheckStatus = cableCheckStatus;
+		notifySubscribers("cableCheckStatus");
 	}
 
 	public synchronized String getCurrentState() {
@@ -77,6 +92,20 @@ public class ChargerData {
 
 	public synchronized void setCurrentState(String state) {
 		this.currentState = state;
+		notifySubscribers("currentState");
+	}
+
+	public void subscribe(CoapResource me, String field) {
+		if (!subscribers.containsKey(field)) {
+			subscribers.put(field, new LinkedList<CoapResource>());
+		}
+		subscribers.get(field).add(me);
+	}
+
+	private void notifySubscribers(String field) {
+		for (String key : subscribers.keySet()) {
+			subscribers.get(key).forEach(sub -> sub.changed());
+		}
 	}
 
 }

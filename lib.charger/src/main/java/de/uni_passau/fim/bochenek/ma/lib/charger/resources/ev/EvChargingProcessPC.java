@@ -21,7 +21,9 @@ public class EvChargingProcessPC extends CoapResource implements HalResource {
 
 	public EvChargingProcessPC(String name, ChargerData chargerData) {
 		super(name);
+		this.setObservable(true);
 		this.chargerData = chargerData;
+		this.chargerData.subscribe(this, "presentCurrent");
 	}
 
 	@Override
