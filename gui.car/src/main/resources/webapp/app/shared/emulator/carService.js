@@ -153,6 +153,8 @@ app.factory('carService', function ($rootScope, socketService) {
         };
         this.config.socket.send('ACTION', data);
       }
+
+      this.changeState('pluggedIn');
     },
 
     // Charge parameter discovery
