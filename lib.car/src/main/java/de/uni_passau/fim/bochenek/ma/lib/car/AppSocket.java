@@ -13,6 +13,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
@@ -99,11 +100,8 @@ public class AppSocket {
 								case "checkAvailableActions" :
 									List<String> actions = car.checkAvailabeActions();
 									String answer = "{\"type\" : \"ANSWER\", \"data\" : {\"actions\" : %s}}"; // TODO Use Gson instead!
-									StringBuilder tmp = new StringBuilder();
-									tmp.append('[');
-									actions.forEach(action -> tmp.append('"' + action + "\","));
-									tmp.deleteCharAt(tmp.length() - 1); // TODO Ugly hack...
-									tmp.append(']');
+									JsonArray tmp = new JsonArray();
+									actions.forEach(action -> tmp.add(action));
 									car.sendToCar(String.format(answer, tmp.toString()));
 									break;
 								case "chargeParameterDiscovery" :
