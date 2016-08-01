@@ -4,25 +4,19 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.californium.core.CoapResource;
-import org.eclipse.californium.core.coap.MediaTypeRegistry;
-import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 import black.door.hate.HalResource;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
-import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
 public class EvChargingProcessTC extends CoapResource implements HalResource {
 
-	private ChargerData chargerData;
 	private CarData carData;
 
-	public EvChargingProcessTC(String name, ChargerData chargerData, CarData carData) {
+	public EvChargingProcessTC(String name, CarData carData) {
 		super(name);
-		this.chargerData = chargerData;
 		this.carData = carData;
 	}
 

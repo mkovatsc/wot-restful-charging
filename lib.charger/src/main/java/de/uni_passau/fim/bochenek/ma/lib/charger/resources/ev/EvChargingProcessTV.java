@@ -10,16 +10,13 @@ import black.door.hate.HalRepresentation;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 import black.door.hate.HalResource;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
-import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
 public class EvChargingProcessTV extends CoapResource implements HalResource {
 
-	private ChargerData chargerData;
 	private CarData carData;
 
-	public EvChargingProcessTV(String name, ChargerData chargerData, CarData carData) {
+	public EvChargingProcessTV(String name, CarData carData) {
 		super(name);
-		this.chargerData = chargerData;
 		this.carData = carData;
 	}
 

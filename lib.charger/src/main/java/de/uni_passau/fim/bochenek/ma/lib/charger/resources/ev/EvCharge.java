@@ -57,11 +57,13 @@ public class EvCharge extends CoapResource implements HalResource {
 
 		if (this.getChildren().size() < 1) { // TODO
 			EvChargingProcess evChargeProc = new EvChargingProcess("process", chargerData, carData);
-			EvChargingProcessTC evChargeTC = new EvChargingProcessTC("tC", chargerData, carData);
+			EvChargingProcessTC evChargeTC = new EvChargingProcessTC("tC", carData);
+			EvChargingProcessTV evChargeTV = new EvChargingProcessTV("tV", carData);
 			EvChargingProcessPC evChargePC = new EvChargingProcessPC("pC", chargerData);
 			EvChargingProcessPV evChargePV = new EvChargingProcessPV("pV", chargerData);
 
 			evChargeProc.add(evChargeTC);
+			evChargeProc.add(evChargeTV);
 			evChargeProc.add(evChargePC);
 			evChargeProc.add(evChargePV);
 
