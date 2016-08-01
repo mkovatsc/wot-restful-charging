@@ -4,7 +4,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.californium.core.CoapResource;
+import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 import black.door.hate.HalRepresentation;
 import black.door.hate.HalRepresentation.HalRepresentationBuilder;
@@ -21,13 +26,21 @@ public class EvChargingProcessTV extends CoapResource implements HalResource {
 	}
 
 	@Override
-	public void handleGET(CoapExchange exchange) {
-		super.handleGET(exchange);
-	}
+	public void handlePUT(CoapExchange exchange) {
+		JsonParser parser = new JsonParser(); // TODO use Gson
+		JsonElement msg = null;
 
-	@Override
-	public void handlePOST(CoapExchange exchange) {
-		super.handlePOST(exchange);
+		try {
+			msg = parser.parse(exchange.getRequestText());
+		} catch (JsonSyntaxException jse) {
+			// TODO Something to do here?
+		}
+
+		if (msg != null && msg.isJsonObject() && msg.getAsJsonObject().get("targetVoltage") != null) {
+			carData.setTargetVoltage(msg.getAsJsonObject().get("targetVoltage").getAsDouble());
+		}
+
+		exchange.respond(ResponseCode.CHANGED);
 	}
 
 	@Override
