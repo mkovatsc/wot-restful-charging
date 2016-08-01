@@ -11,10 +11,33 @@ import java.util.UUID;
 public class EventMessage extends Message {
 
 	private UUID uuid;
+	private String description;
 	private boolean pluggedIn;
+	private double targetVoltage;
+
+	public EventMessage(UUID uuid) {
+		this.uuid = uuid;
+	}
 
 	public EventMessage(UUID uuid, boolean pluggedIn) {
+		this.uuid = uuid;
 		this.setPluggedIn(pluggedIn);
+	}
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public boolean isPluggedIn() {
@@ -25,12 +48,12 @@ public class EventMessage extends Message {
 		this.pluggedIn = pluggedIn;
 	}
 
-	public UUID getUuid() {
-		return uuid;
+	public double getTargetVoltage() {
+		return targetVoltage;
 	}
 
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
+	public void setTargetVoltage(double targetVoltage) {
+		this.targetVoltage = targetVoltage;
 	}
 
 }

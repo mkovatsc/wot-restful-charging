@@ -4,6 +4,8 @@ public class ChargerData {
 
 	private double maxVoltage;
 	private double maxCurrent;
+	private double targetVoltage;
+	private double targetCurrent;
 	private double presentVoltage;
 	private double presentCurrent;
 	private int cableCheckStatus; // TODO Remove magic numbers, make ENUM! 0 (not running), 1 (running), 2 (completed successful), 3 (error)
@@ -11,22 +13,6 @@ public class ChargerData {
 
 	public ChargerData() {
 		// TODO
-	}
-
-	public synchronized double getPresentVoltage() {
-		return presentVoltage;
-	}
-
-	public synchronized void setPresentVoltage(double presentVoltage) {
-		this.presentVoltage = presentVoltage;
-	}
-
-	public synchronized double getPresentCurrent() {
-		return presentCurrent;
-	}
-
-	public synchronized void setPresentCurrent(double presentCurrent) {
-		this.presentCurrent = presentCurrent;
 	}
 
 	public synchronized double getMaxVoltage() {
@@ -45,11 +31,43 @@ public class ChargerData {
 		this.maxCurrent = maxCurrent;
 	}
 
-	public int getCableCheckStatus() {
+	public synchronized double getTargetVoltage() {
+		return targetVoltage;
+	}
+
+	public synchronized void setTargetVoltage(double targetVoltage) {
+		this.targetVoltage = targetVoltage;
+	}
+
+	public synchronized double getTargetCurrent() {
+		return targetCurrent;
+	}
+
+	public synchronized void setTargetCurrent(double targetCurrent) {
+		this.targetCurrent = targetCurrent;
+	}
+
+	public synchronized double getPresentVoltage() {
+		return presentVoltage;
+	}
+
+	public synchronized void setPresentVoltage(double presentVoltage) {
+		this.presentVoltage = presentVoltage;
+	}
+
+	public synchronized double getPresentCurrent() {
+		return presentCurrent;
+	}
+
+	public synchronized void setPresentCurrent(double presentCurrent) {
+		this.presentCurrent = presentCurrent;
+	}
+
+	public synchronized int getCableCheckStatus() {
 		return cableCheckStatus;
 	}
 
-	public void setCableCheckStatus(int cableCheckStatus) {
+	public synchronized void setCableCheckStatus(int cableCheckStatus) {
 		this.cableCheckStatus = cableCheckStatus;
 	}
 

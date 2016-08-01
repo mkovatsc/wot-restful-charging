@@ -72,7 +72,7 @@ public class EvRoot extends CoapResource implements HalResource {
 
 		String actionResult = null;
 		HalRepresentationBuilder result = HalRepresentation.builder();
-		EvID ev = new EvID(uuid.toString(), carData, chargerData);
+		EvID ev = new EvID(uuid.toString(), chargerData, carData);
 
 		for (Map.Entry<String, CoapResource> res : resources.entrySet()) {
 			ev.add(res.getValue());
@@ -90,9 +90,11 @@ public class EvRoot extends CoapResource implements HalResource {
 		// DEBUG
 		SocketHandler socket = SocketHandler.getInstance();
 		socket.pushToListeners(MessageType.DEBUG, new Message("New car (" + uuid + ") connected. Cable check should be started!"));
-		socket.pushToListeners(MessageType.EVENT, new EventMessage(uuid, true));
+		EventMessage eMsg = new EventMessage(uuid, true);
+		eMsg.setDescription("pluggedIn");
+		socket.pushToListeners(MessageType.EVENT, eMsg);
 
-		exchange.setLocationPath("/ev/" + uuid.toString()); // TODO better way?
+		exchange.setLocationPath(ev.getURI());
 		exchange.respond(ResponseCode.CREATED, actionResult, MediaTypeRegistry.APPLICATION_JSON);
 	}
 

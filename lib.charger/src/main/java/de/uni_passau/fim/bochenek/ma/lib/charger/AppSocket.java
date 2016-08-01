@@ -78,6 +78,9 @@ public class AppSocket {
 								case "updateCableCheckStatus" :
 									chargerData.setCableCheckStatus(actMsg.getCableCheckStatus());
 									break;
+								case "updatePresentVoltage" :
+									chargerData.setPresentVoltage(actMsg.getPresentVoltage());
+									break;
 								default :
 									// TODO
 							}

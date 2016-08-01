@@ -92,17 +92,27 @@ public class AppSocket {
 						case ACTION :
 							ActionMessage actMsg = gson.fromJson(msg.getAsJsonObject().get("data"), ActionMessage.class);
 
+							List<String> actions;
+							JsonArray options = new JsonArray();
+							String answer = "{\"type\" : \"ANSWER\", \"data\" : {\"actions\" : %s}}"; // TODO Use Gson instead!
+
 							// DEBUG
 							logger.log(Level.INFO, "Action received: {0}", new Object[]{actMsg.getAction()});
 
 							// Handle triggered action
 							switch (actMsg.getAction()) {
 								case "checkAvailableActions" :
-									List<String> actions = car.checkAvailabeActions();
-									String answer = "{\"type\" : \"ANSWER\", \"data\" : {\"actions\" : %s}}"; // TODO Use Gson instead!
-									JsonArray tmp = new JsonArray();
-									actions.forEach(action -> tmp.add(action));
-									car.sendToCar(String.format(answer, tmp.toString()));
+									actions = car.checkAvailabeActions();
+									actions.forEach(action -> options.add(action));
+									car.sendToCar(String.format(answer, options.toString()));
+									break;
+								case "setTargetVoltage" :
+									car.setTargetVoltage(actMsg.getTargetVoltage()); // TODO Store or forward returned location path?
+									break;
+								case "lookupChargingProcess" :
+									actions = car.lookupChargingProcess();
+									actions.forEach(action -> options.add(action));
+									car.sendToCar(String.format(answer, options.toString()));
 									break;
 								case "chargeParameterDiscovery" :
 									car.chargeParameterDiscovery(actMsg.getSoc(), actMsg.getMaxVoltage(), actMsg.getMaxCurrent());

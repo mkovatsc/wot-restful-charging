@@ -10,6 +10,7 @@ public class ActionMessage {
 
 	private String action;
 	private int cableCheckStatus;
+	private double presentVoltage;
 
 	public ActionMessage(String notify) {
 
@@ -29,6 +30,14 @@ public class ActionMessage {
 
 	public void setCableCheckStatus(int cableCheckStatus) {
 		this.cableCheckStatus = cableCheckStatus;
+	}
+
+	public double getPresentVoltage() {
+		return presentVoltage;
+	}
+
+	public void setPresentVoltage(double presentVoltage) {
+		this.presentVoltage = presentVoltage;
 	}
 
 }

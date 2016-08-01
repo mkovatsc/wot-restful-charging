@@ -103,6 +103,46 @@ app.factory('carService', function ($rootScope, socketService) {
       }
     },
 
+    // Set the desired target voltage
+    setTargetVoltage: function (speedup) {
+      console.log('Setting target voltage.');
+
+      if (typeof this.config.socket != 'undefined') { // TODO external function!
+        var data = {
+          action: 'setTargetVoltage',
+          targetVoltage: this.charging.voltage.DC
+        }; // TODO Maybe submit resource URIs
+        this.config.socket.send('ACTION', data);
+      }
+
+      this.changeState('targetVoltageSet');
+    // TODO Don't execute steps multiple times if we are still waiting for an answer! (see other steps as well)
+    },
+
+    // Lookup charging procedure
+    lookupChargingProcess: function (speedup) {
+      console.log('Looking up charging procedure');
+
+      // Register a handler to wait asynchronously for an answer
+      if (!this.config.socket.hasHandler('ANSWER')) { // TODO external function?
+        var that = this;
+        this.config.socket.addHandler('ANSWER', function (data) {
+          console.log('Answer received.');
+          if (data.actions.length > 1) { // TODO Not just "self"
+            that.changeState('chargingProcess');
+            that.config.socket.clearHandler('ANSWER');
+          }
+        });
+      }
+
+      if (typeof this.config.socket != 'undefined') { // TODO external function, even with rate limit?!
+        var data = {
+          action: 'lookupChargingProcess'
+        };
+        this.config.socket.send('ACTION', data);
+      }
+    },
+
     // Charge parameter discovery
     doChargeParameterDiscovery: function (speedup) {
       this.changeState('chargeParameterDiscovery');

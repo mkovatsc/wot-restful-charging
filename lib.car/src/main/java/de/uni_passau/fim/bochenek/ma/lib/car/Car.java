@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +18,6 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -38,16 +35,16 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	private UUID uuid;
 	private Session session;
-	private CarData data; // TODO Think about dependency injection!
+	private CarData carData; // TODO Think about dependency injection!
 
 	private CoapClient client;
-	private String currentRes; // TODO always now where in the graph we are
 	private HashMap<String, String> resMap;
 	private HashMap<String, CoapObserveRelation> observed; // TODO Better index
 
 	private static Logger logger = Logger.getLogger(Car.class.getName());
 
 	public Car(String chargerURI) {
+		carData = new CarData();
 		client = new CoapClient(chargerURI); // TODO Server not available?
 		resMap = new HashMap<String, String>();
 		observed = new HashMap<String, CoapObserveRelation>();
@@ -99,7 +96,45 @@ public class Car implements ICar { // TODO Extend CoapClient?
 			JsonObject links = tmp.getAsJsonObject("_links");
 			links.entrySet().forEach(e -> refs.add(e.getKey()));
 
-			links.entrySet().removeIf(entry -> entry.getKey().equals("self")); // We should know this already
+			links.remove("self"); // We should know this already
+			links.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString())); // TODO ugly
+		}
+
+		logger.info(refs.toString());
+		return refs;
+	}
+
+	@Override
+	public String setTargetVoltage(double targetVoltage) {
+		carData.setTargetVoltage(targetVoltage);
+
+		Gson gson = new GsonBuilder().create();
+
+		JsonObject tV = new JsonObject();
+		tV.addProperty("targetVoltage", targetVoltage);
+		client.setURI("/charge/" + uuid.toString()); // TODO only for debugging, URI must be resolved from resMap / given by UI!!
+		CoapResponse res = client.post(gson.toJson(tV), MediaTypeRegistry.APPLICATION_JSON);
+		String locPath = res.getOptions().getLocationPathString();
+		resMap.put("chargeProc", "/" + locPath);
+
+		return locPath;
+	}
+
+	@Override
+	public List<String> lookupChargingProcess() { // TODO Maybe build generic lookup
+		client.setURI(resMap.get("chargeProc"));
+		CoapResponse res = client.get();
+
+		JsonParser parser = new JsonParser();
+		JsonObject tmp = parser.parse(res.getResponseText()).getAsJsonObject();
+
+		List<String> refs = new LinkedList<String>();
+
+		if (tmp.has("_links")) {
+			JsonObject links = tmp.getAsJsonObject("_links");
+			links.entrySet().forEach(e -> refs.add(e.getKey()));
+
+			links.remove("self"); // We should know this already
 			links.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString())); // TODO ugly
 		}
 
@@ -289,7 +324,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	}
 
 	public CarData getData() {
-		return data;
+		return carData;
 	}
 
 }

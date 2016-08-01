@@ -27,10 +27,12 @@ public class EvID extends CoapResource implements HalResource {
 	private EvCharge evCharge;
 
 	private ChargerData chargerData;
+	private CarData carData;
 
-	public EvID(String name, CarData data, ChargerData chargerData) {
+	public EvID(String name, ChargerData chargerData, CarData carData) {
 		super(name); // TODO Do something with CarData?!
 		this.chargerData = chargerData;
+		this.carData = carData;
 	}
 
 	@Override
@@ -48,7 +50,11 @@ public class EvID extends CoapResource implements HalResource {
 		((EvRoot) this.getParent()).removeCar(UUID.fromString(this.getName())); // TODO maybe make this methods of the model and inject
 		this.delete();
 		evCharge.delete();
-		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, new EventMessage(null, false)); // TODO Provide UUID?
+
+		EventMessage eMsg = new EventMessage(null, false);
+		eMsg.setDescription("unplugged");
+		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg); // TODO Provide UUID?
+
 		exchange.respond(ResponseCode.DELETED);
 	}
 
@@ -69,7 +75,7 @@ public class EvID extends CoapResource implements HalResource {
 
 		// Add link to charging, if cable check was successfully completed
 		if (chargerData.getCableCheckStatus() == 2 && !chargingInit) {
-			evCharge = new EvCharge(this.getName(), chargerData);
+			evCharge = new EvCharge(this.getName(), chargerData, carData);
 			this.getParent().getParent().getChild("charge").add(evCharge); // TODO
 			chargingInit = true;
 		}

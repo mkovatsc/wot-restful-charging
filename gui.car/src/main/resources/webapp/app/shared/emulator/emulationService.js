@@ -62,7 +62,10 @@ app.factory('emulationService', function ($log, $rootScope, $q) {
             car.checkAvailableActions(this.config.speedup);
             break;
           case 'readyToCharge':
-            console.log('Ready to charge.');
+            car.setTargetVoltage(this.config.speedup);
+            break;
+          case 'targetVoltageSet':
+            car.lookupChargingProcess(this.config.speedup);
             break;
           /*
                     case 'pluggedIn':
