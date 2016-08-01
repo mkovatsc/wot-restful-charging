@@ -38,9 +38,10 @@ public class EvChargingProcessTC extends CoapResource implements HalResource {
 
 		if (msg != null && msg.isJsonObject() && msg.getAsJsonObject().get("targetCurrent") != null) {
 			carData.setTargetCurrent(msg.getAsJsonObject().get("targetCurrent").getAsDouble());
+			exchange.respond(ResponseCode.CHANGED);
+		} else {
+			exchange.respond(ResponseCode.BAD_REQUEST);
 		}
-
-		exchange.respond(ResponseCode.CHANGED);
 	}
 
 	@Override

@@ -38,9 +38,10 @@ public class EvChargingProcessTV extends CoapResource implements HalResource {
 
 		if (msg != null && msg.isJsonObject() && msg.getAsJsonObject().get("targetVoltage") != null) {
 			carData.setTargetVoltage(msg.getAsJsonObject().get("targetVoltage").getAsDouble());
+			exchange.respond(ResponseCode.CHANGED);
+		} else {
+			exchange.respond(ResponseCode.BAD_REQUEST);
 		}
-
-		exchange.respond(ResponseCode.CHANGED);
 	}
 
 	@Override
