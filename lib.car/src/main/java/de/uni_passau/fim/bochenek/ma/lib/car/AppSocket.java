@@ -114,6 +114,9 @@ public class AppSocket {
 									actions.forEach(action -> options.add(action));
 									car.sendToCar(String.format(answer, options.toString()));
 									break;
+								case "stopChargingProcess" :
+									car.stopChargingProcess();
+									break;
 								case "chargeParameterDiscovery" :
 									car.chargeParameterDiscovery(actMsg.getSoc(), actMsg.getMaxVoltage(), actMsg.getMaxCurrent());
 									break;

@@ -13,13 +13,21 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
     car: car
   });
 
-  // Define some $scope functions
+  // Plug in / Unplug the car from charger
   $scope.togglePlug = function () {
     if (!car.plugged_in) {
       car.plugIn(emulator.config.speedup);
     } else {
       emulator.stop();
       car.unplug(emulator.config.speedup);
+    }
+  };
+
+  // Stop the charging process
+  $scope.stopCharging = function () {
+    if (car.plugged_in) {
+      emulator.stop();
+      car.stopChargingProcess(emulator.config.speedup);
     }
   };
 

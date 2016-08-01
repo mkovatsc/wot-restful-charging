@@ -143,6 +143,14 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	}
 
 	@Override
+	public boolean stopChargingProcess() {
+		client.setURI(resMap.get("chargeProc"));
+		client.delete();
+
+		return false; // TODO
+	}
+
+	@Override
 	public boolean chargeParameterDiscovery(int soc, double maxVoltage, double maxCurrent) {
 		Gson gson = new GsonBuilder().create();
 

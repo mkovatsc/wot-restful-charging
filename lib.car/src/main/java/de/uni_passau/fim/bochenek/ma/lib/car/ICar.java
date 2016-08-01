@@ -22,8 +22,11 @@ public interface ICar {
 	// TODO Javadoc
 	public String setTargetVoltage(double targetVoltage);
 
-	//TODO Javadoc
+	// TODO Javadoc
 	public List<String> lookupChargingProcess();
+
+	// TODO Javadoc
+	public boolean stopChargingProcess();
 
 	// TODO Javadoc
 	public boolean chargeParameterDiscovery(int soc, double maxVoltage, double maxCurrent);

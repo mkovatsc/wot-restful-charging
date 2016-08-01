@@ -143,6 +143,18 @@ app.factory('carService', function ($rootScope, socketService) {
       }
     },
 
+    // Stop the charging process
+    stopChargingProcess: function (speedup) {
+      console.log('Stopping charging process');
+
+      if (typeof this.config.socket != 'undefined') { // TODO external function, even with rate limit?!
+        var data = {
+          action: 'stopChargingProcess'
+        };
+        this.config.socket.send('ACTION', data);
+      }
+    },
+
     // Charge parameter discovery
     doChargeParameterDiscovery: function (speedup) {
       this.changeState('chargeParameterDiscovery');

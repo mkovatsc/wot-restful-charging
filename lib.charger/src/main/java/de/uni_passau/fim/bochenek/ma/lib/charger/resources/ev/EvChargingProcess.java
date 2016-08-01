@@ -39,8 +39,9 @@ public class EvChargingProcess extends CoapResource implements HalResource {
 	}
 
 	@Override
-	public void handlePOST(CoapExchange exchange) {
-		super.handlePOST(exchange);
+	public void handleDELETE(CoapExchange exchange) {
+		this.delete();
+		exchange.respond(ResponseCode.DELETED);
 	}
 
 	@Override
