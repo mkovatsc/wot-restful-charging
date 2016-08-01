@@ -67,6 +67,12 @@ app.factory('emulationService', function ($log, $rootScope, $q) {
           case 'targetVoltageSet':
             car.lookupChargingProcess(this.config.speedup);
             break;
+          case 'chargingProcess':
+            car.doCurrentDemand(this.config.speedup);
+            break;
+          case 'currentDemand':
+            car.doCurrentDemand(this.config.speedup);
+            break;
           /*
                     case 'pluggedIn':
                       car.doChargeParameterDiscovery(this.config.speedup)

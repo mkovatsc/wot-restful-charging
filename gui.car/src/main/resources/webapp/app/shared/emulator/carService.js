@@ -276,7 +276,6 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // Current demand
     doCurrentDemand: function (speedup) {
-      // this.changeState('currentDemand')
       console.log('Sending current demand.'); // TODO
 
       // TODO base on time / cycles
@@ -299,7 +298,8 @@ app.factory('carService', function ($rootScope, socketService) {
         this.battery.charging = false; // TODO maybe define a routine
         this.ready_charge = false;
         this.charging.complete = true;
-        this.changeState('currentDemandDone');
+        //this.changeState('currentDemandDone');
+        this.changeState('sessionStop');
 
         if (typeof this.config.socket != 'undefined') {
           var data = {

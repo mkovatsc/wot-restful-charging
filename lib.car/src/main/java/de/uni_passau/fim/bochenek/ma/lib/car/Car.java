@@ -245,17 +245,33 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	@Override
 	public boolean currentDemand(int soc, double targetVoltage, double targetCurrent, boolean chargingComplete) {
-		Gson gson = new GsonBuilder().create();
-		JsonObject targetVals = new JsonObject();
-		targetVals.addProperty("targetVoltage", targetVoltage);
-		targetVals.addProperty("targetCurrent", targetCurrent);
-		client.setURI(resMap.get("ev_self") + "/targetValues");
-		client.post(gson.toJson(targetVals), MediaTypeRegistry.APPLICATION_JSON);
+		// Implementation for old approach following
+		//		Gson gson = new GsonBuilder().create();
+		//		JsonObject targetVals = new JsonObject();
+		//		targetVals.addProperty("targetVoltage", targetVoltage);
+		//		targetVals.addProperty("targetCurrent", targetCurrent);
+		//		client.setURI(resMap.get("ev_self") + "/targetValues");
+		//		client.post(gson.toJson(targetVals), MediaTypeRegistry.APPLICATION_JSON);
+		//
+		//		JsonObject stateOfCharge = new JsonObject();
+		//		stateOfCharge.addProperty("soc", soc);
+		//		client.setURI(resMap.get("stateOfCharge"));
+		//		client.post(gson.toJson(stateOfCharge), MediaTypeRegistry.APPLICATION_JSON);
+
+		JsonObject tV = new JsonObject();
+		tV.addProperty("targetVoltage", targetVoltage);
+		client.setURI(resMap.get("tV"));
+		client.put(tV.toString(), MediaTypeRegistry.APPLICATION_JSON);
+
+		JsonObject tC = new JsonObject();
+		tC.addProperty("targetCurrent", targetCurrent);
+		client.setURI(resMap.get("tC"));
+		client.put(tC.toString(), MediaTypeRegistry.APPLICATION_JSON);
 
 		JsonObject stateOfCharge = new JsonObject();
 		stateOfCharge.addProperty("soc", soc);
-		client.setURI(resMap.get("stateOfCharge"));
-		client.post(gson.toJson(stateOfCharge), MediaTypeRegistry.APPLICATION_JSON);
+		client.setURI(resMap.get("stateOfCharge")); // TODO Another resource?
+		client.post(stateOfCharge.toString(), MediaTypeRegistry.APPLICATION_JSON);
 
 		// DEBUG
 		logger.log(Level.INFO, "{0}: Sent current demand request.", new Object[]{this.uuid});
