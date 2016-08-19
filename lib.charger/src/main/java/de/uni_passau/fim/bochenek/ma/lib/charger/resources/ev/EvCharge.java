@@ -1,21 +1,14 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 
-import black.door.hate.HalRepresentation;
-import black.door.hate.HalRepresentation.HalRepresentationBuilder;
-import black.door.hate.HalResource;
-import ch.ethz.inf.vs.hypermedia.corehal.FormList;
+import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
 import ch.ethz.inf.vs.hypermedia.corehal.model.Form;
+import ch.ethz.inf.vs.hypermedia.corehal.model.Link;
 import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.EventMessage;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
@@ -23,7 +16,7 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.messages.StatusMessage.EvStatus
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
-public class EvCharge extends CoapResource implements HalResource {
+public class EvCharge extends CoapResource {
 
 	private ChargerData chargerData;
 	private CarData carData;
@@ -36,12 +29,7 @@ public class EvCharge extends CoapResource implements HalResource {
 
 	@Override
 	public void handleGET(CoapExchange exchange) {
-		try {
-			exchange.respond(ResponseCode.CONTENT, this.asEmbedded().serialize(), MediaTypeRegistry.APPLICATION_JSON);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		exchange.respond(ResponseCode.CONTENT, this.getRepresentation().toString(), MediaTypeRegistry.APPLICATION_JSON);
 	}
 
 	@Override
@@ -74,30 +62,18 @@ public class EvCharge extends CoapResource implements HalResource {
 		exchange.respond(ResponseCode.CREATED, "", MediaTypeRegistry.APPLICATION_JSON); // TODO content?
 	}
 
-	@Override
-	public URI location() {
-		try {
-			return new URI(this.getURI());
-		} catch (URISyntaxException e) {
-			return null;
-		}
-	}
-
-	@Override
-	public HalRepresentationBuilder representationBuilder() {
-		HalRepresentationBuilder hal = HalRepresentation.builder();
-		hal.addLink("self", this);
+	/**
+	 * TODO
+	 * 
+	 * @return
+	 */
+	private CoREHalBase getRepresentation() {
+		CoREHalBase hal = new CoREHalBase();
+		hal.addLink("self", new Link(this.getURI()));
 
 		if (chargerData.getCableCheckStatus() == 2) {
-			FormList forms = new FormList();
-
-			// Add form for target voltage
 			Form voltage = new Form("POST", this.getURI(), "application/json"); // TODO Define application specific format
-			voltage.setNames("voltage");
-			forms.add(voltage);
-
-			// TODO Implement FormSerializer to be used with FormListDeserializer?
-			hal.addProperty("_forms", forms);
+			hal.addForm("voltage", voltage);
 		}
 
 		return hal;

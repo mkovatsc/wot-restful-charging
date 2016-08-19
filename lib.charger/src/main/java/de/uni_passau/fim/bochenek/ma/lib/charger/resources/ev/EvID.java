@@ -1,7 +1,5 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.UUID;
 
 import org.eclipse.californium.core.CoapResource;
@@ -10,19 +8,16 @@ import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 //import org.eclipse.californium.core.server.resources.Resource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import black.door.hate.HalRepresentation;
-import black.door.hate.HalResource;
 import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.EventMessage;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
-import black.door.hate.HalRepresentation.HalRepresentationBuilder;
+import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
+import ch.ethz.inf.vs.hypermedia.corehal.model.Link;
 
-public class EvID extends CoapResource implements HalResource {
+public class EvID extends CoapResource {
 
 	private boolean chargingInit = false; // TODO Could be left out, equals evCharge == null
 	private EvCharge evCharge;
@@ -38,12 +33,7 @@ public class EvID extends CoapResource implements HalResource {
 
 	@Override
 	public void handleGET(CoapExchange exchange) {
-		try {
-			exchange.respond(ResponseCode.CONTENT, this.asEmbedded().serialize(), MediaTypeRegistry.APPLICATION_JSON);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		exchange.respond(ResponseCode.CONTENT, this.getRepresentation().toString(), MediaTypeRegistry.APPLICATION_JSON);
 	}
 
 	@Override
@@ -63,20 +53,14 @@ public class EvID extends CoapResource implements HalResource {
 		exchange.respond(ResponseCode.DELETED);
 	}
 
-	@Override
-	public URI location() {
-		try {
-			return new URI(this.getURI());
-		} catch (URISyntaxException e) {
-			return null;
-		}
-	}
-
-	@Override
-	public HalRepresentationBuilder representationBuilder() {
-		HalRepresentationBuilder hal = HalRepresentation.builder();
-		hal.addLink("self", this);
-		hal.addProperty("id", this.getName());
+	/**
+	 * TODO
+	 * 
+	 * @return
+	 */
+	private CoREHalBase getRepresentation() {
+		CoREHalBase hal = new CoREHalBase();
+		hal.addLink("self", new Link(this.getURI()));
 
 		// Add link to charging, if cable check was successfully completed
 		if (chargerData.getCableCheckStatus() == 2 && !chargingInit) {
@@ -87,14 +71,10 @@ public class EvID extends CoapResource implements HalResource {
 
 		// Add link to charge resource
 		if (chargingInit && evCharge != null) {
-			hal.addLink("charge", evCharge);
+			hal.addLink("charge", new Link(evCharge.getURI()));
 		}
 
-		//		for (Resource res : this.getChildren()) {
-		//
-		//			// TODO Maybe to much information due to recursive nature
-		//			hal.addEmbedded(res.getName(), (HalResource) res);
-		//		}
+		// TODO embedded resources?
 
 		return hal;
 	}

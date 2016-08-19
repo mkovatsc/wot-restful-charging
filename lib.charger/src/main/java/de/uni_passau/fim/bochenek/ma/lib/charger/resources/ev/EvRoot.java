@@ -1,7 +1,5 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -12,14 +10,12 @@ import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.Resource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import black.door.hate.HalRepresentation;
-import black.door.hate.HalResource;
-import black.door.hate.LinkOrResource;
+import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
+import ch.ethz.inf.vs.hypermedia.corehal.model.Link;
 import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.EventMessage;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
@@ -27,9 +23,8 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
-import black.door.hate.HalRepresentation.HalRepresentationBuilder;
 
-public class EvRoot extends CoapResource implements HalResource {
+public class EvRoot extends CoapResource {
 
 	private ChargerData chargerData;
 	private Map<UUID, CarData> cars;
@@ -42,12 +37,7 @@ public class EvRoot extends CoapResource implements HalResource {
 
 	@Override
 	public void handleGET(CoapExchange exchange) {
-		try {
-			exchange.respond(ResponseCode.CONTENT, this.asEmbedded().serialize(), MediaTypeRegistry.APPLICATION_JSON);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		exchange.respond(ResponseCode.CONTENT, this.getRepresentation().toString(), MediaTypeRegistry.APPLICATION_JSON);
 	}
 
 	@Override
@@ -71,22 +61,15 @@ public class EvRoot extends CoapResource implements HalResource {
 		resources.put("stateOfCharge", new EvSoc("stateOfCharge", carData));
 		resources.put("targetValues", new EvTargetValues("targetValues", carData));
 
-		String actionResult = null;
-		HalRepresentationBuilder result = HalRepresentation.builder();
+		CoREHalBase actionResult = new CoREHalBase();
 		EvID ev = new EvID(uuid.toString(), chargerData, carData);
 
 		for (Map.Entry<String, CoapResource> res : resources.entrySet()) {
 			ev.add(res.getValue());
-			result.addLink(res.getKey(), (LinkOrResource) res.getValue());
+			actionResult.addLink(res.getKey(), new Link(res.getValue().getURI()));
 		}
 
 		this.add(ev);
-		try {
-			actionResult = result.build().serialize();
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		// DEBUG
 		SocketHandler socket = SocketHandler.getInstance();
@@ -96,25 +79,20 @@ public class EvRoot extends CoapResource implements HalResource {
 		socket.pushToListeners(MessageType.EVENT, eMsg);
 
 		exchange.setLocationPath(ev.getURI());
-		exchange.respond(ResponseCode.CREATED, actionResult, MediaTypeRegistry.APPLICATION_JSON);
+		exchange.respond(ResponseCode.CREATED, actionResult.toString(), MediaTypeRegistry.APPLICATION_JSON);
 	}
 
-	@Override
-	public URI location() {
-		try {
-			return new URI(this.getURI());
-		} catch (URISyntaxException e) {
-			return null;
-		}
-	}
-
-	@Override
-	public HalRepresentationBuilder representationBuilder() {
-		HalRepresentationBuilder hal = HalRepresentation.builder();
-		hal.addLink("self", this);
+	/**
+	 * TODO
+	 * 
+	 * @return
+	 */
+	private CoREHalBase getRepresentation() {
+		CoREHalBase hal = new CoREHalBase();
+		hal.addLink("self", new Link(this.getURI()));
 
 		for (Resource res : this.getChildren()) {
-			hal.addLink(res.getName(), (HalResource) res);
+			hal.addLink(res.getName(), new Link(res.getURI()));
 		}
 
 		return hal;

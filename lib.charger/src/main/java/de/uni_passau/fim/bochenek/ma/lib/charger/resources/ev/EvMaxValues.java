@@ -1,24 +1,19 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import black.door.hate.HalRepresentation;
-import black.door.hate.HalResource;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
-import black.door.hate.HalRepresentation.HalRepresentationBuilder;
+import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
+import ch.ethz.inf.vs.hypermedia.corehal.model.Link;
 
-public class EvMaxValues extends CoapResource implements HalResource {
+public class EvMaxValues extends CoapResource {
 
 	private CarData data;
 
@@ -29,12 +24,7 @@ public class EvMaxValues extends CoapResource implements HalResource {
 
 	@Override
 	public void handleGET(CoapExchange exchange) {
-		try {
-			exchange.respond(ResponseCode.CONTENT, this.asEmbedded().serialize(), MediaTypeRegistry.APPLICATION_JSON);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		exchange.respond(ResponseCode.CONTENT, this.getRepresentation().toString(), MediaTypeRegistry.APPLICATION_JSON);
 	}
 
 	@Override
@@ -49,21 +39,16 @@ public class EvMaxValues extends CoapResource implements HalResource {
 		exchange.respond(ResponseCode.CHANGED);
 	}
 
-	@Override
-	public URI location() {
-		try {
-			return new URI(this.getURI());
-		} catch (URISyntaxException e) {
-			return null;
-		}
-	}
+	/**
+	 * TODO
+	 * 
+	 * @return
+	 */
+	private CoREHalBase getRepresentation() {
+		CoREHalBase hal = new CoREHalBase();
+		hal.addLink("self", new Link(this.getURI()));
 
-	@Override
-	public HalRepresentationBuilder representationBuilder() {
-		HalRepresentationBuilder hal = HalRepresentation.builder();
-		hal.addLink("self", this);
-		hal.addProperty("voltage", this.data.getMaxVoltage());
-		hal.addProperty("current", this.data.getMaxCurrent());
+		// TODO embedded resources?
 
 		return hal;
 	}
