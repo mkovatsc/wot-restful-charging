@@ -1,9 +1,12 @@
 package de.uni_passau.fim.bochenek.ma.util.server.data;
 
+import java.util.UUID;
+
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 
 public class CarData {
 
+	private UUID uuid;
 	private ChargingType chargingType;
 	private int soc;
 	private double maxVoltage;
@@ -15,6 +18,14 @@ public class CarData {
 
 	public CarData() {
 		//TODO
+	}
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public synchronized ChargingType getChargingType() {

@@ -16,6 +16,7 @@ import black.door.hate.HalRepresentation;
 import black.door.hate.HalResource;
 import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.EventMessage;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
@@ -50,6 +51,10 @@ public class EvID extends CoapResource implements HalResource {
 		((EvRoot) this.getParent()).removeCar(UUID.fromString(this.getName())); // TODO maybe make this methods of the model and inject
 		this.delete();
 		evCharge.delete();
+
+		// DEBUG
+		SocketHandler socket = SocketHandler.getInstance();
+		socket.pushToListeners(MessageType.DEBUG, new Message("Car (" + carData.getUuid().toString() + ") disconnected."));
 
 		EventMessage eMsg = new EventMessage(null, false);
 		eMsg.setDescription("unplugged");

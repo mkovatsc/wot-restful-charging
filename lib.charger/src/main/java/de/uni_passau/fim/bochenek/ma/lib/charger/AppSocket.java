@@ -16,6 +16,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.ActionMessage;
+import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
@@ -62,7 +63,8 @@ public class AppSocket {
 				try {
 					MessageType type = MessageType.valueOf(msg.getAsJsonObject().get("type").getAsString());
 					Gson gson = new Gson();
-					ChargerData chargerData = SocketHandler.getInstance().getChargerData();
+					SocketHandler socket = SocketHandler.getInstance();
+					ChargerData chargerData = socket.getChargerData();
 
 					switch (type) {
 						case EVENT : // TODO
@@ -77,9 +79,17 @@ public class AppSocket {
 							switch (actMsg.getAction()) {
 								case "updateCableCheckStatus" :
 									chargerData.setCableCheckStatus(actMsg.getCableCheckStatus());
+
+									// DEBUG
+									socket.pushToListeners(MessageType.DEBUG, new Message("Charger updated cableCheckStatus to: " + chargerData.getCableCheckStatus()));
+
 									break;
 								case "updatePresentVoltage" :
 									chargerData.setPresentVoltage(actMsg.getPresentVoltage());
+
+									// DEBUG
+									socket.pushToListeners(MessageType.DEBUG, new Message("Charger updated presentVoltage to: " + chargerData.getPresentVoltage()));
+
 									break;
 								default :
 									// TODO

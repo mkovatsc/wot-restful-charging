@@ -55,6 +55,7 @@ public class EvRoot extends CoapResource implements HalResource {
 		CarData carData = new CarData();
 		UUID uuid = UUID.randomUUID(); // TODO has to be done in the emulator!
 		this.cars.put(uuid, carData);
+		carData.setUuid(uuid);
 
 		// TODO not very robust :P
 		Gson gson = new GsonBuilder().create();

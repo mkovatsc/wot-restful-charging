@@ -138,6 +138,9 @@ public class Car implements ICar { // TODO Extend CoapClient?
 			links.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString())); // TODO ugly
 		}
 
+		// TODO Establish OBSERVE relationship, push incoming messages directly to UI
+		//		client.setURI(resMap.get("pV"));
+
 		logger.info(refs.toString());
 		return refs;
 	}
