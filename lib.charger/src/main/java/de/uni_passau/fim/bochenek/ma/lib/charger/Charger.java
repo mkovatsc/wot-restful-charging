@@ -32,6 +32,8 @@ public class Charger extends CoapServer {
 		this.add(seRoot);
 		this.add(new SeCharge("charge", chargerData));
 		this.add(new EvRoot("ev", chargerData, carData));
+
+		// TODO Change appearance of .well-known resource?
 	}
 
 	@Override
