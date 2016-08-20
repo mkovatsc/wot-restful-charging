@@ -13,6 +13,7 @@ import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
+import org.eclipse.californium.core.WebLink;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -50,10 +51,11 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		observed = new HashMap<String, CoapObserveRelation>();
 
 		// Discover the entry URL for EVs
-		JsonObject rootHal = new Gson().fromJson(client.get().getResponseText(), JsonObject.class); // TODO invalid JSON?
-		JsonObject links = rootHal.getAsJsonObject("_links");
-		if (links.get("ev") != null) {
-			resMap.put("ev", links.getAsJsonObject("ev").get("href").getAsString());
+		for (WebLink wl : client.discover()) {
+			if (wl.getAttributes().getResourceTypes().contains("ev")) {
+				resMap.put("ev", wl.getURI());
+				break;
+			}
 		}
 
 		// DEBUG

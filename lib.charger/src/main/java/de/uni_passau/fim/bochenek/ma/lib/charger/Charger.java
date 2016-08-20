@@ -25,13 +25,19 @@ public class Charger extends CoapServer {
 	public Charger(ChargerData chargerData, Map<UUID, CarData> carData) {
 		super();
 
-		// Add initial static resources
+		// Add SE resource
 		SeRoot seRoot = new SeRoot("se");
 		seRoot.add(new SeMaxValues("maxValues", chargerData));
 		seRoot.add(new SePresentValues("presentValues", chargerData));
 		this.add(seRoot);
-		this.add(new SeCharge("charge", chargerData));
-		this.add(new EvRoot("ev", chargerData, carData));
+		SeCharge seCharge = new SeCharge("charge", chargerData);
+		seCharge.setVisible(false);
+		this.add(seCharge);
+
+		// Add EV root resource
+		EvRoot evRoot = new EvRoot("ev", chargerData, carData);
+		evRoot.getAttributes().addResourceType("ev");
+		this.add(evRoot);
 
 		// TODO Change appearance of .well-known resource?
 	}
