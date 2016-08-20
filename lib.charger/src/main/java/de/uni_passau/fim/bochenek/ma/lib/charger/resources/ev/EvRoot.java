@@ -29,12 +29,12 @@ public class EvRoot extends CoapResource {
 	private static final String RELATION_TYPE = "ev";
 
 	private ChargerData chargerData;
-	private Map<UUID, CarData> cars;
+	private Map<UUID, CarData> carData;
 
-	public EvRoot(String name, ChargerData chargerData, Map<UUID, CarData> cars) {
+	public EvRoot(String name, ChargerData chargerData, Map<UUID, CarData> carData) {
 		super(name);
 		this.chargerData = chargerData;
-		this.cars = cars;
+		this.carData = carData;
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class EvRoot extends CoapResource {
 	public void handlePOST(CoapExchange exchange) {
 		CarData carData = new CarData();
 		UUID uuid = UUID.randomUUID(); // TODO has to be done in the emulator!
-		this.cars.put(uuid, carData);
+		this.carData.put(uuid, carData);
 		carData.setUuid(uuid);
 
 		// TODO not very robust :P
@@ -106,7 +106,7 @@ public class EvRoot extends CoapResource {
 	 * @param uuid
 	 */
 	protected void removeCar(UUID uuid) {
-		this.cars.remove(uuid);
+		this.carData.remove(uuid);
 	}
 
 }
