@@ -27,6 +27,7 @@ public class Charger extends CoapServer {
 
 		// Add SE resource
 		SeRoot seRoot = new SeRoot("se");
+		seRoot.setVisible(false); // TODO Debugging, resource should be removed at some point
 		seRoot.add(new SeMaxValues("maxValues", chargerData));
 		seRoot.add(new SePresentValues("presentValues", chargerData));
 		this.add(seRoot);
@@ -38,8 +39,6 @@ public class Charger extends CoapServer {
 		EvRoot evRoot = new EvRoot("ev", chargerData, carData);
 		evRoot.getAttributes().addResourceType("ev");
 		this.add(evRoot);
-
-		// TODO Change appearance of .well-known resource?
 	}
 
 	@Override
