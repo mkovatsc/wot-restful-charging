@@ -30,9 +30,10 @@ public class RootResource extends CoapResource {
 		CoREHalBase hal = new CoREHalBase();
 		hal.addLink("self", new Link(this.getURI()));
 
+		// TODO Think about what makes sense here
 		for (Resource res : this.getChildren()) {
 			if (!res.getName().equals(".well-known")) {
-				hal.addLink(res.getName(), new Link(res.getURI()));
+				// hal.addLink(res.getName(), new Link(res.getURI()));
 			}
 		}
 

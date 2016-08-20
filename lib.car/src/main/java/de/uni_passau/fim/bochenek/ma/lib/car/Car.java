@@ -77,6 +77,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		this.uuid = UUID.fromString(res.getOptions().getLocationPath().get(1)); // TODO remove magic number
 		resMap.put("ev_self", "/" + res.getOptions().getLocationPathString());
 		resolveAndAddRel(res.getResponseText(), "stateOfCharge", "maxValues");
+		client.setURI("/" + res.getOptions().getLocationPathString()); // Set URI directly to returned location
 
 		// DEBUG
 		logger.log(Level.INFO, "Car with UUID {0} plugged in.", new Object[]{this.uuid});
@@ -86,11 +87,12 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	@Override
 	public List<String> checkAvailabeActions() {
-		client.setURI(resMap.get("ev_self")); // TODO what if key doesn't exist?
+
+		// Query the currently set location for available actions
 		CoapResponse res = client.get();
 
 		JsonParser parser = new JsonParser();
-		JsonObject tmp = parser.parse(res.getResponseText()).getAsJsonObject();
+		JsonObject tmp = parser.parse(res.getResponseText()).getAsJsonObject(); // TODO Parse result might be null
 
 		List<String> refs = new LinkedList<String>();
 
@@ -100,6 +102,14 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 			links.remove("self"); // We should know this already
 			links.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString())); // TODO ugly
+		}
+
+		if (tmp.has("_forms") && !tmp.get("_forms").isJsonNull()) {
+			JsonObject forms = tmp.getAsJsonObject("_forms");
+			forms.entrySet().forEach(e -> refs.add(e.getKey()));
+
+			// TODO Actually handle forms correctly and push them to UI
+			forms.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString()));
 		}
 
 		logger.info(refs.toString());
@@ -358,6 +368,11 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	public CarData getData() {
 		return carData;
+	}
+
+	// TODO
+	public String getCurrentLocation() {
+		return client.getURI();
 	}
 
 }

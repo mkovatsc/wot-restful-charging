@@ -141,6 +141,8 @@ app.factory('emulationService', function ($log, $rootScope, $q) {
     stop: function () {
       clearTimeout(this.emulation);
       this.isRunning = false;
+
+      // TODO Remove existing asynchronous handlers
     },
 
     // Reset the emulator

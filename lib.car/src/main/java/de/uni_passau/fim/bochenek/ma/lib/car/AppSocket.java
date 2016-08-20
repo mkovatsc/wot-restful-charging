@@ -95,7 +95,7 @@ public class AppSocket {
 
 							List<String> actions;
 							JsonArray options = new JsonArray();
-							String answer = "{\"type\" : \"ANSWER\", \"data\" : {\"actions\" : %s}}"; // TODO Use Gson instead!
+							String answer = "{\"type\" : \"ANSWER\", \"data\" : {\"location\" : \"%s\", \"actions\" : %s}}"; // TODO Use Gson instead!
 
 							// DEBUG
 							logger.log(Level.INFO, "Action received: {0}", new Object[]{actMsg.getAction()});
@@ -105,7 +105,7 @@ public class AppSocket {
 								case "checkAvailableActions" :
 									actions = car.checkAvailabeActions();
 									actions.forEach(action -> options.add(new JsonPrimitive(action)));
-									car.sendToCar(String.format(answer, options.toString()));
+									car.sendToCar(String.format(answer, car.getCurrentLocation(), options.toString()));
 									break;
 								case "setTargetVoltage" :
 									car.setTargetVoltage(actMsg.getTargetVoltage()); // TODO Store or forward returned location path?
@@ -113,7 +113,7 @@ public class AppSocket {
 								case "lookupChargingProcess" :
 									actions = car.lookupChargingProcess();
 									actions.forEach(action -> options.add(new JsonPrimitive(action)));
-									car.sendToCar(String.format(answer, options.toString()));
+									car.sendToCar(String.format(answer, car.getCurrentLocation(), options.toString()));
 									break;
 								case "stopChargingProcess" :
 									car.stopChargingProcess();
@@ -158,7 +158,7 @@ public class AppSocket {
 					// TODO Proper handling for invalid contents
 				} catch (IllegalArgumentException iae) {
 					// TODO Find some elegant solution
-					logger.log(Level.WARNING, "No valid message type. (" + message + ")");
+					logger.log(Level.WARNING, "No valid message type. (" + message + ")"); // TODO Message covers not all the errors!
 				}
 			}
 		}

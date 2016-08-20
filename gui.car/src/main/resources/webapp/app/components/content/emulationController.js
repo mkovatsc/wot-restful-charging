@@ -31,6 +31,11 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
     }
   };
 
+  // Check for available actions
+  $scope.checkAvailableActions = function () { // TODO
+    car.checkAvailableActions(emulator.config.speedup);
+  };
+
   // Start the emulation
   $scope.start = function () {
     emulator.start();
@@ -44,6 +49,11 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
   // Reset the emulator
   $scope.reset = function () {
     emulator.reset();
+  };
+
+  // Pass the status of the emulator
+  $scope.emulatorRunning = function () {
+    return emulator.isRunning;
   };
 
   // Catch events and handle them

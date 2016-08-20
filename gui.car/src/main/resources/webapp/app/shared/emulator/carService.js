@@ -2,6 +2,10 @@ app.factory('carService', function ($rootScope, socketService) {
   var car = function (args) {
     this.uuid = undefined;
 
+    // Navigation for RESTful interface
+    this.location = '';
+    this.actions = [];
+
     this.config = {
       socketaddr: undefined
     };
@@ -88,6 +92,10 @@ app.factory('carService', function ($rootScope, socketService) {
         var that = this;
         this.config.socket.addHandler('ANSWER', function (data) {
           console.log('Answer received.');
+          
+          that.location = data.location;
+          that.actions = data.actions;
+
           if (data.actions.indexOf('charge') != -1) {
             that.changeState('readyToCharge');
             that.config.socket.clearHandler('ANSWER');

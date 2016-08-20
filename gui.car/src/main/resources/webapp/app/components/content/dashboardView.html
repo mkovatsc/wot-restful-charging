@@ -21,7 +21,7 @@
       <div layout="column">
         <p>State: {{car.state || '-'}}</p>
         <div layout="row">
-          <md-button class="md-raised" data-ng-click="start()" ng-disabled="">Start</md-button>
+          <md-button class="md-raised" data-ng-click="start()" ng-disabled="emulatorRunning()">Start</md-button>
           <md-button class="md-raised" data-ng-click="stop()" ng-disabled="">Stop</md-button>
           <md-button class="md-raised" data-ng-click="reset()" ng-disabled="">Reset</md-button>
         </div>
@@ -40,6 +40,8 @@
       <h2>Actions</h2>
       <md-button class="md-raised md-primary" data-ng-click="togglePlug()">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
       <md-button class="md-raised md-primary" data-ng-click="stopCharging()">Stop Charging</md-button>
+      <h2>Debugging</h2>
+      <md-button class="md-raised md-primary" data-ng-click="checkAvailableActions()" ng-disabled="emulatorRunning()">Check available actions</md-button>
     </div>
 
   </md-content>
