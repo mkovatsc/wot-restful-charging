@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 
 import de.uni_passau.fim.bochenek.ma.lib.car.handler.SocketHandler;
@@ -103,7 +104,7 @@ public class AppSocket {
 							switch (actMsg.getAction()) {
 								case "checkAvailableActions" :
 									actions = car.checkAvailabeActions();
-									actions.forEach(action -> options.add(action));
+									actions.forEach(action -> options.add(new JsonPrimitive(action)));
 									car.sendToCar(String.format(answer, options.toString()));
 									break;
 								case "setTargetVoltage" :
@@ -111,7 +112,7 @@ public class AppSocket {
 									break;
 								case "lookupChargingProcess" :
 									actions = car.lookupChargingProcess();
-									actions.forEach(action -> options.add(action));
+									actions.forEach(action -> options.add(new JsonPrimitive(action)));
 									car.sendToCar(String.format(answer, options.toString()));
 									break;
 								case "stopChargingProcess" :

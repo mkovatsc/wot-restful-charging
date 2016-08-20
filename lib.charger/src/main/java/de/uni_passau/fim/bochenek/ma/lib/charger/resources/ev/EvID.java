@@ -40,7 +40,7 @@ public class EvID extends CoapResource {
 	public void handleDELETE(CoapExchange exchange) {
 		((EvRoot) this.getParent()).removeCar(UUID.fromString(this.getName())); // TODO maybe make this methods of the model and inject
 		this.delete();
-		evCharge.delete();
+		evCharge.delete(); // TODO Can be null...
 
 		// DEBUG
 		SocketHandler socket = SocketHandler.getInstance();
