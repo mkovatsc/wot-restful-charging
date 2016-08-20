@@ -26,8 +26,6 @@ import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 
 public class EvRoot extends CoapResource {
 
-	private static final String RELATION_TYPE = "ev";
-
 	private ChargerData chargerData;
 	private Map<UUID, CarData> carData;
 
@@ -91,7 +89,7 @@ public class EvRoot extends CoapResource {
 	 */
 	private CoREHalBase getRepresentation() {
 		CoREHalBase hal = new CoREHalBase();
-		hal.addLink("self", new Link(this.getURI(), RELATION_TYPE));
+		hal.addLink("self", new Link(this.getURI()));
 
 		for (Resource res : this.getChildren()) {
 			hal.addLink(res.getName(), new Link(res.getURI()));
