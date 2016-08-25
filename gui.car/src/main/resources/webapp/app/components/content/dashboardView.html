@@ -42,6 +42,10 @@
       <md-button class="md-raised md-primary" data-ng-click="stopCharging()">Stop Charging</md-button>
       <h2>Debugging</h2>
       <md-button class="md-raised md-primary" data-ng-click="checkAvailableActions()" ng-disabled="emulatorRunning()">Check available actions</md-button>
+      <h2>Links</h2>
+      <md-button class="md-raised md-primary" ng-repeat="(key, value) in car.links">{{ key }}</md-button>
+      <h2>Forms</h2>
+      <md-button class="md-raised md-primary" ng-repeat="(key, value) in car.forms">{{ key }}</md-button>
     </div>
 
   </md-content>

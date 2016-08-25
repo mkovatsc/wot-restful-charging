@@ -3,6 +3,7 @@ package de.uni_passau.fim.bochenek.ma.lib.car;
 import java.util.List;
 import java.util.UUID;
 
+import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 
 /**
@@ -18,6 +19,12 @@ public interface ICar {
 
 	// TODO Javadoc
 	public List<String> checkAvailabeActions();
+
+	// TODO Javadoc
+	public CoREHalBase getCoREHal();
+
+	// TODO Javadoc
+	public CoREHalBase getCoREHal(String rel);
 
 	// TODO Javadoc
 	public String setTargetVoltage(double targetVoltage);

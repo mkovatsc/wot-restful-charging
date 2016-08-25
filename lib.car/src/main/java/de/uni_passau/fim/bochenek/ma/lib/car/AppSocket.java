@@ -1,6 +1,5 @@
 package de.uni_passau.fim.bochenek.ma.lib.car;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,10 +12,8 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 
 import de.uni_passau.fim.bochenek.ma.lib.car.handler.SocketHandler;
@@ -93,9 +90,7 @@ public class AppSocket {
 						case ACTION :
 							ActionMessage actMsg = gson.fromJson(msg.getAsJsonObject().get("data"), ActionMessage.class);
 
-							List<String> actions;
-							JsonArray options = new JsonArray();
-							String answer = "{\"type\" : \"ANSWER\", \"data\" : {\"location\" : \"%s\", \"actions\" : %s}}"; // TODO Use Gson instead!
+							String answer = "{\"type\" : \"%s\", \"data\" : %s }"; // TODO Use Gson instead!
 
 							// DEBUG
 							logger.log(Level.INFO, "Action received: {0}", new Object[]{actMsg.getAction()});
@@ -103,17 +98,15 @@ public class AppSocket {
 							// Handle triggered action
 							switch (actMsg.getAction()) {
 								case "checkAvailableActions" :
-									actions = car.checkAvailabeActions();
-									actions.forEach(action -> options.add(new JsonPrimitive(action)));
-									car.sendToCar(String.format(answer, car.getCurrentLocation(), options.toString()));
+									car.sendToCar(String.format(answer, "LINKS", car.getCoREHal().json().get("_links")));
+									car.sendToCar(String.format(answer, "FORMS", car.getCoREHal().json().get("_forms")));
 									break;
 								case "setTargetVoltage" :
 									car.setTargetVoltage(actMsg.getTargetVoltage()); // TODO Store or forward returned location path?
 									break;
 								case "lookupChargingProcess" :
-									actions = car.lookupChargingProcess();
-									actions.forEach(action -> options.add(new JsonPrimitive(action)));
-									car.sendToCar(String.format(answer, car.getCurrentLocation(), options.toString()));
+									car.sendToCar(String.format(answer, "LINKS", car.getCoREHal("chargeProc").json().get("_links")));
+									car.sendToCar(String.format(answer, "FORMS", car.getCoREHal("chargeProc").json().get("_forms")));
 									break;
 								case "stopChargingProcess" :
 									car.stopChargingProcess();

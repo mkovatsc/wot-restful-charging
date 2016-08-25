@@ -22,6 +22,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import ch.ethz.inf.vs.hypermedia.corehal.block.CoREHalBaseResourceFuture;
+import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 
@@ -114,6 +116,51 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 		logger.info(refs.toString());
 		return refs;
+	}
+
+	@Override
+	public CoREHalBase getCoREHal() {
+
+		// TODO
+		CoapResponse res = client.get();
+
+		JsonParser parser = new JsonParser();
+		JsonObject tmp = parser.parse(res.getResponseText()).getAsJsonObject(); // TODO Parse result might be null
+
+		List<String> refs = new LinkedList<String>();
+
+		if (tmp.has("_links")) {
+			JsonObject links = tmp.getAsJsonObject("_links");
+			links.entrySet().forEach(e -> refs.add(e.getKey()));
+
+			links.remove("self"); // We should know this already
+			links.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString())); // TODO ugly
+		}
+
+		if (tmp.has("_forms") && !tmp.get("_forms").isJsonNull()) {
+			JsonObject forms = tmp.getAsJsonObject("_forms");
+			forms.entrySet().forEach(e -> refs.add(e.getKey()));
+
+			// TODO Actually handle forms correctly and push them to UI
+			forms.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString()));
+		}
+
+		// TODO
+		CoREHalBase hal = new CoREHalBase();
+		try {
+			hal = new CoREHalBaseResourceFuture().deserialize(res.getResponseText());
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		return hal;
+	}
+
+	@Override
+	public CoREHalBase getCoREHal(String rel) {
+		client.setURI(resMap.get(rel));
+		return this.getCoREHal();
 	}
 
 	@Override
@@ -318,9 +365,10 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	public void unplug() {
 		client.setURI(resMap.get("ev_self"));
 		client.delete();
-
 		resMap.remove("ev_self");
 
+		client.setURI(resMap.get("ev"));
+		
 		// DEBUG
 		logger.log(Level.INFO, "Car with UUID {0} unplugged.", new Object[]{this.uuid});
 	}

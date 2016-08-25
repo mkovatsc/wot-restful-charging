@@ -4,7 +4,8 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // Navigation for RESTful interface
     this.location = '';
-    this.actions = [];
+    this.links = {};
+    this.forms = {};
 
     this.config = {
       socketaddr: undefined
@@ -29,6 +30,20 @@ app.factory('carService', function ($rootScope, socketService) {
       });
       this.config.socket.addHandler('DEBUG', function (data) { // TODO
         console.log(data);
+      });
+      this.config.socket.addHandler('LINKS', function (data) { // TODO
+        if (data !== null) {
+          that.location = data.self.href;
+          delete data.self;
+          that.links = data;
+        }
+      });
+      this.config.socket.addHandler('FORMS', function (data) { // TODO
+        if (data !== null) {
+          that.location = data.self.href;
+          delete data.self;
+          that.forms = data;
+        }
       });
     }
   };
@@ -87,20 +102,8 @@ app.factory('carService', function ($rootScope, socketService) {
     checkAvailableActions: function (speedup) {
       console.log('Checking for available actions.');
 
-      // Register a handler to wait asynchronously for an answer
-      if (!this.config.socket.hasHandler('ANSWER')) { // TODO external function?
-        var that = this;
-        this.config.socket.addHandler('ANSWER', function (data) {
-          console.log('Answer received.');
-          
-          that.location = data.location;
-          that.actions = data.actions;
-
-          if (data.actions.indexOf('charge') != -1) {
-            that.changeState('readyToCharge');
-            that.config.socket.clearHandler('ANSWER');
-          }
-        });
+      if ('charge' in this.links) { // TODO
+        this.changeState('readyToCharge');
       }
 
       if (typeof this.config.socket != 'undefined') { // TODO external function!
@@ -131,16 +134,8 @@ app.factory('carService', function ($rootScope, socketService) {
     lookupChargingProcess: function (speedup) {
       console.log('Looking up charging procedure');
 
-      // Register a handler to wait asynchronously for an answer
-      if (!this.config.socket.hasHandler('ANSWER')) { // TODO external function?
-        var that = this;
-        this.config.socket.addHandler('ANSWER', function (data) {
-          console.log('Answer received.');
-          if (data.actions.length > 1) { // TODO Not just "self"
-            that.changeState('chargingProcess');
-            that.config.socket.clearHandler('ANSWER');
-          }
-        });
+      if (Object.keys(this.links).length > 1) { // TODO Not just "self"
+        this.changeState('chargingProcess');
       }
 
       if (typeof this.config.socket != 'undefined') { // TODO external function, even with rate limit?!
