@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
 import de.uni_passau.fim.bochenek.ma.lib.car.handler.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.ActionMessage;
 import de.uni_passau.fim.bochenek.ma.lib.car.messages.EventMessage;
@@ -107,8 +108,9 @@ public class AppSocket {
 							// Handle triggered action
 							switch (actMsg.getAction()) {
 								case "follow" :
-									car.sendToCar(String.format(answer, "LINKS", car.follow(actMsg.getHref()).json().get("_links")));
-									car.sendToCar(String.format(answer, "FORMS", car.follow(actMsg.getHref()).json().get("_forms")));
+									CoREHalBase halRes1 = car.follow(actMsg.getHref());
+									car.sendToCar(String.format(answer, "LINKS", halRes1.json().get("_links")));
+									car.sendToCar(String.format(answer, "FORMS", halRes1.json().get("_forms")));
 									break;
 								case "sendForm" :
 
@@ -125,8 +127,9 @@ public class AppSocket {
 									if (res != null && res.getOptions().getLocationPathCount() > 0) {
 										car.sendToCar(String.format(answer, "REDIRECT", "\"" + res.getOptions().getLocationString() + "\""));
 									} else {
-										car.sendToCar(String.format(answer, "LINKS", car.getCoREHal().json().get("_links")));
-										car.sendToCar(String.format(answer, "FORMS", car.getCoREHal().json().get("_forms")));
+										CoREHalBase halRes2 = car.getCoREHal();
+										car.sendToCar(String.format(answer, "LINKS", halRes2.json().get("_links")));
+										car.sendToCar(String.format(answer, "FORMS", halRes2.json().get("_forms")));
 									}
 
 									break;
