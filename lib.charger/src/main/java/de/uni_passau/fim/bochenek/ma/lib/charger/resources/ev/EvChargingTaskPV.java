@@ -9,11 +9,11 @@ import com.google.gson.JsonObject;
 
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
-public class EvChargingProcessPV extends CoapResource {
+public class EvChargingTaskPV extends CoapResource {
 
 	private ChargerData chargerData;
 
-	public EvChargingProcessPV(String name, ChargerData chargerData) {
+	public EvChargingTaskPV(String name, ChargerData chargerData) {
 		super(name);
 		this.setObservable(true);
 		this.chargerData = chargerData;

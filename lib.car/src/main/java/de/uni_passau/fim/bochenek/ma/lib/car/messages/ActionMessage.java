@@ -9,7 +9,10 @@ package de.uni_passau.fim.bochenek.ma.lib.car.messages;
 public class ActionMessage {
 
 	private String action;
+	private String href;
+	private String method;
 	private int soc;
+	private String chargingType;
 	private double maxVoltage;
 	private double maxCurrent;
 	private double targetVoltage;
@@ -29,12 +32,36 @@ public class ActionMessage {
 		this.action = notify;
 	}
 
+	public String getHref() {
+		return href;
+	}
+
+	public void setHref(String href) {
+		this.href = href;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
 	public int getSoc() {
 		return soc;
 	}
 
 	public void setSoc(int soc) {
 		this.soc = soc;
+	}
+
+	public String getChargingType() {
+		return chargingType;
+	}
+
+	public void setChargingType(String chargingType) {
+		this.chargingType = chargingType;
 	}
 
 	public double getMaxVoltage() {

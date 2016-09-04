@@ -31,19 +31,33 @@ app.factory('carService', function ($rootScope, socketService) {
       this.config.socket.addHandler('DEBUG', function (data) { // TODO
         console.log(data);
       });
+      this.config.socket.addHandler('DISCOVER', function (data) { // TODO
+        if (data !== null) {
+          that.location = '/.well-known/core';
+          that.links = data.links;
+          $rootScope.$apply(); // TODO
+        }
+      });
+      this.config.socket.addHandler('REDIRECT', function (data) { // TODO
+        if (data !== null) {
+          that.follow(data);
+        }
+      });
       this.config.socket.addHandler('LINKS', function (data) { // TODO
         if (data !== null) {
-          that.location = data.self.href;
-          delete data.self;
           that.links = data;
+        } else {
+          that.links = {};
         }
+        $rootScope.$apply(); // TODO
       });
       this.config.socket.addHandler('FORMS', function (data) { // TODO
         if (data !== null) {
-          that.location = data.self.href;
-          delete data.self;
           that.forms = data;
+        } else {
+          that.forms = {};
         }
+        $rootScope.$apply(); // TODO
       });
     }
   };
@@ -95,6 +109,49 @@ app.factory('carService', function ($rootScope, socketService) {
         this.changeState('pluggedIn'); // TODO First wait for answer from charger, $apply() exception
       } else {
         console.log('No connector for charger defined.'); // TODO
+      }
+    },
+
+    // TODO Follow a link
+    follow: function (href) {
+      if (typeof this.config.socket != 'undefined') { // TODO external function!
+        var data = {
+          action: 'follow',
+          href: href
+        };
+        this.config.socket.send('ACTION', data);
+      }
+    },
+
+    // TODO
+    sendForm: function (href, method, accepts) {
+      if (typeof this.config.socket != 'undefined') { // TODO external function!
+        var data = {
+          action: 'sendForm',
+          href: href,
+          method: method
+        };
+
+        // Fill in form values > TODO generic solution?
+        switch (accepts) {
+            case 'application/register+json':
+              data.soc = this.battery.soc;
+              data.chargingType = 'DC';
+              data.maxVoltage = this.charging.voltage.DC;
+              data.maxCurrent = Math.max.apply(null, this.charging.rate.DC);
+              break;
+            case 'application/chargeinit+json':
+              data.targetVoltage = this.charging.voltage.DC;
+              break;
+            case 'application/charge+json':
+              data.soc = this.battery.soc;
+              data.targetCurrent = Math.max.apply(null, this.charging.rate.DC); // TODO Has to change!
+              break;
+            default:
+              // TODO
+        }
+
+        this.config.socket.send('ACTION', data);
       }
     },
 

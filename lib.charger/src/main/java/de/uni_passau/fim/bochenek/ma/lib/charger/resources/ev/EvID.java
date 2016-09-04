@@ -65,6 +65,7 @@ public class EvID extends CoapResource {
 		// Add link to charging, if cable check was successfully completed
 		if (chargerData.getCableCheckStatus() == 2 && !chargingInit) {
 			evCharge = new EvCharge(this.getName(), chargerData, carData);
+			evCharge.setVisible(false);
 			this.getParent().getParent().getChild("charge").add(evCharge); // TODO
 			chargingInit = true;
 		}

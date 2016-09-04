@@ -41,11 +41,22 @@
       <md-button class="md-raised md-primary" data-ng-click="togglePlug()">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
       <md-button class="md-raised md-primary" data-ng-click="stopCharging()">Stop Charging</md-button>
       <h2>Debugging</h2>
-      <md-button class="md-raised md-primary" data-ng-click="checkAvailableActions()" ng-disabled="emulatorRunning()">Check available actions</md-button>
+      <p ng-if="car.links.self">Location: {{ car.links.self.href }}</p>
       <h2>Links</h2>
-      <md-button class="md-raised md-primary" ng-repeat="(key, value) in car.links">{{ key }}</md-button>
+      <ng-repeat ng-repeat="(key, value) in car.links">
+        <md-button class="md-raised md-primary" ng-click="follow(value.href)">
+          {{ key }}
+          <span ng-if="value.rt">
+            (rt="{{ value.rt }}")
+          </span>
+        </md-button>
+      </ng-repeat>
       <h2>Forms</h2>
-      <md-button class="md-raised md-primary" ng-repeat="(key, value) in car.forms">{{ key }}</md-button>
+      <ng-repeat ng-repeat="(key, value) in car.forms">
+        <md-button class="md-raised md-primary" ng-click="sendForm(value.href, value.method, value.accepts)">
+          {{ key }}
+        </md-button>
+      </ng-repeat>
     </div>
 
   </md-content>

@@ -24,7 +24,7 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
-import de.uni_passau.fim.bochenek.ma.util.server.forms.PlugInForm;
+import de.uni_passau.fim.bochenek.ma.util.server.forms.RegisterForm;
 
 public class EvRoot extends CoapResource {
 
@@ -52,26 +52,27 @@ public class EvRoot extends CoapResource {
 		// Parsing the form data and store the information
 		Gson gson = new GsonBuilder().create();
 		JsonObject formData = gson.fromJson(exchange.getRequestText(), JsonObject.class); // TODO not very robust...
-		PlugInForm plugIn = new PlugInForm(formData);
-		carData.setSoc(plugIn.getSoc());
-		carData.setMaxVoltage(plugIn.getMaxVoltage());
-		carData.setMaxCurrent(plugIn.getMaxCurrent());
-		carData.setChargingType(plugIn.getChargingType());
+		RegisterForm register = new RegisterForm(formData);
+		carData.setSoc(register.getSoc());
+		carData.setMaxVoltage(register.getMaxVoltage());
+		carData.setMaxCurrent(register.getMaxCurrent());
+		carData.setChargingType(register.getChargingType());
 
 		// Setup the new resources that have to be created for the car
-		Map<String, CoapResource> resources = new HashMap<String, CoapResource>();
-		resources.put("chargingComplete", new EvChargingComplete("chargingComplete", carData));
-		resources.put("maxValues", new EvMaxValues("maxValues", carData));
-		resources.put("stateOfCharge", new EvSoc("stateOfCharge", carData));
-		resources.put("targetValues", new EvTargetValues("targetValues", carData));
+		//		Map<String, CoapResource> resources = new HashMap<String, CoapResource>();
+		//		resources.put("chargingComplete", new EvChargingComplete("chargingComplete", carData));
+		//		resources.put("maxValues", new EvMaxValues("maxValues", carData));
+		//		resources.put("stateOfCharge", new EvSoc("stateOfCharge", carData));
+		//		resources.put("targetValues", new EvTargetValues("targetValues", carData));
 
 		CoREHalBase actionResult = new CoREHalBase();
 		EvID ev = new EvID(uuid.toString(), chargerData, carData);
+		ev.setVisible(false);
 
-		for (Map.Entry<String, CoapResource> res : resources.entrySet()) {
-			ev.add(res.getValue());
-			actionResult.addLink(res.getKey(), new Link(res.getValue().getURI()));
-		}
+		//		for (Map.Entry<String, CoapResource> res : resources.entrySet()) {
+		//			ev.add(res.getValue());
+		//			actionResult.addLink(res.getKey(), new Link(res.getValue().getURI()));
+		//		}
 
 		this.add(ev);
 
@@ -95,8 +96,7 @@ public class EvRoot extends CoapResource {
 		CoREHalBase hal = new CoREHalBase();
 		hal.addLink("self", new Link(this.getURI()));
 
-		Form plugin = new Form("POST", this.getURI(), Utils.getMediaType(PlugInForm.class));
-		hal.addForm("plugin", plugin);
+		hal.addForm("register", new Form("POST", this.getURI(), Utils.getMediaType(RegisterForm.class)));
 
 		for (Resource res : this.getChildren()) {
 			hal.addLink(res.getName(), new Link(res.getURI()));

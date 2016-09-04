@@ -4,6 +4,8 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.eclipse.californium.core.server.resources.Resource;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -17,17 +19,24 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.messages.EventMessage;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
-import de.uni_passau.fim.bochenek.ma.util.server.forms.ChargeInitForm;
+import de.uni_passau.fim.bochenek.ma.util.server.forms.ChargeForm;
 
-public class EvCharge extends CoapResource {
+public class EvChargingTask extends CoapResource {
 
 	private ChargerData chargerData;
 	private CarData carData;
 
-	public EvCharge(String name, ChargerData chargerData, CarData carData) {
+	public EvChargingTask(String name, ChargerData chargerData, CarData carData) {
 		super(name);
 		this.chargerData = chargerData;
 		this.carData = carData;
+
+		EvChargingTaskPV evChargingTaskPV = new EvChargingTaskPV("pV", this.chargerData);
+		evChargingTaskPV.setVisible(false);
+		EvChargingTaskPC evChargingTaskPC = new EvChargingTaskPC("pC", this.chargerData);
+		evChargingTaskPC.setVisible(false);
+		this.add(evChargingTaskPV);
+		this.add(evChargingTaskPC);
 	}
 
 	@Override
@@ -36,25 +45,28 @@ public class EvCharge extends CoapResource {
 	}
 
 	@Override
-	public void handlePOST(CoapExchange exchange) {
+	public void handlePUT(CoapExchange exchange) {
+		// TODO not allowed, i.e. if voltages don't match yet
+
 		Gson gson = new GsonBuilder().create();
 		JsonObject formData = gson.fromJson(exchange.getRequestText(), JsonObject.class); // TODO not very robust...
-		ChargeInitForm chargeInit = new ChargeInitForm(formData);
-		carData.setTargetVoltage(chargeInit.getTargetVoltage());
+		ChargeForm charge = new ChargeForm(formData);
+		carData.setSoc(charge.getSoc());
+		carData.setTargetCurrent(charge.getTargetCurrent());
 
 		EventMessage eMsg = new EventMessage(null);
-		eMsg.setTargetVoltage(carData.getTargetVoltage());
-		eMsg.setDescription("targetVoltageSet");
+		eMsg.setTargetCurrent(carData.getTargetCurrent());
+		eMsg.setDescription("targetCurrentSet");
 		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
 
-		if (this.getChildren().size() < 1) { // TODO
-			EvChargingTask chargingTask = new EvChargingTask("task", chargerData, carData);
-			chargingTask.setVisible(false);
-			this.add(chargingTask);
-			exchange.setLocationPath(chargingTask.getURI());
-		}
+		exchange.respond(ResponseCode.CHANGED, "", MediaTypeRegistry.APPLICATION_JSON); // TODO content?
+	}
 
-		exchange.respond(ResponseCode.CREATED, "", MediaTypeRegistry.APPLICATION_JSON); // TODO content?
+	@Override
+	public void handleDELETE(CoapExchange exchange) {
+		exchange.setLocationPath(this.getParent().getURI());
+		this.delete();
+		exchange.respond(ResponseCode.DELETED);
 	}
 
 	/**
@@ -66,10 +78,18 @@ public class EvCharge extends CoapResource {
 		CoREHalBase hal = new CoREHalBase();
 		hal.addLink("self", new Link(this.getURI()));
 
-		if (chargerData.getCableCheckStatus() == 2) {
-			Form chargeInit = new Form("POST", this.getURI(), Utils.getMediaType(ChargeInitForm.class));
-			hal.addForm("init", chargeInit);
+		for (Resource child : this.getChildren()) {
+			hal.addLink(child.getName(), new Link(child.getURI()));
 		}
+
+		if (chargerData.getCableCheckStatus() == 2 && chargerData.getPresentVoltage() == carData.getTargetVoltage()) { // TODO define acceptance range for voltage
+			Form charge = new Form("PUT", this.getURI(), Utils.getMediaType(ChargeForm.class));
+			hal.addForm("charge", charge);
+		}
+
+		// TODO Check for present current first!
+		Form stop = new Form("DELETE", this.getURI(), ""); // TODO define accepts
+		hal.addForm("stop", stop);
 
 		return hal;
 	}

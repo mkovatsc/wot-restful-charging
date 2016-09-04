@@ -14,6 +14,7 @@ public class EventMessage extends Message {
 	private String description;
 	private boolean pluggedIn;
 	private double targetVoltage;
+	private double targetCurrent;
 
 	public EventMessage(UUID uuid) {
 		this.uuid = uuid;
@@ -54,6 +55,14 @@ public class EventMessage extends Message {
 
 	public void setTargetVoltage(double targetVoltage) {
 		this.targetVoltage = targetVoltage;
+	}
+
+	public double getTargetCurrent() {
+		return targetCurrent;
+	}
+
+	public void setTargetCurrent(double targetCurrent) {
+		this.targetCurrent = targetCurrent;
 	}
 
 }

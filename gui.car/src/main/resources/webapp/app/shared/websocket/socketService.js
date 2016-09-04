@@ -36,6 +36,7 @@ app.factory('socketService', function ($timeout, $log) {
       };
 
       this.config.websocket.onmessage = function (evt) {
+        $log.info(evt.data);
         var json = JSON.parse(evt.data); // TODO Catch if invalid JSON received
         callHandlers(json.type, json.data);
       };

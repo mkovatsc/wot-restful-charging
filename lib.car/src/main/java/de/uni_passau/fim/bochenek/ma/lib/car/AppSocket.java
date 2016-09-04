@@ -1,9 +1,12 @@
 package de.uni_passau.fim.bochenek.ma.lib.car;
 
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.californium.core.CoapResponse;
+import org.eclipse.californium.core.WebLink;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -12,7 +15,9 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
@@ -73,12 +78,16 @@ public class AppSocket {
 							if (evtMsg.isPluggedIn()) {
 
 								// TODO Use Message objects as POJOs
-								UUID uuid = car.plugIn(evtMsg.getChargingType(), evtMsg.getSoc(), evtMsg.getMaxVoltage(), evtMsg.getMaxCurrent());
-								String register = "{\"type\" : \"REGISTER\", \"data\" : {\"uuid\" : \"%s\"}}"; // TODO Use POJOs an Gson! (Same below.)
-								car.sendToCar(String.format(register, uuid.toString()));
+								//								UUID uuid = car.plugIn(evtMsg.getChargingType(), evtMsg.getSoc(), evtMsg.getMaxVoltage(), evtMsg.getMaxCurrent());
+								//								String register = "{\"type\" : \"REGISTER\", \"data\" : {\"uuid\" : \"%s\"}}"; // TODO Use POJOs an Gson! (Same below.)
+								//								car.sendToCar(String.format(register, uuid.toString()));
+
+								// TODO
+								String discover = "{\"type\" : \"DISCOVER\", \"data\" : {\"links\" : %s}}";
+								car.sendToCar(String.format(discover, serialize(car.plugIn())));
 
 								// DEBUG
-								logger.log(Level.INFO, "Car with UUID {0} plugged in.", new Object[]{uuid.toString()});
+								//								logger.log(Level.INFO, "Car with UUID {0} plugged in.", new Object[]{uuid.toString()});
 							} else {
 								car.unplug();
 
@@ -97,6 +106,30 @@ public class AppSocket {
 
 							// Handle triggered action
 							switch (actMsg.getAction()) {
+								case "follow" :
+									car.sendToCar(String.format(answer, "LINKS", car.follow(actMsg.getHref()).json().get("_links")));
+									car.sendToCar(String.format(answer, "FORMS", car.follow(actMsg.getHref()).json().get("_forms")));
+									break;
+								case "sendForm" :
+
+									// TODO Don't send data that doesn't match media type!
+									JsonObject json = new JsonObject();
+									json.addProperty("soc", actMsg.getSoc());
+									json.addProperty("maxVoltage", actMsg.getMaxVoltage());
+									json.addProperty("maxCurrent", actMsg.getMaxCurrent());
+									json.addProperty("chargingType", actMsg.getChargingType());
+									json.addProperty("targetVoltage", actMsg.getTargetVoltage());
+									json.addProperty("targetCurrent", actMsg.getTargetCurrent());
+									CoapResponse res = car.sendForm(actMsg.getHref(), actMsg.getMethod(), json);
+
+									if (res != null && res.getOptions().getLocationPathCount() > 0) {
+										car.sendToCar(String.format(answer, "REDIRECT", "\"" + res.getOptions().getLocationString() + "\""));
+									} else {
+										car.sendToCar(String.format(answer, "LINKS", car.getCoREHal().json().get("_links")));
+										car.sendToCar(String.format(answer, "FORMS", car.getCoREHal().json().get("_forms")));
+									}
+
+									break;
 								case "checkAvailableActions" :
 									car.sendToCar(String.format(answer, "LINKS", car.getCoREHal().json().get("_links")));
 									car.sendToCar(String.format(answer, "FORMS", car.getCoREHal().json().get("_forms")));
@@ -155,6 +188,21 @@ public class AppSocket {
 				}
 			}
 		}
+	}
+
+	private static JsonArray serialize(Set<WebLink> webLinks) {
+		JsonArray result = new JsonArray();
+
+		for (WebLink link : webLinks) {
+			JsonObject linkObj = new JsonObject();
+			linkObj.addProperty("href", link.getURI());
+			if (link.getAttributes().getResourceTypes().size() > 0) {
+				linkObj.addProperty("rt", link.getAttributes().getResourceTypes().get(0)); // TODO assumes there is only one...
+			}
+			result.add(linkObj);
+		}
+
+		return result;
 	}
 
 }

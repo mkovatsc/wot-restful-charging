@@ -28,9 +28,17 @@ public class Charger extends CoapServer {
 		// Add SE resource
 		SeRoot seRoot = new SeRoot("se");
 		seRoot.setVisible(false); // TODO Debugging, resource should be removed at some point
-		seRoot.add(new SeMaxValues("maxValues", chargerData));
-		seRoot.add(new SePresentValues("presentValues", chargerData));
+
+		SeMaxValues seMaxValues = new SeMaxValues("maxValues", chargerData);
+		seMaxValues.setVisible(false);
+
+		SePresentValues sePresentValues = new SePresentValues("presentValues", chargerData);
+		sePresentValues.setVisible(false);
+
+		seRoot.add(seMaxValues);
+		seRoot.add(sePresentValues);
 		this.add(seRoot);
+
 		SeCharge seCharge = new SeCharge("charge", chargerData);
 		seCharge.setVisible(false);
 		this.add(seCharge);

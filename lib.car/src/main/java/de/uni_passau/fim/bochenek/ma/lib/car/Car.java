@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -88,6 +89,32 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	}
 
 	@Override
+	public Set<WebLink> plugIn() {
+		return client.discover();
+	}
+
+	@Override
+	public CoREHalBase follow(String href) {
+		client.setURI(href);
+		return this.getCoREHal();
+	}
+
+	public CoapResponse sendForm(String href, String method, JsonObject data) {
+		client.setURI(href);
+
+		switch (method) {
+			case "POST" :
+				return client.post(new GsonBuilder().create().toJson(data), MediaTypeRegistry.APPLICATION_JSON); // TODO data could be null!
+			case "PUT" :
+				return client.put(new GsonBuilder().create().toJson(data), MediaTypeRegistry.APPLICATION_JSON); // TODO data could be null!
+			case "DELETE" :
+				return client.delete();
+			default :
+				return null; // TODO
+		}
+	}
+
+	@Override
 	public List<String> checkAvailabeActions() {
 
 		// Query the currently set location for available actions
@@ -153,7 +180,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		return hal;
 	}
 
@@ -368,7 +395,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		resMap.remove("ev_self");
 
 		client.setURI(resMap.get("ev"));
-		
+
 		// DEBUG
 		logger.log(Level.INFO, "Car with UUID {0} unplugged.", new Object[]{this.uuid});
 	}

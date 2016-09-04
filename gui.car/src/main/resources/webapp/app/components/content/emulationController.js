@@ -60,4 +60,19 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
   $rootScope.$on('carStateChanged', function (event, args) {
     $log.info('Car state changed to: ' + car.state);
   });
+
+  // TODO
+  $scope.follow = function (href) {
+    if (car.plugged_in) {
+      car.follow(href);
+    }
+  }
+
+  // TODO
+  $scope.sendForm = function (href, method, accepts) {
+    if (car.plugged_in) {
+      car.sendForm(href, method, accepts);
+    }
+  }
+
 });

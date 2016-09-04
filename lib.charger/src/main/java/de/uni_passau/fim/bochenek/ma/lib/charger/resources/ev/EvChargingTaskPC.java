@@ -8,11 +8,11 @@ import com.google.gson.JsonObject;
 
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
-public class EvChargingProcessPC extends CoapResource {
+public class EvChargingTaskPC extends CoapResource {
 
 	private ChargerData chargerData;
 
-	public EvChargingProcessPC(String name, ChargerData chargerData) {
+	public EvChargingTaskPC(String name, ChargerData chargerData) {
 		super(name);
 		this.setObservable(true);
 		this.chargerData = chargerData;

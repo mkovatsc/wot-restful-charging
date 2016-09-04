@@ -1,7 +1,10 @@
 package de.uni_passau.fim.bochenek.ma.lib.car;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+
+import org.eclipse.californium.core.WebLink;
 
 import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
@@ -16,6 +19,12 @@ public interface ICar {
 
 	// TODO Javadoc
 	public UUID plugIn(ChargingType chargingType, int soc, double maxVoltage, double maxCurrent);
+
+	// TODO Javadoc
+	public Set<WebLink> plugIn();
+
+	// TODO Javadoc
+	public CoREHalBase follow(String href);
 
 	// TODO Javadoc
 	public List<String> checkAvailabeActions();

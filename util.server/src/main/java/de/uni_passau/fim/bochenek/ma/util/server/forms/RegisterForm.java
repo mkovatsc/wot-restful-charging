@@ -5,19 +5,19 @@ import com.google.gson.JsonObject;
 import ch.ethz.inf.vs.hypermedia.client.MediaType;
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 
-@MediaType(contentType = 65010, mediaType = "application/plugin+json")
-public class PlugInForm extends BaseForm {
+@MediaType(contentType = 65010, mediaType = "application/register+json")
+public class RegisterForm extends BaseForm {
 
 	private int soc;
 	private double maxVoltage;
 	private double maxCurrent;
 	private ChargingType chargingType;
 
-	public PlugInForm() {
+	public RegisterForm() {
 
 	}
 
-	public PlugInForm(JsonObject jo) {
+	public RegisterForm(JsonObject jo) {
 		this.parse(jo);
 	}
 
