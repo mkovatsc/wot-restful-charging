@@ -28,12 +28,12 @@ import de.uni_passau.fim.bochenek.ma.util.server.forms.RegisterForm;
 public class EvRoot extends CoapResource {
 
 	private ChargerData chargerData;
-	private Map<UUID, CarData> carData;
+	private Map<UUID, CarData> carsData;
 
 	public EvRoot(String name, ChargerData chargerData, Map<UUID, CarData> carData) {
 		super(name);
 		this.chargerData = chargerData;
-		this.carData = carData;
+		this.carsData = carData;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class EvRoot extends CoapResource {
 	public void handlePOST(CoapExchange exchange) {
 		CarData carData = new CarData();
 		UUID uuid = UUID.randomUUID(); // TODO has to be done in the emulator!
-		this.carData.put(uuid, carData);
+		this.carsData.put(uuid, carData);
 		carData.setUuid(uuid);
 
 		// Parsing the form data and store the information
@@ -112,7 +112,7 @@ public class EvRoot extends CoapResource {
 	 * @param uuid
 	 */
 	protected void removeCar(UUID uuid) {
-		this.carData.remove(uuid);
+		this.carsData.remove(uuid);
 	}
 
 }

@@ -147,40 +147,14 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	@Override
 	public CoREHalBase getCoREHal() {
-
-		// TODO
-		CoapResponse res = client.get();
-
-		JsonParser parser = new JsonParser();
-		JsonObject tmp = parser.parse(res.getResponseText()).getAsJsonObject(); // TODO Parse result might be null
-
-		List<String> refs = new LinkedList<String>();
-
-		if (tmp.has("_links")) {
-			JsonObject links = tmp.getAsJsonObject("_links");
-			links.entrySet().forEach(e -> refs.add(e.getKey()));
-
-			links.remove("self"); // We should know this already
-			links.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString())); // TODO ugly
-		}
-
-		if (tmp.has("_forms") && !tmp.get("_forms").isJsonNull()) {
-			JsonObject forms = tmp.getAsJsonObject("_forms");
-			forms.entrySet().forEach(e -> refs.add(e.getKey()));
-
-			// TODO Actually handle forms correctly and push them to UI
-			forms.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString()));
-		}
-
-		// TODO
 		CoREHalBase hal = new CoREHalBase();
+		CoapResponse res = client.get();
 		try {
 			hal = new CoREHalBaseResourceFuture().deserialize(res.getResponseText());
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
 		return hal;
 	}
 

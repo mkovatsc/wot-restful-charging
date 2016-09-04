@@ -89,6 +89,7 @@ public class AppSocket {
 
 								// DEBUG
 								//								logger.log(Level.INFO, "Car with UUID {0} plugged in.", new Object[]{uuid.toString()});
+								logger.log(Level.INFO, "Car plugged in.");
 							} else {
 								car.unplug();
 

@@ -15,6 +15,7 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
+import ch.ethz.inf.vs.hypermedia.corehal.model.Form;
 import ch.ethz.inf.vs.hypermedia.corehal.model.Link;
 
 public class EvID extends CoapResource {
@@ -38,9 +39,9 @@ public class EvID extends CoapResource {
 
 	@Override
 	public void handleDELETE(CoapExchange exchange) {
-		((EvRoot) this.getParent()).removeCar(UUID.fromString(this.getName())); // TODO maybe make this methods of the model and inject
+		//		((EvRoot) this.getParent()).removeCar(UUID.fromString(this.getName())); // TODO maybe make this methods of the model and inject
 		this.delete();
-		evCharge.delete(); // TODO Can be null...
+		//		evCharge.delete(); // TODO Can be null...
 
 		// DEBUG
 		SocketHandler socket = SocketHandler.getInstance();
@@ -50,6 +51,7 @@ public class EvID extends CoapResource {
 		eMsg.setDescription("unplugged");
 		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg); // TODO Provide UUID?
 
+		exchange.setLocationPath("/.well-known/core"); // Reset
 		exchange.respond(ResponseCode.DELETED);
 	}
 
@@ -74,6 +76,10 @@ public class EvID extends CoapResource {
 		if (chargingInit && evCharge != null) {
 			hal.addLink("charge", new Link(evCharge.getURI()));
 		}
+
+		// TODO Check for present current first!
+		Form leave = new Form("DELETE", this.getURI(), ""); // TODO define accepts
+		hal.addForm("leave", leave);
 
 		// TODO embedded resources?
 

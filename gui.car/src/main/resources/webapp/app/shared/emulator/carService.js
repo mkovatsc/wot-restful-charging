@@ -35,12 +35,17 @@ app.factory('carService', function ($rootScope, socketService) {
         if (data !== null) {
           that.location = '/.well-known/core';
           that.links = data.links;
+          that.forms = {};
           $rootScope.$apply(); // TODO
         }
       });
       this.config.socket.addHandler('REDIRECT', function (data) { // TODO
         if (data !== null) {
-          that.follow(data);
+          if (data == '/.well-known/core') { // TODO ugly hack
+            that.plugIn();
+          } else {
+            that.follow(data);
+          }
         }
       });
       this.config.socket.addHandler('LINKS', function (data) { // TODO
