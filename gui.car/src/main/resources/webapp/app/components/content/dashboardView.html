@@ -33,15 +33,23 @@
   <md-content id="info" class="md-padding" layout="column" layout-gt-sm="row">
 
     <div class="md-whiteframe-5dp" layout-padding flex-gt-sm>
-      <img ng-src="assets/img/bmw-i3-{{car.plugged_in && 'pluggedin.jpg' || 'unplugged.jpg'}}"/>
+      <h2>Car status:</h2>
+      <form>
+        <md-input-container>
+          <label for="soc">State of Charge (%):</label>
+          <input type="text" name="soc" ng-model="car.battery.soc">
+        </md-input-container>
+      </form>
+
+      <h2>Debugging</h2>
+      <p ng-if="car.links.self">Location: {{ car.links.self.href }}</p>
     </div>
 
     <div class="md-whiteframe-5dp" layout-padding flex-gt-sm>
       <h2>Actions</h2>
       <md-button class="md-raised md-primary" data-ng-click="togglePlug()">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
       <md-button class="md-raised md-primary" data-ng-click="stopCharging()">Stop Charging</md-button>
-      <h2>Debugging</h2>
-      <p ng-if="car.links.self">Location: {{ car.links.self.href }}</p>
+
       <h2>Links</h2>
       <ng-repeat ng-repeat="(key, value) in car.links">
         <md-button class="md-raised md-primary" ng-click="follow(value.href)">
@@ -51,6 +59,7 @@
           </span>
         </md-button>
       </ng-repeat>
+
       <h2>Forms</h2>
       <ng-repeat ng-repeat="(key, value) in car.forms">
         <md-button class="md-raised md-primary" ng-click="sendForm(value.href, value.method, value.accepts)">
