@@ -66,7 +66,7 @@
           State of Charge ( {{charger.status.ev.stateOfCharge || '-'}} % )
           <img ng-src="assets/img/icons/{{ev.data.chargingComplete && 'ic_check_black_24px.svg' || 'ic_sync_black_24px.svg'}}"/>
         </h3>
-        <md-progress-linear md-mode="determinate" value="{{ev.data.stateOfCharge}}"></md-progress-linear>
+        <md-progress-linear md-mode="determinate" value="{{charger.status.ev.stateOfCharge}}"></md-progress-linear>
       </div>
     </md-content>
   </div>
