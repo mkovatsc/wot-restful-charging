@@ -47,8 +47,8 @@
 
     <div class="md-whiteframe-5dp" layout-padding flex-gt-sm>
       <h2>Actions</h2>
-      <md-button class="md-raised md-primary" data-ng-click="togglePlug()">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
-      <md-button class="md-raised md-primary" data-ng-click="stopCharging()">Stop Charging</md-button>
+      <md-button class="md-raised md-primary" ng-click="togglePlug()" ng-disabled="car.plugged_in">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
+      <!--<md-button class="md-raised md-primary" data-ng-click="stopCharging()">Stop Charging</md-button>-->
 
       <h2>Links</h2>
       <ng-repeat ng-repeat="(key, value) in car.links">

@@ -64,7 +64,7 @@ public class EvChargingTask extends CoapResource {
 
 	@Override
 	public void handleDELETE(CoapExchange exchange) {
-		exchange.setLocationPath(this.getParent().getURI());
+		exchange.setLocationPath(carData.getBookmarks().get("evLoc").getURI());
 		this.delete();
 		exchange.respond(ResponseCode.DELETED);
 	}

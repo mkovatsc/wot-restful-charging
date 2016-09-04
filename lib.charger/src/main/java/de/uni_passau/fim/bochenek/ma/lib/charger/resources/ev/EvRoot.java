@@ -1,6 +1,5 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -68,6 +67,7 @@ public class EvRoot extends CoapResource {
 		CoREHalBase actionResult = new CoREHalBase();
 		EvID ev = new EvID(uuid.toString(), chargerData, carData);
 		ev.setVisible(false);
+		carData.getBookmarks().put("evLoc", ev);
 
 		//		for (Map.Entry<String, CoapResource> res : resources.entrySet()) {
 		//			ev.add(res.getValue());
@@ -96,6 +96,7 @@ public class EvRoot extends CoapResource {
 		CoREHalBase hal = new CoREHalBase();
 		hal.addLink("self", new Link(this.getURI()));
 
+		// TODO Don't show if already registered
 		hal.addForm("register", new Form("POST", this.getURI(), Utils.getMediaType(RegisterForm.class)));
 
 		for (Resource res : this.getChildren()) {

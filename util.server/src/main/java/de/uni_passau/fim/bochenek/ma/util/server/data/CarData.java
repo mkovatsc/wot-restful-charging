@@ -1,6 +1,10 @@
 package de.uni_passau.fim.bochenek.ma.util.server.data;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+
+import org.eclipse.californium.core.CoapResource;
 
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 
@@ -15,9 +19,11 @@ public class CarData {
 	private double targetCurrent;
 	private boolean readyToCharge;
 	private boolean chargingComplete;
+	private Map<String, CoapResource> bookmarks;
 
 	public CarData() {
 		//TODO
+		this.bookmarks = new HashMap<String, CoapResource>();
 	}
 
 	public UUID getUuid() {
@@ -83,6 +89,10 @@ public class CarData {
 
 	public synchronized void setChargingComplete(boolean chargingComplete) {
 		this.chargingComplete = chargingComplete;
+	}
+
+	public Map<String, CoapResource> getBookmarks() {
+		return bookmarks;
 	}
 
 }
