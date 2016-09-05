@@ -1,4 +1,4 @@
-app.factory('carService', function ($rootScope, socketService) {
+app.factory('carService', function ($log, $rootScope, socketService) {
   var car = function (args) {
     this.uuid = undefined;
 
@@ -29,7 +29,7 @@ app.factory('carService', function ($rootScope, socketService) {
         $rootScope.$apply();
       });
       this.config.socket.addHandler('DEBUG', function (data) { // TODO
-        console.log(data);
+        $log.debug(data);
       });
       this.config.socket.addHandler('DISCOVER', function (data) { // TODO
         if (data !== null) {
@@ -99,7 +99,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // Plug the car in
     plugIn: function (speedup) {
-      console.log('Plugging in the car.'); // TODO
+      $log.info('Plugging in the car.'); // TODO
       this.plugged_in = true;
 
       // Try to connect to the charger
@@ -114,12 +114,14 @@ app.factory('carService', function ($rootScope, socketService) {
         this.config.socket.send('EVENT', data);
         this.changeState('pluggedIn'); // TODO First wait for answer from charger, $apply() exception
       } else {
-        console.log('No connector for charger defined.'); // TODO
+        $log.debug('No connector for charger defined.'); // TODO
       }
     },
 
     // TODO Follow a link
     follow: function (href) {
+      $log.info('Following: ' + href);
+
       if (typeof this.config.socket != 'undefined') { // TODO external function!
         var data = {
           action: 'follow',
@@ -131,6 +133,8 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // TODO
     sendForm: function (href, method, accepts) {
+      $log.info('Submitting form: ' + method + ' ' + href + ' (' + accepts + ')');
+
       if (typeof this.config.socket != 'undefined') { // TODO external function!
         var data = {
           action: 'sendForm',
@@ -163,7 +167,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // Set the desired target voltage
     setTargetVoltage: function (speedup) {
-      console.log('Setting target voltage.');
+      $log.info('Setting target voltage.');
 
       if (typeof this.config.socket != 'undefined') { // TODO external function!
         var data = {
@@ -179,7 +183,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // Lookup charging procedure
     lookupChargingProcess: function (speedup) {
-      console.log('Looking up charging procedure');
+      $log.info('Looking up charging procedure');
 
       if (Object.keys(this.links).length > 1) { // TODO Not just "self"
         this.changeState('chargingProcess');
@@ -195,7 +199,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // Stop the charging process
     stopChargingProcess: function (speedup) {
-      console.log('Stopping charging process');
+      $log.info('Stopping charging process');
 
       if (typeof this.config.socket != 'undefined') { // TODO external function, even with rate limit?!
         var data = {
@@ -214,7 +218,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
       // TODO construction used very often, maybe offload? or generic do()?
       if (typeof this.runningProc == 'undefined') {
-        console.log('Running charge parameter discovery.'); // TODO
+        $log.info('Running charge parameter discovery.'); // TODO
 
         if (typeof this.config.socket != 'undefined') { // TODO external function!
           var data = {
@@ -243,7 +247,7 @@ app.factory('carService', function ($rootScope, socketService) {
       var timeout = Math.floor(23000 / speedup);
 
       if (typeof this.runningProc == 'undefined') {
-        console.log('Running the cable check.'); // TODO
+        $log.info('Running the cable check.'); // TODO
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
@@ -279,7 +283,7 @@ app.factory('carService', function ($rootScope, socketService) {
       var timeout = Math.floor(3800 / speedup);
 
       if (typeof this.runningProc == 'undefined') {
-        console.log('Running the pre charge routine.'); // TODO
+        $log.info('Running the pre charge routine.'); // TODO
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
@@ -298,7 +302,7 @@ app.factory('carService', function ($rootScope, socketService) {
       var timeout = Math.floor(600 / speedup);
 
       if (typeof this.runningProc == 'undefined') {
-        console.log('Asking for power delivery.'); // TODO
+      $log.info('Asking for power delivery.'); // TODO
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
@@ -326,7 +330,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // Current demand
     doCurrentDemand: function (speedup) {
-      console.log('Sending current demand.'); // TODO
+      $log.info('Sending current demand.'); // TODO
 
       // TODO base on time / cycles
       if (this.battery.soc < 100) {
@@ -370,7 +374,7 @@ app.factory('carService', function ($rootScope, socketService) {
       var timeout = Math.floor(2200 / speedup);
 
       if (typeof this.runningProc == 'undefined') {
-        console.log('Performing welding detection.'); // TODO
+        $log.info('Performing welding detection.'); // TODO
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
@@ -395,7 +399,7 @@ app.factory('carService', function ($rootScope, socketService) {
       var timeout = Math.floor(1000 / speedup);
 
       if (typeof this.runningProc == 'undefined') {
-        console.log('Stopping the session'); // TODO
+        $log.info('Stopping the session'); // TODO
 
         if (typeof this.config.socket != 'undefined') {
           var data = {
@@ -416,7 +420,7 @@ app.factory('carService', function ($rootScope, socketService) {
 
     // Unplug the car
     unplug: function (speedup) {
-      console.log('Unplugging car.'); // TODO
+      $log.info('Unplugging car.'); // TODO
       this.plugged_in = false;
       if (typeof this.config.socket != 'undefined') {
         this.config.socket.send('EVENT', {pluggedIn: false});
