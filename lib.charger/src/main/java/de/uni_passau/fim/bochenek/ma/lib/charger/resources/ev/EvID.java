@@ -1,12 +1,9 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev;
 
-import java.util.UUID;
-
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.coap.CoAP.ResponseCode;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-//import org.eclipse.californium.core.server.resources.Resource;
 
 import de.uni_passau.fim.bochenek.ma.lib.charger.handler.SocketHandler;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.EventMessage;
@@ -39,9 +36,9 @@ public class EvID extends CoapResource {
 
 	@Override
 	public void handleDELETE(CoapExchange exchange) {
-		//		((EvRoot) this.getParent()).removeCar(UUID.fromString(this.getName())); // TODO maybe make this methods of the model and inject
+		chargerData.removeCar(carData.getUuid());
+
 		this.delete();
-		//		evCharge.delete(); // TODO Can be null...
 
 		// DEBUG
 		SocketHandler socket = SocketHandler.getInstance();

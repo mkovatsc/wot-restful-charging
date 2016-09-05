@@ -1,6 +1,5 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev;
 
-import java.util.Map;
 import java.util.UUID;
 
 import org.eclipse.californium.core.CoapResource;
@@ -28,12 +27,10 @@ import de.uni_passau.fim.bochenek.ma.util.server.forms.RegisterForm;
 public class EvRoot extends CoapResource {
 
 	private ChargerData chargerData;
-	private Map<UUID, CarData> carsData;
 
-	public EvRoot(String name, ChargerData chargerData, Map<UUID, CarData> carData) {
+	public EvRoot(String name, ChargerData chargerData) {
 		super(name);
 		this.chargerData = chargerData;
-		this.carsData = carData;
 	}
 
 	@Override
@@ -45,7 +42,7 @@ public class EvRoot extends CoapResource {
 	public void handlePOST(CoapExchange exchange) {
 		CarData carData = new CarData();
 		UUID uuid = UUID.randomUUID(); // TODO has to be done in the emulator!
-		this.carsData.put(uuid, carData);
+		chargerData.addCar(uuid, carData);
 		carData.setUuid(uuid);
 
 		// Parsing the form data and store the information
@@ -104,15 +101,6 @@ public class EvRoot extends CoapResource {
 		}
 
 		return hal;
-	}
-
-	/**
-	 * TODO
-	 * 
-	 * @param uuid
-	 */
-	protected void removeCar(UUID uuid) {
-		this.carsData.remove(uuid);
 	}
 
 }

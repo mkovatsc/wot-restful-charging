@@ -1,8 +1,5 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger;
 
-import java.util.Map;
-import java.util.UUID;
-
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.server.resources.Resource;
 
@@ -12,7 +9,6 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvRoot;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SeMaxValues;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePresentValues;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SeRoot;
-import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
 /**
@@ -22,7 +18,7 @@ import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
  */
 public class Charger extends CoapServer {
 
-	public Charger(ChargerData chargerData, Map<UUID, CarData> carData) {
+	public Charger(ChargerData chargerData) {
 		super();
 
 		// Add SE resource
@@ -44,7 +40,7 @@ public class Charger extends CoapServer {
 		this.add(seCharge);
 
 		// Add EV root resource
-		EvRoot evRoot = new EvRoot("ev", chargerData, carData);
+		EvRoot evRoot = new EvRoot("ev", chargerData);
 		evRoot.getAttributes().addResourceType("ev");
 		this.add(evRoot);
 	}

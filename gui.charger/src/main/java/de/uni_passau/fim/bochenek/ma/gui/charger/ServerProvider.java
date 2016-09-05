@@ -1,7 +1,6 @@
 package de.uni_passau.fim.bochenek.ma.gui.charger;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,10 +47,9 @@ public class ServerProvider {
 		// Prepare data POJOs for charger and connected cars
 		ChargerData chargerData = new ChargerData();
 		SocketHandler.getInstance().setChargerData(chargerData); // TODO Part of a ugly hack...
-		Map<UUID, CarData> carData = new HashMap<UUID, CarData>();
 
 		// Setup and start charger
-		Charger charger = new Charger(chargerData, carData);
+		Charger charger = new Charger(chargerData);
 		charger.start();
 
 		// Debugging information
@@ -60,7 +58,7 @@ public class ServerProvider {
 
 		// Start regular interface update
 		Timer timer = new Timer();
-		timer.schedule(new InterfaceUpdate(chargerData, carData), 0, 1000);
+		timer.schedule(new InterfaceUpdate(chargerData), 0, 1000);
 	}
 
 	/**
@@ -72,11 +70,9 @@ public class ServerProvider {
 	static class InterfaceUpdate extends TimerTask {
 
 		private ChargerData charger;
-		private Map<UUID, CarData> cars;
 
-		public InterfaceUpdate(ChargerData charger, Map<UUID, CarData> cars) {
+		public InterfaceUpdate(ChargerData charger) {
 			this.charger = charger;
-			this.cars = cars;
 		}
 
 		@Override
@@ -86,7 +82,7 @@ public class ServerProvider {
 			SeStatus se = status.getSeStatus();
 
 			// TODO what if there is more than just one EV connected?
-			for (Map.Entry<UUID, CarData> entry : cars.entrySet()) {
+			for (Map.Entry<UUID, CarData> entry : charger.getCars()) {
 				CarData car = entry.getValue();
 				ev.setUuid(entry.getKey());
 				ev.setStateOfCharge(car.getSoc());
@@ -100,7 +96,7 @@ public class ServerProvider {
 			se.setPresentCurrent(charger.getPresentCurrent());
 
 			// Only update UI if at least one car is plugged in
-			if (cars.size() > 0) {
+			if (charger.connectedCars() > 0) {
 				SocketHandler.getInstance().pushToListeners(MessageType.STATUS, status);
 			}
 		}

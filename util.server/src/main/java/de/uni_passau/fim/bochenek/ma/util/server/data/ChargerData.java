@@ -3,6 +3,10 @@ package de.uni_passau.fim.bochenek.ma.util.server.data;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
 
 import org.eclipse.californium.core.CoapResource;
 
@@ -17,10 +21,12 @@ public class ChargerData {
 	private int cableCheckStatus; // TODO Remove magic numbers, make ENUM! 0 (not running), 1 (running), 2 (completed successful), 3 (error)
 	private String currentState; // TODO make ENUM
 
-	private HashMap<String, List<CoapResource>> subscribers;
+	private Map<String, List<CoapResource>> subscribers;
+	private Map<UUID, CarData> carsData;
 
 	public ChargerData() {
 		subscribers = new HashMap<String, List<CoapResource>>();
+		carsData = new HashMap<UUID, CarData>();
 	}
 
 	public synchronized double getMaxVoltage() {
@@ -106,6 +112,22 @@ public class ChargerData {
 		for (String key : subscribers.keySet()) {
 			subscribers.get(key).forEach(sub -> sub.changed());
 		}
+	}
+
+	public CarData addCar(UUID uuid, CarData data) {
+		return carsData.put(uuid, data);
+	}
+
+	public CarData removeCar(UUID uuid) {
+		return carsData.remove(uuid);
+	}
+
+	public Set<Entry<UUID, CarData>> getCars() {
+		return carsData.entrySet();
+	}
+
+	public int connectedCars() {
+		return carsData.size();
 	}
 
 }
