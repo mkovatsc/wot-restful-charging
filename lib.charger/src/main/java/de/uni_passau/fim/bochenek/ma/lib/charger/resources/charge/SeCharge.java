@@ -10,11 +10,8 @@ import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
 public class SeCharge extends CoapResource {
 
-	private ChargerData data;
-
 	public SeCharge(String name, ChargerData data) {
 		super(name);
-		this.data = data;
 	}
 
 	@Override

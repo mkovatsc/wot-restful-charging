@@ -54,23 +54,9 @@ public class EvRoot extends CoapResource {
 		carData.setMaxCurrent(register.getMaxCurrent());
 		carData.setChargingType(register.getChargingType());
 
-		// Setup the new resources that have to be created for the car
-		//		Map<String, CoapResource> resources = new HashMap<String, CoapResource>();
-		//		resources.put("chargingComplete", new EvChargingComplete("chargingComplete", carData));
-		//		resources.put("maxValues", new EvMaxValues("maxValues", carData));
-		//		resources.put("stateOfCharge", new EvSoc("stateOfCharge", carData));
-		//		resources.put("targetValues", new EvTargetValues("targetValues", carData));
-
-		CoREHalBase actionResult = new CoREHalBase();
 		EvID ev = new EvID(uuid.toString(), chargerData, carData);
 		ev.setVisible(false);
 		carData.getBookmarks().put("evLoc", ev);
-
-		//		for (Map.Entry<String, CoapResource> res : resources.entrySet()) {
-		//			ev.add(res.getValue());
-		//			actionResult.addLink(res.getKey(), new Link(res.getValue().getURI()));
-		//		}
-
 		this.add(ev);
 
 		// DEBUG
@@ -79,6 +65,9 @@ public class EvRoot extends CoapResource {
 		EventMessage eMsg = new EventMessage(uuid, true);
 		eMsg.setDescription("pluggedIn");
 		socket.pushToListeners(MessageType.EVENT, eMsg);
+
+		CoREHalBase actionResult = new CoREHalBase();
+		//actionResult.set("uuid", uuid.toString()); // TODO Causes some strange bug
 
 		exchange.setLocationPath(ev.getURI());
 		exchange.respond(ResponseCode.CREATED, actionResult.toString(), MediaTypeRegistry.APPLICATION_JSON);

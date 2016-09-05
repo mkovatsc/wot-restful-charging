@@ -64,9 +64,9 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
   }
 
   // TODO
-  $scope.sendForm = function (href, method, accepts) {
+  $scope.submitForm = function (href, method, accepts) {
     if (car.plugged_in) {
-      car.sendForm(href, method, accepts);
+      car.submitForm(href, method, accepts);
     }
   }
 

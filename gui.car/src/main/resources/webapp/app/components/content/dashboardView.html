@@ -21,9 +21,9 @@
       <div layout="column">
         <p>State: {{car.state || '-'}}</p>
         <div layout="row">
-          <md-button class="md-raised" data-ng-click="start()" ng-disabled="emulatorRunning()">Start</md-button>
-          <md-button class="md-raised" data-ng-click="stop()" ng-disabled="">Stop</md-button>
-          <md-button class="md-raised" data-ng-click="reset()" ng-disabled="">Reset</md-button>
+          <md-button class="md-raised" ng-click="start()" ng-disabled="emulatorRunning()">Start</md-button>
+          <md-button class="md-raised" ng-click="stop()" ng-disabled="">Stop</md-button>
+          <md-button class="md-raised" ng-click="reset()" ng-disabled="">Reset</md-button>
         </div>
       </div>
     </div>
@@ -52,7 +52,6 @@
     <div class="md-whiteframe-5dp" layout-padding flex-gt-sm>
       <h2>Actions</h2>
       <md-button class="md-raised md-primary" ng-click="togglePlug()" ng-disabled="car.plugged_in">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
-      <!--<md-button class="md-raised md-primary" data-ng-click="stopCharging()">Stop Charging</md-button>-->
 
       <h2>Links</h2>
       <ng-repeat ng-repeat="(key, value) in car.links">
@@ -66,7 +65,7 @@
 
       <h2>Forms</h2>
       <ng-repeat ng-repeat="(key, value) in car.forms">
-        <md-button class="md-raised md-primary" ng-click="sendForm(value.href, value.method, value.accepts)">
+        <md-button class="md-raised md-primary" ng-click="submitForm(value.href, value.method, value.accepts)">
           {{ key }}
         </md-button>
       </ng-repeat>

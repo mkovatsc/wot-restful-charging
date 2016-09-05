@@ -24,7 +24,7 @@ public class EvID extends CoapResource {
 	private CarData carData;
 
 	public EvID(String name, ChargerData chargerData, CarData carData) {
-		super(name); // TODO Do something with CarData?!
+		super(name);
 		this.chargerData = chargerData;
 		this.carData = carData;
 	}

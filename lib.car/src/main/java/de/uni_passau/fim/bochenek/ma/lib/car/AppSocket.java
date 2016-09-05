@@ -48,8 +48,6 @@ public class AppSocket {
 
 		// Automatically add client to listeners on connect
 		SocketHandler.getInstance().addListener(session);
-
-		// TODO Wait some time to give car the chance to present its UUID
 	}
 
 	@OnWebSocketMessage
@@ -104,7 +102,7 @@ public class AppSocket {
 									car.sendToCar(String.format(answer, "LINKS", halRes1.json().get("_links")));
 									car.sendToCar(String.format(answer, "FORMS", halRes1.json().get("_forms")));
 									break;
-								case "sendForm" :
+								case "submitForm" :
 
 									// TODO Don't send data that doesn't match media type!
 									JsonObject json = new JsonObject();

@@ -3,7 +3,6 @@ app.factory('carService', function ($log, $rootScope, socketService) {
     this.uuid = undefined;
 
     // Navigation for RESTful interface
-    this.location = '';
     this.links = {};
     this.forms = {};
 
@@ -21,25 +20,24 @@ app.factory('carService', function ($log, $rootScope, socketService) {
       // Create new socket and register default handlers
       this.config.socket = new socketService({socketaddr: this.config.socketaddr});
       var that = this;
+
       this.config.socket.addHandler('KEEPALIVE', function () {
         that.config.socket.send('KEEPALIVE', {});
       });
-      this.config.socket.addHandler('REGISTER', function (data) {
-        that.uuid = data.uuid;
-        $rootScope.$apply();
-      });
-      this.config.socket.addHandler('DEBUG', function (data) { // TODO
+
+      this.config.socket.addHandler('DEBUG', function (data) {
         $log.debug(data);
       });
-      this.config.socket.addHandler('DISCOVER', function (data) { // TODO
+
+      this.config.socket.addHandler('DISCOVER', function (data) {
         if (data !== null) {
-          that.location = '/.well-known/core';
           that.links = data.links;
           that.forms = {};
           $rootScope.$apply(); // TODO
         }
       });
-      this.config.socket.addHandler('REDIRECT', function (data) { // TODO
+
+      this.config.socket.addHandler('REDIRECT', function (data) {
         if (data !== null) {
           if (data == '/.well-known/core') { // TODO ugly hack
             that.plugIn();
@@ -48,7 +46,8 @@ app.factory('carService', function ($log, $rootScope, socketService) {
           }
         }
       });
-      this.config.socket.addHandler('LINKS', function (data) { // TODO
+
+      this.config.socket.addHandler('LINKS', function (data) {
         if (data !== null) {
           that.links = data;
         } else {
@@ -56,7 +55,8 @@ app.factory('carService', function ($log, $rootScope, socketService) {
         }
         $rootScope.$apply(); // TODO
       });
-      this.config.socket.addHandler('FORMS', function (data) { // TODO
+
+      this.config.socket.addHandler('FORMS', function (data) {
         if (data !== null) {
           that.forms = data;
         } else {
@@ -118,7 +118,7 @@ app.factory('carService', function ($log, $rootScope, socketService) {
       }
     },
 
-    // TODO Follow a link
+    // Follow a link
     follow: function (href) {
       $log.info('Following: ' + href);
 
@@ -131,13 +131,13 @@ app.factory('carService', function ($log, $rootScope, socketService) {
       }
     },
 
-    // TODO
-    sendForm: function (href, method, accepts) {
+    // Submit a form
+    submitForm: function (href, method, accepts) {
       $log.info('Submitting form: ' + method + ' ' + href + ' (' + accepts + ')');
 
       if (typeof this.config.socket != 'undefined') { // TODO external function!
         var data = {
-          action: 'sendForm',
+          action: 'submitForm',
           href: href,
           method: method
         };
