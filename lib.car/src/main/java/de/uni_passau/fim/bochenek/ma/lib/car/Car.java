@@ -39,7 +39,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 
 	private UUID uuid;
 	private Session session;
-	private CarData carData; // TODO Think about dependency injection!
+	private CarData carData;
 
 	private CoapClient client;
 	private HashMap<String, String> resMap;
@@ -99,6 +99,7 @@ public class Car implements ICar { // TODO Extend CoapClient?
 		return this.getCoREHal();
 	}
 
+	@Override
 	public CoapResponse sendForm(String href, String method, JsonObject data) {
 		client.setURI(href);
 
@@ -115,37 +116,6 @@ public class Car implements ICar { // TODO Extend CoapClient?
 	}
 
 	@Override
-	public List<String> checkAvailabeActions() {
-
-		// Query the currently set location for available actions
-		CoapResponse res = client.get();
-
-		JsonParser parser = new JsonParser();
-		JsonObject tmp = parser.parse(res.getResponseText()).getAsJsonObject(); // TODO Parse result might be null
-
-		List<String> refs = new LinkedList<String>();
-
-		if (tmp.has("_links")) {
-			JsonObject links = tmp.getAsJsonObject("_links");
-			links.entrySet().forEach(e -> refs.add(e.getKey()));
-
-			links.remove("self"); // We should know this already
-			links.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString())); // TODO ugly
-		}
-
-		if (tmp.has("_forms") && !tmp.get("_forms").isJsonNull()) {
-			JsonObject forms = tmp.getAsJsonObject("_forms");
-			forms.entrySet().forEach(e -> refs.add(e.getKey()));
-
-			// TODO Actually handle forms correctly and push them to UI
-			forms.entrySet().forEach(entry -> resMap.put(entry.getKey(), entry.getValue().getAsJsonObject().get("href").getAsString()));
-		}
-
-		logger.info(refs.toString());
-		return refs;
-	}
-
-	@Override
 	public CoREHalBase getCoREHal() {
 		CoREHalBase hal = new CoREHalBase();
 		CoapResponse res = client.get();
@@ -156,12 +126,6 @@ public class Car implements ICar { // TODO Extend CoapClient?
 			e1.printStackTrace();
 		}
 		return hal;
-	}
-
-	@Override
-	public CoREHalBase getCoREHal(String rel) {
-		client.setURI(resMap.get(rel));
-		return this.getCoREHal();
 	}
 
 	@Override

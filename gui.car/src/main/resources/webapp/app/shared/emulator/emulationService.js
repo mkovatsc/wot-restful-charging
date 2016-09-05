@@ -59,7 +59,7 @@ app.factory('emulationService', function ($log, $rootScope, $q) {
       } else {
         switch (car.state) {
           case 'pluggedIn':
-            car.checkAvailableActions(this.config.speedup);
+            // TODO
             break;
           case 'readyToCharge':
             car.setTargetVoltage(this.config.speedup);

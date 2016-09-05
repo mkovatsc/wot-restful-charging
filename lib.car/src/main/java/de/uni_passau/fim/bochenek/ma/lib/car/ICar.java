@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.WebLink;
+
+import com.google.gson.JsonObject;
 
 import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
@@ -27,13 +30,10 @@ public interface ICar {
 	public CoREHalBase follow(String href);
 
 	// TODO Javadoc
-	public List<String> checkAvailabeActions();
+	public CoapResponse sendForm(String href, String method, JsonObject data);
 
 	// TODO Javadoc
 	public CoREHalBase getCoREHal();
-
-	// TODO Javadoc
-	public CoREHalBase getCoREHal(String rel);
 
 	// TODO Javadoc
 	public String setTargetVoltage(double targetVoltage);

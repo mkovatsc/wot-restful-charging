@@ -31,11 +31,6 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
     }
   };
 
-  // Check for available actions
-  $scope.checkAvailableActions = function () { // TODO
-    car.checkAvailableActions(emulator.config.speedup);
-  };
-
   // Start the emulation
   $scope.start = function () {
     emulator.start();

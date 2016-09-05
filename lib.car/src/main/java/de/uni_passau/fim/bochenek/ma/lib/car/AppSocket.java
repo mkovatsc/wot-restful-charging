@@ -1,7 +1,6 @@
 package de.uni_passau.fim.bochenek.ma.lib.car;
 
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -77,18 +76,10 @@ public class AppSocket {
 							EventMessage evtMsg = gson.fromJson(msg.getAsJsonObject().get("data"), EventMessage.class);
 
 							if (evtMsg.isPluggedIn()) {
-
-								// TODO Use Message objects as POJOs
-								//								UUID uuid = car.plugIn(evtMsg.getChargingType(), evtMsg.getSoc(), evtMsg.getMaxVoltage(), evtMsg.getMaxCurrent());
-								//								String register = "{\"type\" : \"REGISTER\", \"data\" : {\"uuid\" : \"%s\"}}"; // TODO Use POJOs an Gson! (Same below.)
-								//								car.sendToCar(String.format(register, uuid.toString()));
-
-								// TODO
 								String discover = "{\"type\" : \"DISCOVER\", \"data\" : {\"links\" : %s}}";
 								car.sendToCar(String.format(discover, serialize(car.plugIn())));
 
 								// DEBUG
-								//								logger.log(Level.INFO, "Car with UUID {0} plugged in.", new Object[]{uuid.toString()});
 								logger.log(Level.INFO, "Car plugged in.");
 							} else {
 								car.unplug();
@@ -134,16 +125,11 @@ public class AppSocket {
 									}
 
 									break;
-								case "checkAvailableActions" :
-									car.sendToCar(String.format(answer, "LINKS", car.getCoREHal().json().get("_links")));
-									car.sendToCar(String.format(answer, "FORMS", car.getCoREHal().json().get("_forms")));
-									break;
 								case "setTargetVoltage" :
 									car.setTargetVoltage(actMsg.getTargetVoltage()); // TODO Store or forward returned location path?
 									break;
 								case "lookupChargingProcess" :
-									car.sendToCar(String.format(answer, "LINKS", car.getCoREHal("chargeProc").json().get("_links")));
-									car.sendToCar(String.format(answer, "FORMS", car.getCoREHal("chargeProc").json().get("_forms")));
+									// TODO Remove?
 									break;
 								case "stopChargingProcess" :
 									car.stopChargingProcess();
