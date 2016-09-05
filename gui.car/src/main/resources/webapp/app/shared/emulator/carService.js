@@ -89,6 +89,7 @@ app.factory('carService', function ($rootScope, socketService) {
         AC: [12, 16, 32],
         DC: [125]
       },
+      currentDemand : 0,
       complete: false
     },
 
@@ -150,7 +151,7 @@ app.factory('carService', function ($rootScope, socketService) {
               break;
             case 'application/charge+json':
               data.soc = this.battery.soc;
-              data.targetCurrent = Math.max.apply(null, this.charging.rate.DC); // TODO Has to change!
+              data.targetCurrent = this.charging.currentDemand;
               break;
             default:
               // TODO

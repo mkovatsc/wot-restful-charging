@@ -71,7 +71,7 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
           var tmpVol = data.targetVoltage;
 
           if (that.status.voltageAdaption == '') { // TODO Completely random right now
-            $timeout(function () {
+            $timeout(function () { // TODO Stop if car wants to leave, so that it can be unplugged
 
               // Tell CoAP server about voltage change
               if (typeof that.config.socket != 'undefined') { // TODO external function!

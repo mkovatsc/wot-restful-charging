@@ -64,6 +64,9 @@ public class EvChargingTask extends CoapResource {
 
 	@Override
 	public void handleDELETE(CoapExchange exchange) {
+		carData.setTargetVoltage(0);
+		carData.setTargetCurrent(0); // TODO Also tell charger to cut voltage supply
+		
 		exchange.setLocationPath(carData.getBookmarks().get("evLoc").getURI());
 		this.delete();
 		exchange.respond(ResponseCode.DELETED);
