@@ -29,6 +29,10 @@ import de.uni_passau.fim.bochenek.ma.lib.car.messages.Message.MessageType;
 @WebSocket
 public class AppSocket {
 
+	// Message templates
+	private static final String TMPL_DISCOVER = "{\"type\" : \"DISCOVER\", \"data\" : {\"links\" : %s}}";
+	private static final String TMPL_ANSWER = "{\"type\" : \"%s\", \"data\" : %s }"; // TODO Use Gson instead!
+
 	private Logger logger = Logger.getLogger(AppSocket.class.getName());
 
 	@OnWebSocketClose
@@ -74,8 +78,7 @@ public class AppSocket {
 							EventMessage evtMsg = gson.fromJson(msg.getAsJsonObject().get("data"), EventMessage.class);
 
 							if (evtMsg.isPluggedIn()) {
-								String discover = "{\"type\" : \"DISCOVER\", \"data\" : {\"links\" : %s}}";
-								car.sendToCar(String.format(discover, serialize(car.plugIn())));
+								car.sendToCar(String.format(TMPL_DISCOVER, serialize(car.plugIn())));
 
 								// DEBUG
 								logger.log(Level.INFO, "Car plugged in.");
@@ -90,8 +93,6 @@ public class AppSocket {
 						case ACTION :
 							ActionMessage actMsg = gson.fromJson(msg.getAsJsonObject().get("data"), ActionMessage.class);
 
-							String answer = "{\"type\" : \"%s\", \"data\" : %s }"; // TODO Use Gson instead!
-
 							// DEBUG
 							logger.log(Level.INFO, "Action received: {0}", new Object[]{actMsg.getAction()});
 
@@ -99,8 +100,8 @@ public class AppSocket {
 							switch (actMsg.getAction()) {
 								case "follow" :
 									CoREHalBase halRes1 = car.follow(actMsg.getHref());
-									car.sendToCar(String.format(answer, "LINKS", halRes1.json().get("_links")));
-									car.sendToCar(String.format(answer, "FORMS", halRes1.json().get("_forms")));
+									car.sendToCar(String.format(TMPL_ANSWER, "LINKS", halRes1.json().get("_links")));
+									car.sendToCar(String.format(TMPL_ANSWER, "FORMS", halRes1.json().get("_forms")));
 									break;
 								case "submitForm" :
 
@@ -115,49 +116,17 @@ public class AppSocket {
 									CoapResponse res = car.sendForm(actMsg.getHref(), actMsg.getMethod(), json);
 
 									if (res != null && res.getOptions().getLocationPathCount() > 0) {
-										car.sendToCar(String.format(answer, "REDIRECT", "\"" + res.getOptions().getLocationString() + "\""));
+										car.sendToCar(String.format(TMPL_ANSWER, "REDIRECT", "\"" + res.getOptions().getLocationString() + "\""));
 									} else {
 										CoREHalBase halRes2 = car.getCoREHal();
-										car.sendToCar(String.format(answer, "LINKS", halRes2.json().get("_links")));
-										car.sendToCar(String.format(answer, "FORMS", halRes2.json().get("_forms")));
+										car.sendToCar(String.format(TMPL_ANSWER, "LINKS", halRes2.json().get("_links")));
+										car.sendToCar(String.format(TMPL_ANSWER, "FORMS", halRes2.json().get("_forms")));
 									}
 
 									break;
-								case "setTargetVoltage" :
-									car.setTargetVoltage(actMsg.getTargetVoltage()); // TODO Store or forward returned location path?
-									break;
-								case "lookupChargingProcess" :
-									// TODO Remove?
-									break;
-								case "stopChargingProcess" :
-									car.stopChargingProcess();
-									break;
-								case "chargeParameterDiscovery" :
-									car.chargeParameterDiscovery(actMsg.getSoc(), actMsg.getMaxVoltage(), actMsg.getMaxCurrent());
-									break;
-								case "cableCheck" :
-									car.cableCheck();
-									break;
-								case "preCharge" :
-									car.preCharge(actMsg.getTargetVoltage(), actMsg.getTargetCurrent());
-									break;
-								case "powerDelivery" :
-									car.powerDelivery(actMsg.isChargingComplete(), actMsg.isReadyToCharge());
-									break;
-								case "currentDemand" :
-									car.currentDemand(actMsg.getSoc(), actMsg.getTargetVoltage(), actMsg.getTargetCurrent(), actMsg.isChargingComplete());
-									break;
-								case "stopCharging" : // Just a special case of currentDemand
-									car.currentDemand(actMsg.getSoc(), actMsg.getTargetVoltage(), actMsg.getTargetCurrent(), actMsg.isChargingComplete());
-									break;
-								case "weldingDetection" :
-									car.weldingDetection();
-									break;
-								case "sessionStop" :
-									car.stopSession();
-									break;
 								default :
 									// TODO
+									break;
 							}
 							break;
 						case KEEPALIVE :

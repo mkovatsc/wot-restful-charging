@@ -42,8 +42,8 @@ public class EvRoot extends CoapResource {
 	public void handlePOST(CoapExchange exchange) {
 		CarData carData = new CarData();
 		UUID uuid = UUID.randomUUID(); // TODO has to be done in the emulator!
-		chargerData.addCar(uuid, carData);
 		carData.setUuid(uuid);
+		chargerData.addCar(uuid, carData);
 
 		// Parsing the form data and store the information
 		Gson gson = new GsonBuilder().create();

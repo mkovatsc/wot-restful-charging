@@ -4,11 +4,8 @@ import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.server.resources.Resource;
 
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.RootResource;
-import de.uni_passau.fim.bochenek.ma.lib.charger.resources.charge.SeCharge;
 import de.uni_passau.fim.bochenek.ma.lib.charger.resources.ev.EvRoot;
-import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SeMaxValues;
-import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SePresentValues;
-import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SeRoot;
+import de.uni_passau.fim.bochenek.ma.lib.charger.resources.se.SeCharge;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
 /**
@@ -21,20 +18,7 @@ public class Charger extends CoapServer {
 	public Charger(ChargerData chargerData) {
 		super();
 
-		// Add SE resource
-		SeRoot seRoot = new SeRoot("se");
-		seRoot.setVisible(false); // TODO Debugging, resource should be removed at some point
-
-		SeMaxValues seMaxValues = new SeMaxValues("maxValues", chargerData);
-		seMaxValues.setVisible(false);
-
-		SePresentValues sePresentValues = new SePresentValues("presentValues", chargerData);
-		sePresentValues.setVisible(false);
-
-		seRoot.add(seMaxValues);
-		seRoot.add(sePresentValues);
-		this.add(seRoot);
-
+		// Add SE root resource
 		SeCharge seCharge = new SeCharge("charge", chargerData);
 		seCharge.setVisible(false);
 		this.add(seCharge);
