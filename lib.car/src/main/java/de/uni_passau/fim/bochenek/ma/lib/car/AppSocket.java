@@ -87,7 +87,7 @@ public class AppSocket {
 								car.unplug();
 
 								// DEBUG
-								logger.log(Level.INFO, "Car with UUID {0} was unplugged.", new Object[]{car.getUuid().toString()});
+								logger.log(Level.INFO, "Car was unplugged.");
 							}
 
 							break;

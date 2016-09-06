@@ -74,9 +74,11 @@ public class EvID extends CoapResource {
 			hal.addLink("charge", new Link(evCharge.getURI()));
 		}
 
-		// TODO Check for present current first!
-		Form leave = new Form("DELETE", this.getURI(), ""); // TODO define accepts
-		hal.addForm("leave", leave);
+		// Present form to leave the charger
+		if (chargerData.getPresentVoltage() == 0 && chargerData.getTargetCurrent() == 0) {
+			Form leave = new Form("DELETE", this.getURI(), ""); // TODO define accepts
+			hal.addForm("leave", leave);
+		}
 
 		// TODO embedded resources?
 

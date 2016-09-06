@@ -7,7 +7,7 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
       voltageAdaption: ''
     };
 
-    this.runningProc;
+    this.runningProc; // TODO map all the "physical" processes
 
     this.config = {
       socketaddr: undefined
@@ -49,7 +49,7 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
             that.config.socket.send('ACTION', data);
           }
 
-          this.runningProc = $timeout(function () {
+          that.runningProc = $timeout(function () {
             that.status.cableCheck = 'finished';
 
             // Tell CoAP server about that change
@@ -63,11 +63,11 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
             $rootScope.$apply();
           }, 5000);
         } else if ('description' in data && data['description'] == 'unplugged') {
-          if (typeof this.runningProc != 'undefined') {
-            $timeout.cancel(this.runningProc);
-            this.status.cableCheck = '';
+          if (typeof that.runningProc != 'undefined') {
+            $timeout.cancel(that.runningProc);
+            that.status.cableCheck = '';
 
-            // Tell CoAP server about that change
+            // Tell CoAP server about that changes
             if (typeof that.config.socket != 'undefined') { // TODO external function!
               var data = {
                 action: 'updateCableCheckStatus',
@@ -86,14 +86,16 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
         } else if ('description' in data && data['description'] == 'targetVoltageSet') {
           var tmpVol = data.targetVoltage;
 
-          if (that.status.voltageAdaption == '') { // TODO Completely random right now
+          if (tmpVol != that.status.se.presentVoltage) { // TODO Completely random right now
+            that.status.voltageAdaption = 'running';
+
             $timeout(function () { // TODO Stop if car wants to leave, so that it can be unplugged
 
               // Tell CoAP server about voltage change
               if (typeof that.config.socket != 'undefined') { // TODO external function!
                 var data = {
                   action: 'updatePresentVoltage',
-                  presentVoltage: tmpVol / 2
+                  presentVoltage: (tmpVol > that.status.se.presentVoltage ? tmpVol / 2 : that.status.se.presentVoltage / 2)
                 };
                 that.config.socket.send('ACTION', data);
               }
@@ -114,8 +116,6 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
               }, 2000);
             });
           }
-
-          that.status.voltageAdaption = 'running';
         }
 
         $rootScope.$apply();

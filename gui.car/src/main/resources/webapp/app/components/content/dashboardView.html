@@ -46,12 +46,12 @@
       </form>
 
       <h2>Debugging</h2>
-      <p ng-if="car.links.self">Location: {{ car.links.self.href }}</p>
+      <p ng-if="car.links.self">Location: {{ car.href }}</p>
     </div>
 
     <div class="md-whiteframe-5dp" layout-padding flex-gt-sm>
       <h2>Actions</h2>
-      <md-button class="md-raised md-primary" ng-click="togglePlug()" ng-disabled="car.plugged_in">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
+      <md-button class="md-raised md-primary" ng-click="togglePlug()" ng-disabled="car.nowayback && car.href != '/.well-known/core'">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
 
       <h2>Links</h2>
       <ng-repeat ng-repeat="(key, value) in car.links">

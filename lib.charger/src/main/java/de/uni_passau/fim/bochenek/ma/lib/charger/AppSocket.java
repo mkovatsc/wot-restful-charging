@@ -82,24 +82,17 @@ public class AppSocket {
 
 									// DEBUG
 									socket.pushToListeners(MessageType.DEBUG, new Message("Charger updated cableCheckStatus to: " + chargerData.getCableCheckStatus()));
-
 									break;
 								case "updatePresentVoltage" :
 									chargerData.setPresentVoltage(actMsg.getPresentVoltage());
 
 									// DEBUG
 									socket.pushToListeners(MessageType.DEBUG, new Message("Charger updated presentVoltage to: " + chargerData.getPresentVoltage()));
-
 									break;
 								default :
 									// TODO
 							}
 							break;
-						//						case KEEPALIVE :
-						//
-						//							// DEBUG
-						//							logger.log(Level.INFO, "Answer to keepalive received.");
-						//							break;
 						default :
 							logger.log(Level.INFO, "No handler found for this type of message. (" + message + ")");
 							break;

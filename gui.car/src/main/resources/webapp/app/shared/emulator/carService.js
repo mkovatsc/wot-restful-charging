@@ -3,6 +3,8 @@ app.factory('carService', function ($log, $rootScope, socketService) {
     this.uuid = undefined;
 
     // Navigation for RESTful interface
+    this.href = '/.well-known/core';
+    this.nowayback = false; // TODO true as soon as a form was sent
     this.links = {};
     this.forms = {};
 
@@ -39,6 +41,7 @@ app.factory('carService', function ($log, $rootScope, socketService) {
 
       this.config.socket.addHandler('REDIRECT', function (data) {
         if (data !== null) {
+          that.href = data;
           if (data == '/.well-known/core') { // TODO ugly hack
             that.plugIn();
           } else {
@@ -121,6 +124,7 @@ app.factory('carService', function ($log, $rootScope, socketService) {
     // Follow a link
     follow: function (href) {
       $log.info('Following: ' + href);
+      this.href = href;
 
       if (typeof this.config.socket != 'undefined') { // TODO external function!
         var data = {
@@ -134,6 +138,8 @@ app.factory('carService', function ($log, $rootScope, socketService) {
     // Submit a form
     submitForm: function (href, method, accepts) {
       $log.info('Submitting form: ' + method + ' ' + href + ' (' + accepts + ')');
+
+      this.nowayback = true; // TODO
 
       if (typeof this.config.socket != 'undefined') { // TODO external function!
         var data = {
@@ -421,6 +427,12 @@ app.factory('carService', function ($log, $rootScope, socketService) {
     // Unplug the car
     unplug: function (speedup) {
       $log.info('Unplugging car.'); // TODO
+
+      this.href = '/.well-known/core'; // TODO Better way?
+      this.nowayback = false;
+      this.links = {};
+      this.forms = {};
+
       this.plugged_in = false;
       if (typeof this.config.socket != 'undefined') {
         this.config.socket.send('EVENT', {pluggedIn: false});
