@@ -31,14 +31,6 @@ app.factory('carService', function ($log, $rootScope, socketService) {
         $log.debug(data);
       });
 
-      this.config.socket.addHandler('DISCOVER', function (data) {
-        if (data !== null) {
-          that.links = data.links;
-          that.forms = {};
-          $rootScope.$apply(); // TODO
-        }
-      });
-
       this.config.socket.addHandler('REDIRECT', function (data) {
         if (data !== null) {
           that.href = data;
@@ -124,7 +116,10 @@ app.factory('carService', function ($log, $rootScope, socketService) {
     // Follow a link
     follow: function (href) {
       $log.info('Following: ' + href);
+
       this.href = href;
+      this.links = {}; // Reset links and forms, as they might no longer be valid
+      this.forms = {};
 
       if (typeof this.config.socket != 'undefined') { // TODO external function!
         var data = {
@@ -138,6 +133,9 @@ app.factory('carService', function ($log, $rootScope, socketService) {
     // Submit a form
     submitForm: function (href, method, accepts) {
       $log.info('Submitting form: ' + method + ' ' + href + ' (' + accepts + ')');
+
+      this.links = {}; // Reset links and forms, as they might no longer be valid
+      this.forms = {};
 
       this.nowayback = true; // TODO
 

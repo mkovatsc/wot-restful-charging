@@ -46,7 +46,7 @@
       </form>
 
       <h2>Debugging</h2>
-      <p ng-if="car.links.self">Location: {{ car.href }}</p>
+      <p>Location: {{ car.href }}</p>
     </div>
 
     <div class="md-whiteframe-5dp" layout-padding flex-gt-sm>
@@ -54,7 +54,7 @@
       <md-button class="md-raised md-primary" ng-click="togglePlug()" ng-disabled="car.nowayback && car.href != '/.well-known/core'">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
 
       <h2>Links</h2>
-      <ng-repeat ng-repeat="(key, value) in car.links">
+      <ng-repeat ng-repeat="(key, value) in car.links" ng-if="value.href != '/.well-known/core'">
         <md-button class="md-raised md-primary" ng-click="follow(value.href)">
           {{ key }}
           <span ng-if="value.rt">

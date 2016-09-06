@@ -14,7 +14,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -31,7 +30,6 @@ public class AppSocket {
 
 	// Message templates
 	private static final String TMPL_ANSWER = "{\"type\" : \"%s\", \"data\" : %s }";
-	private static final String TMPL_DISCOVER = "{\"type\" : \"DISCOVER\", \"data\" : {\"links\" : %s}}";
 
 	private Logger logger = Logger.getLogger(AppSocket.class.getName());
 
@@ -79,7 +77,7 @@ public class AppSocket {
 							EventMessage evtMsg = gson.fromJson(msg.getAsJsonObject().get("data"), EventMessage.class);
 
 							if (evtMsg.isPluggedIn()) {
-								car.sendToCar(String.format(TMPL_DISCOVER, serialize(car.plugIn())));
+								car.sendToCar(String.format(TMPL_ANSWER, "LINKS", serialize(car.plugIn())));
 
 								// DEBUG
 								logger.log(Level.INFO, "Car plugged in.");
@@ -147,16 +145,17 @@ public class AppSocket {
 		}
 	}
 
-	private static JsonArray serialize(Set<WebLink> webLinks) {
-		JsonArray result = new JsonArray();
+	private static JsonObject serialize(Set<WebLink> webLinks) {
+		JsonObject result = new JsonObject();
 
+		int count = 0; // Enumerate links for the object
 		for (WebLink link : webLinks) {
 			JsonObject linkObj = new JsonObject();
 			linkObj.addProperty("href", link.getURI());
 			if (link.getAttributes().getResourceTypes().size() > 0) {
 				linkObj.addProperty("rt", link.getAttributes().getResourceTypes().get(0)); // TODO assumes there is only one...
 			}
-			result.add(linkObj);
+			result.add(Integer.toString(count++), linkObj);
 		}
 
 		return result;
