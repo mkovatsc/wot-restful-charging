@@ -89,6 +89,12 @@ public class AppSocket {
 									// DEBUG
 									socket.pushToListeners(MessageType.DEBUG, new Message("Charger updated presentVoltage to: " + chargerData.getPresentVoltage()));
 									break;
+								case "updatePresentCurrent" :
+									chargerData.setPresentCurrent(actMsg.getPresentCurrent());
+
+									// DEBUG
+									socket.pushToListeners(MessageType.DEBUG, new Message("Charger updated presentCurrent to: " + chargerData.getPresentCurrent()));
+									break;
 								default :
 									// TODO
 							}

@@ -67,12 +67,15 @@ public class EvChargingTask extends CoapResource {
 		carData.setTargetVoltage(0);
 		carData.setTargetCurrent(0); // TODO Also tell ChargerUI to cut voltage supply
 
-		// Tell charger that the target voltage was updated
+		// Tell charger that the target voltage and current was updated
 		EventMessage eMsg = new EventMessage(null);
-		eMsg.setTargetCurrent(carData.getTargetVoltage());
+		eMsg.setTargetVoltage(carData.getTargetVoltage());
+		eMsg.setTargetCurrent(carData.getTargetCurrent());
 		eMsg.setDescription("targetVoltageSet");
 		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
-		
+		eMsg.setDescription("targetCurrentSet");
+		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg); // TODO Combine messages
+
 		exchange.setLocationPath(carData.getBookmarks().get("evLoc").getURI());
 		this.delete();
 		exchange.respond(ResponseCode.DELETED);

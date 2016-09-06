@@ -116,6 +116,16 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
               }, 2000);
             });
           }
+        } else if ('description' in data && data['description'] == 'targetCurrentSet') {
+
+          // TODO At the moment it delivers what is requested straight away
+          if (typeof that.config.socket != 'undefined') { // TODO external function!
+            var data = {
+              action: 'updatePresentCurrent',
+              presentCurrent: data.targetCurrent
+            };
+            that.config.socket.send('ACTION', data);
+          }
         }
 
         $rootScope.$apply();
