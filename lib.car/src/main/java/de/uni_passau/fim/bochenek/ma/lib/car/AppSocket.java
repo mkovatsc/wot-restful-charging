@@ -30,8 +30,8 @@ import de.uni_passau.fim.bochenek.ma.lib.car.messages.Message.MessageType;
 public class AppSocket {
 
 	// Message templates
+	private static final String TMPL_ANSWER = "{\"type\" : \"%s\", \"data\" : %s }";
 	private static final String TMPL_DISCOVER = "{\"type\" : \"DISCOVER\", \"data\" : {\"links\" : %s}}";
-	private static final String TMPL_ANSWER = "{\"type\" : \"%s\", \"data\" : %s }"; // TODO Use Gson instead!
 
 	private Logger logger = Logger.getLogger(AppSocket.class.getName());
 
@@ -65,6 +65,7 @@ public class AppSocket {
 			} catch (JsonSyntaxException jse) {
 				// TODO Something to do here?
 				logger.log(Level.WARNING, "No valid JSON received. (" + message + ")");
+				return;
 			}
 
 			if (msg != null && msg.isJsonObject() && msg.getAsJsonObject().get("type") != null) {
@@ -130,20 +131,19 @@ public class AppSocket {
 							}
 							break;
 						case KEEPALIVE :
-
-							// DEBUG
 							logger.log(Level.INFO, "Answer to keepalive received.");
 							break;
 						default :
-							logger.log(Level.INFO, "No handler found for this type of message. (" + message + ")");
+							logger.log(Level.WARNING, "No handler found for this type of message. (" + message + ")");
 							break;
 					}
-					// TODO Proper handling for invalid contents
 				} catch (IllegalArgumentException iae) {
 					// TODO Find some elegant solution
 					logger.log(Level.WARNING, "No valid message type. (" + message + ")"); // TODO Message covers not all the errors!
 				}
 			}
+		} else {
+			logger.log(Level.WARNING, "Empty message arrived at socket.");
 		}
 	}
 

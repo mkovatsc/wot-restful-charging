@@ -7,6 +7,8 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
       voltageAdaption: ''
     };
 
+    this.runningProc;
+
     this.config = {
       socketaddr: undefined
     };
@@ -47,7 +49,7 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
             that.config.socket.send('ACTION', data);
           }
 
-          $timeout(function () {
+          this.runningProc = $timeout(function () {
             that.status.cableCheck = 'finished';
 
             // Tell CoAP server about that change
@@ -61,6 +63,20 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
             $rootScope.$apply();
           }, 5000);
         } else if ('description' in data && data['description'] == 'unplugged') {
+          if (typeof this.runningProc != 'undefined') {
+            $timeout.cancel(this.runningProc);
+            this.status.cableCheck = '';
+
+            // Tell CoAP server about that change
+            if (typeof that.config.socket != 'undefined') { // TODO external function!
+              var data = {
+                action: 'updateCableCheckStatus',
+                cableCheckStatus: 0
+              };
+              that.config.socket.send('ACTION', data);
+            }
+          }
+
           that.status = {
             se: {},
             ev: {},
