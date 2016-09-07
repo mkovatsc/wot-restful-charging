@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import ch.ethz.inf.vs.hypermedia.corehal.block.CoREHalBaseResourceFuture;
 import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
+import de.uni_passau.fim.bochenek.ma.lib.car.handler.ObserveHandler;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 
 /**
@@ -25,13 +26,14 @@ import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
  * @author Martin Bochenek
  *
  */
-public class Car { // TODO Extend CoapClient?
+public class Car {
+
+	private CoapClient client; // TODO Extend CoapClient?
+	private CoapResponse lastRes;
 
 	private UUID uuid;
 	private Session session;
 	private CarData carData;
-
-	private CoapClient client;
 
 	private static Logger logger = Logger.getLogger(Car.class.getName());
 
@@ -52,26 +54,39 @@ public class Car { // TODO Extend CoapClient?
 		return this.getCoREHal();
 	}
 
-	public CoapResponse sendForm(String href, String method, JsonObject data) {
+	public CoapResponse submitForm(String href, String method, JsonObject data) {
 		client.setURI(href);
 
 		switch (method) {
 			case "POST" :
-				return client.post(new GsonBuilder().create().toJson(data), MediaTypeRegistry.APPLICATION_JSON); // TODO data could be null!
+				lastRes = client.post(new GsonBuilder().create().toJson(data), MediaTypeRegistry.APPLICATION_JSON); // TODO data could be null!
+				return lastRes;
 			case "PUT" :
-				return client.put(new GsonBuilder().create().toJson(data), MediaTypeRegistry.APPLICATION_JSON); // TODO data could be null!
+				lastRes = client.put(new GsonBuilder().create().toJson(data), MediaTypeRegistry.APPLICATION_JSON); // TODO data could be null!
+				return lastRes;
 			case "DELETE" :
-				return client.delete();
+				lastRes = client.delete();
+				return lastRes;
 			default :
 				return null; // TODO
 		}
 	}
 
+	public boolean observe(String href) {
+		carData.getObserves().put(href, client.observe(new ObserveHandler(this)));
+		return false; // TODO
+	}
+
+	public boolean cancelObserve(String href) {
+		carData.getObserves().remove(href).reactiveCancel(); // TODO could be null or already cancelled?
+		return false; // TODO
+	}
+
 	public CoREHalBase getCoREHal() {
 		CoREHalBase hal = new CoREHalBase();
-		CoapResponse res = client.get();
+		lastRes = client.get();
 		try {
-			hal = new CoREHalBaseResourceFuture().deserialize(res.getResponseText());
+			hal = new CoREHalBaseResourceFuture().deserialize(lastRes.getResponseText());
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -114,6 +129,11 @@ public class Car { // TODO Extend CoapClient?
 	// TODO
 	public String getCurrentLocation() {
 		return client.getURI();
+	}
+
+	// TODO
+	public CoapResponse getLastResponse() {
+		return lastRes;
 	}
 
 }

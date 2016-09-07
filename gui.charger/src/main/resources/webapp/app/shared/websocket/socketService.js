@@ -36,6 +36,7 @@ app.factory('socketService', function ($timeout, $log) {
       };
 
       this.config.websocket.onmessage = function (evt) {
+        $log.info(evt.data);
         var json = JSON.parse(evt.data); // TODO Catch if invalid JSON received
         callHandlers(json.type, json.data);
       };
@@ -43,9 +44,17 @@ app.factory('socketService', function ($timeout, $log) {
   };
 
   socket.prototype = {
+    hasHandler: function(msgType) {
+      return msgType in this.config.handlers;
+    },
+
     addHandler: function (msgType, handler) {
       this.config.handlers[msgType] = this.config.handlers[msgType] || [];
       this.config.handlers[msgType].push(handler);
+    },
+
+    clearHandler: function(msgType) {
+      delete this.config.handlers[msgType];
     },
 
     send: function (msgType, msgData) {

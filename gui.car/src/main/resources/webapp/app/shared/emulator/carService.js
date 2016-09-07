@@ -169,6 +169,27 @@ app.factory('carService', function ($log, $rootScope, socketService) {
       }
     },
 
+    // Establish an observe relation
+    observe: function (href) {
+      if (typeof this.config.socket != 'undefined') { // TODO external function!
+        var data = {
+          action: 'observe',
+          href: href
+        };
+        this.config.socket.send('ACTION', data);
+      }
+    },
+
+    // Get last CoAP response from server
+    getLastResponse: function() {
+      if (typeof this.config.socket != 'undefined') { // TODO external function!
+        var data = {
+          action: 'lastResponse'
+        };
+        this.config.socket.send('ACTION', data);
+      }
+    },
+
     // Set the desired target voltage
     setTargetVoltage: function (speedup) {
       $log.info('Setting target voltage.');

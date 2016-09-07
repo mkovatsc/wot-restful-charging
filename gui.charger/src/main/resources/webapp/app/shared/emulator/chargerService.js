@@ -7,7 +7,7 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
       voltageAdaption: ''
     };
 
-    this.runningProc; // TODO map all the "physical" processes
+    this.runningProcs = {}; // Keeps the promisess
 
     this.config = {
       socketaddr: undefined
@@ -23,21 +23,19 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
       // Create new socket and register default handlers
       this.config.socket = new socketService({socketaddr: this.config.socketaddr});
       var that = this;
+
       this.config.socket.addHandler('KEEPALIVE', function () {
         that.config.socket.send('KEEPALIVE', {});
       });
-      this.config.socket.addHandler('STATUS', function (data) {
-        $log.info(data); // TODO DEBUG
 
+      this.config.socket.addHandler('STATUS', function (data) {
         that.status.se = data.se;
         that.status.ev = data.ev;
         $rootScope.$apply();
       });
-      this.config.socket.addHandler('EVENT', function (data) { // TODO This section needs a complete rework, just hacked together!
-        $log.info(data); // TODO DEBUG
 
+      this.config.socket.addHandler('EVENT', function (data) { // TODO This section needs a complete rework, just hacked together!
         if ('description' in data && data['description'] == 'pluggedIn') {
-          // TODO Start cable check
           that.status.cableCheck = 'running';
 
           // Tell CoAP server about that change
@@ -49,7 +47,7 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
             that.config.socket.send('ACTION', data);
           }
 
-          that.runningProc = $timeout(function () {
+          that.runningProcs['cableCheck'] = $timeout(function () {
             that.status.cableCheck = 'finished';
 
             // Tell CoAP server about that change
@@ -63,8 +61,8 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
             $rootScope.$apply();
           }, 5000);
         } else if ('description' in data && data['description'] == 'unplugged') {
-          if (typeof that.runningProc != 'undefined') {
-            $timeout.cancel(that.runningProc);
+          if ('cableCheck' in that.runningProcs) {
+            $timeout.cancel(that.runningProcs['cableCheck']);
             that.status.cableCheck = '';
 
             // Tell CoAP server about that changes
@@ -135,14 +133,6 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
 
   charger.prototype = {
 
-    // Set charger to EV target values
-    prepare: function (speedup, voltage, current) {
-      var that = this;
-      $interval(function () {
-        if (that.status.se.voltage <= that.status.ev.targetVoltage - 100)
-          that.status.se.voltage += 100;
-      }, 500, 5);
-    }
   };
 
   return charger;

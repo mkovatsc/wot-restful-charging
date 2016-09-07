@@ -112,7 +112,7 @@ public class AppSocket {
 									json.addProperty("chargingType", actMsg.getChargingType());
 									json.addProperty("targetVoltage", actMsg.getTargetVoltage());
 									json.addProperty("targetCurrent", actMsg.getTargetCurrent());
-									CoapResponse res = car.sendForm(actMsg.getHref(), actMsg.getMethod(), json);
+									CoapResponse res = car.submitForm(actMsg.getHref(), actMsg.getMethod(), json);
 
 									if (res != null && res.getOptions().getLocationPathCount() > 0) {
 										car.sendToCar(String.format(TMPL_ANSWER, "REDIRECT", "\"" + res.getOptions().getLocationString() + "\""));
@@ -122,6 +122,17 @@ public class AppSocket {
 										car.sendToCar(String.format(TMPL_ANSWER, "FORMS", halRes2.json().get("_forms")));
 									}
 
+									break;
+								case "observe" :
+									car.observe(actMsg.getHref());
+									break;
+								case "lastResponse" :
+									if (car.getLastResponse() != null && car.getLastResponse().getResponseText() != null) {
+										//car.sendToCar(String.format(TMPL_ANSWER, "LASTRESPONSE", "{\"response\" : " + new JsonParser().parse(car.getLastResponse().getResponseText()).getAsJsonObject() + "}"));
+										car.sendToCar(String.format(TMPL_ANSWER, "LASTRESPONSE", "{\"response\" : " + car.getLastResponse().getResponseText() + "}"));
+									} else {
+										car.sendToCar(String.format(TMPL_ANSWER, "LASTRESPONSE", "{\"response\" : {}"));
+									}
 									break;
 								default :
 									// TODO

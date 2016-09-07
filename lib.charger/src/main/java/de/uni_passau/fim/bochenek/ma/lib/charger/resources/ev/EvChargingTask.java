@@ -65,7 +65,7 @@ public class EvChargingTask extends CoapResource {
 	@Override
 	public void handleDELETE(CoapExchange exchange) {
 		carData.setTargetVoltage(0);
-		carData.setTargetCurrent(0); // TODO Also tell ChargerUI to cut voltage supply
+		carData.setTargetCurrent(0);
 
 		// Tell charger that the target voltage and current was updated
 		EventMessage eMsg = new EventMessage(null);
@@ -94,7 +94,6 @@ public class EvChargingTask extends CoapResource {
 			hal.addLink(child.getName(), new Link(child.getURI()));
 		}
 
-		System.out.println(chargerData.getCableCheckStatus() + " - " + chargerData.getPresentVoltage() + " - " + carData.getTargetVoltage());
 		if (chargerData.getCableCheckStatus() == 2 && chargerData.getPresentVoltage() == carData.getTargetVoltage()) { // TODO define acceptance range for voltage
 			Form charge = new Form("PUT", this.getURI(), Utils.getMediaType(ChargeForm.class));
 			hal.addForm("charge", charge);

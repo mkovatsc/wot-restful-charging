@@ -1,4 +1,4 @@
-app.controller('emulationController', function ($log, $rootScope, $scope, carService, emulationService) {
+app.controller('emulationController', function ($log, $rootScope, $scope, $mdDialog, carService, emulationService) {
 
   // Create a new car
   var car = new carService({
@@ -57,17 +57,51 @@ app.controller('emulationController', function ($log, $rootScope, $scope, carSer
   });
 
   // TODO
+  $scope.showLastResponse = function(event) {
+    car.config.socket.addHandler('LASTRESPONSE', function (data) {
+      if (data !== null) {
+        $mdDialog.show({
+          template:
+          '<md-dialog layout="row" layout-align="center center" class="md-padding" aria-label="Last CoAP response">' +
+          '  <md-dialog-content>' +
+          '    <pre>{{ response }}</pre>' +
+          '  </md-dialog-content>' +
+          '</md-dialog>',
+          locals: {
+            response: angular.toJson(data.response, true)
+          },
+          controller: ['$scope', 'response', function($scope, response) {
+            $scope.response = response;
+          }],
+          parent: angular.element(document.body),
+          targetEvent: event,
+          clickOutsideToClose:true
+        });
+      }
+      car.config.socket.clearHandler('LASTRESPONSE');
+    });
+    car.getLastResponse();
+  };
+
+  // TODO
   $scope.follow = function (href) {
     if (car.plugged_in) {
       car.follow(href);
     }
-  }
+  };
 
   // TODO
   $scope.submitForm = function (href, method, accepts) {
     if (car.plugged_in) {
       car.submitForm(href, method, accepts);
     }
-  }
+  };
+
+  // TODO
+  $scope.observe = function (href) {
+    if (car.plugged_in) {
+      car.observe(href);
+    }
+  };
 
 });

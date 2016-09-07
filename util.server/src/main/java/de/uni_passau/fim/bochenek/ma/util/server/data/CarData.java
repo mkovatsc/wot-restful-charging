@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResource;
 
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
@@ -17,13 +18,12 @@ public class CarData {
 	private double maxCurrent;
 	private double targetVoltage;
 	private double targetCurrent;
-	private boolean readyToCharge;
-	private boolean chargingComplete;
 	private Map<String, CoapResource> bookmarks;
+	private Map<String, CoapObserveRelation> observes;
 
 	public CarData() {
-		//TODO
 		this.bookmarks = new HashMap<String, CoapResource>();
+		this.observes = new HashMap<String, CoapObserveRelation>();
 	}
 
 	public UUID getUuid() {
@@ -75,24 +75,12 @@ public class CarData {
 		this.targetCurrent = targetCurrent;
 	}
 
-	public synchronized boolean isReadyToCharge() {
-		return readyToCharge;
-	}
-
-	public synchronized void setReadyToCharge(boolean readyToCharge) {
-		this.readyToCharge = readyToCharge;
-	}
-
-	public synchronized boolean isChargingComplete() {
-		return chargingComplete;
-	}
-
-	public synchronized void setChargingComplete(boolean chargingComplete) {
-		this.chargingComplete = chargingComplete;
-	}
-
-	public Map<String, CoapResource> getBookmarks() {
+	public synchronized Map<String, CoapResource> getBookmarks() {
 		return bookmarks;
+	}
+
+	public Map<String, CoapObserveRelation> getObserves() {
+		return observes;
 	}
 
 }
