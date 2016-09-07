@@ -128,10 +128,9 @@ public class AppSocket {
 									break;
 								case "lastResponse" :
 									if (car.getLastResponse() != null && car.getLastResponse().getResponseText() != null) {
-										//car.sendToCar(String.format(TMPL_ANSWER, "LASTRESPONSE", "{\"response\" : " + new JsonParser().parse(car.getLastResponse().getResponseText()).getAsJsonObject() + "}"));
 										car.sendToCar(String.format(TMPL_ANSWER, "LASTRESPONSE", "{\"response\" : " + car.getLastResponse().getResponseText() + "}"));
 									} else {
-										car.sendToCar(String.format(TMPL_ANSWER, "LASTRESPONSE", "{\"response\" : {}"));
+										car.sendToCar(String.format(TMPL_ANSWER, "LASTRESPONSE", "{\"response\" : {}}"));
 									}
 									break;
 								default :
