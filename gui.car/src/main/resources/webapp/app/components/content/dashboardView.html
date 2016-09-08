@@ -37,17 +37,17 @@
       <form>
         <md-input-container>
           <label for="soc">State of Charge (%):</label>
-          <input type="number" name="soc" ng-model="car.battery.soc">
+          <input type="number" name="soc" min="0" max="100" ng-model="car.battery.soc">
         </md-input-container>
         <md-input-container>
           <label for="tC">Current demand (A):</label>
-          <input type="number" name="tC" ng-model="car.charging.currentDemand">
+          <input type="number" name="tC" min="0" ng-model="car.charging.currentDemand"><!-- TODO limit max value -->
         </md-input-container>
       </form>
 
       <h2>Debugging</h2>
       <p>Location: {{ car.href }}</p>
-      <md-button class="md-primary md-raised" ng-click="showLastResponse($event)">Last response</md-button>
+      <md-button class="md-raised" ng-click="showLastResponse($event)">Last response</md-button>
       <div layout="row">
         <md-input-container flex="75">
           <label>Observe relations</label>
@@ -57,7 +57,7 @@
             </md-optgroup>
           </md-select>
         </md-input-container>
-        <md-button class="md-primary md-raised" ng-click="cancelObserve(selectedObserve)">Cancel</md-button>
+        <md-button class="md-warn" ng-click="cancelObserve(selectedObserve)">Cancel</md-button>
       </div>
     </div>
 
