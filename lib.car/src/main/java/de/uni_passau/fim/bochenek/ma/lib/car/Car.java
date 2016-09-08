@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.WebLink;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
@@ -73,18 +74,23 @@ public class Car {
 	}
 
 	public boolean observe(String href) {
+		client.setURI(href);
 		carData.getObserves().put(href, client.observe(new ObserveHandler(this)));
 		return false; // TODO
 	}
 
 	public boolean cancelObserve(String href) {
-		carData.getObserves().remove(href).reactiveCancel(); // TODO could be null or already cancelled?
-		return false; // TODO
+		CoapObserveRelation rel = carData.getObserves().remove(href);
+		if (rel != null && !rel.isCanceled()) {
+			rel.reactiveCancel();
+			return true;
+		}
+		return false;
 	}
 
 	public CoREHalBase getCoREHal() {
 		CoREHalBase hal = new CoREHalBase();
-		lastRes = client.get();
+		lastRes = client.get(); // TODO Make use of a CoapHandler
 		try {
 			hal = new CoREHalBaseResourceFuture().deserialize(lastRes.getResponseText());
 		} catch (Exception e1) {

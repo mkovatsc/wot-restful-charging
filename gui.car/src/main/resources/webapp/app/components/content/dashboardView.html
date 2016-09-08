@@ -47,7 +47,17 @@
 
       <h2>Debugging</h2>
       <p>Location: {{ car.href }}</p>
-      <md-button class="md-primary md-raised" ng-click="showLastResponse($event)">Last response</md-button>
+      <div layout="row">
+        <md-button class="md-primary md-raised" ng-click="showLastResponse($event)" flex="20">Last response</md-button>
+        <md-input-container flex="80">
+          <label>Observe relations</label>
+          <md-select ng-model="selectedObserve" ng-change="cancelObserve(selectedObserve)">
+            <md-optgroup label="observe">
+              <md-option ng-value="observe" ng-repeat="observe in car.observes">{{observe}}</md-option>
+            </md-optgroup>
+          </md-select>
+        </md-input-container>
+      </div>
     </div>
 
     <div class="md-whiteframe-5dp" layout-padding flex-gt-sm>

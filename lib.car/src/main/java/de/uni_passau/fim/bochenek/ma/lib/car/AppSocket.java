@@ -126,6 +126,9 @@ public class AppSocket {
 								case "observe" :
 									car.observe(actMsg.getHref());
 									break;
+								case "cancelObserve" :
+									car.cancelObserve(actMsg.getHref());
+									break;
 								case "lastResponse" :
 									if (car.getLastResponse() != null && car.getLastResponse().getResponseText() != null) {
 										car.sendToCar(String.format(TMPL_ANSWER, "LASTRESPONSE", "{\"response\" : " + car.getLastResponse().getResponseText() + "}"));

@@ -104,4 +104,11 @@ app.controller('emulationController', function ($log, $rootScope, $scope, $mdDia
     }
   };
 
+  // TODO
+  $scope.cancelObserve = function (href) {
+    if (car.plugged_in) {
+      car.cancelObserve(href);
+    }
+  };
+
 });

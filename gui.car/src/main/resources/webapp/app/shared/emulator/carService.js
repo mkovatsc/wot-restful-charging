@@ -7,6 +7,7 @@ app.factory('carService', function ($log, $rootScope, socketService) {
     this.nowayback = false; // TODO true as soon as a form was sent
     this.links = {};
     this.forms = {};
+    this.observes = [];
 
     this.config = {
       socketaddr: undefined
@@ -177,6 +178,25 @@ app.factory('carService', function ($log, $rootScope, socketService) {
           href: href
         };
         this.config.socket.send('ACTION', data);
+
+        this.observes.push(href);
+      }
+    },
+
+    // Cancel an observe relation
+    cancelObserve: function (href) {
+      if (typeof this.config.socket != 'undefined') { // TODO external function!
+        var data = {
+          action: 'cancelObserve',
+          href: href
+        };
+        this.config.socket.send('ACTION', data);
+
+        // Remove entry from observes
+        var index = this.observes.indexOf(href);
+        if (index != -1) {
+          this.observes.splice(index, 1);
+        }
       }
     },
 
