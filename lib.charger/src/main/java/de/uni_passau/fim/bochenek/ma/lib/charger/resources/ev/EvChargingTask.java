@@ -46,20 +46,22 @@ public class EvChargingTask extends CoapResource {
 
 	@Override
 	public void handlePUT(CoapExchange exchange) {
-		// TODO not allowed, i.e. if voltages don't match yet
+		if (chargerData.getPresentVoltage() == carData.getTargetVoltage()) { // TODO Define acceptance range?
+			Gson gson = new GsonBuilder().create();
+			JsonObject formData = gson.fromJson(exchange.getRequestText(), JsonObject.class); // TODO not very robust...
+			ChargeForm charge = new ChargeForm(formData);
+			carData.setSoc(charge.getSoc());
+			carData.setTargetCurrent(charge.getTargetCurrent());
 
-		Gson gson = new GsonBuilder().create();
-		JsonObject formData = gson.fromJson(exchange.getRequestText(), JsonObject.class); // TODO not very robust...
-		ChargeForm charge = new ChargeForm(formData);
-		carData.setSoc(charge.getSoc());
-		carData.setTargetCurrent(charge.getTargetCurrent());
+			EventMessage eMsg = new EventMessage(null);
+			eMsg.setTargetCurrent(carData.getTargetCurrent());
+			eMsg.setDescription("targetCurrentSet");
+			SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
 
-		EventMessage eMsg = new EventMessage(null);
-		eMsg.setTargetCurrent(carData.getTargetCurrent());
-		eMsg.setDescription("targetCurrentSet");
-		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
-
-		exchange.respond(ResponseCode.CHANGED, "", MediaTypeRegistry.APPLICATION_JSON); // TODO content?
+			exchange.respond(ResponseCode.CHANGED, "", MediaTypeRegistry.APPLICATION_JSON); // TODO content?
+		} else {
+			exchange.respond(ResponseCode.PRECONDITION_FAILED); // TODO Correct response code?
+		}
 	}
 
 	@Override
@@ -90,18 +92,22 @@ public class EvChargingTask extends CoapResource {
 		CoREHalBase hal = new CoREHalBase();
 		hal.addLink("self", new Link(this.getURI()));
 
+		// TODO Applies to all links: Set the types?
 		for (Resource child : this.getChildren()) {
 			hal.addLink(child.getName(), new Link(child.getURI()));
 		}
 
 		if (chargerData.getCableCheckStatus() == 2 && chargerData.getPresentVoltage() == carData.getTargetVoltage()) { // TODO define acceptance range for voltage
 			Form charge = new Form("PUT", this.getURI(), Utils.getMediaType(ChargeForm.class));
+			charge.setNames("next"); // TODO relation types
 			hal.addForm("charge", charge);
 		}
 
-		// TODO Check for present current first!
-		Form stop = new Form("DELETE", this.getURI(), ""); // TODO define accepts
-		hal.addForm("stop", stop);
+		// Only provide the form if current is ramped down
+		if (chargerData.getPresentCurrent() == 0) {
+			Form stop = new Form("DELETE", this.getURI(), ""); // TODO define accepts
+			hal.addForm("stop", stop);
+		}
 
 		return hal;
 	}

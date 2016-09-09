@@ -37,24 +37,30 @@ public class EvCharge extends CoapResource {
 
 	@Override
 	public void handlePOST(CoapExchange exchange) {
-		Gson gson = new GsonBuilder().create();
-		JsonObject formData = gson.fromJson(exchange.getRequestText(), JsonObject.class); // TODO not very robust...
-		ChargeInitForm chargeInit = new ChargeInitForm(formData);
-		carData.setTargetVoltage(chargeInit.getTargetVoltage());
 
-		EventMessage eMsg = new EventMessage(null);
-		eMsg.setTargetVoltage(carData.getTargetVoltage());
-		eMsg.setDescription("targetVoltageSet");
-		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
+		// TODO Only allow if there is no other charging task running, but what if more than one car is connected?
+		if (this.getChildren().size() < 1) {
+			Gson gson = new GsonBuilder().create();
+			JsonObject formData = gson.fromJson(exchange.getRequestText(), JsonObject.class); // TODO not very robust...
+			ChargeInitForm chargeInit = new ChargeInitForm(formData);
+			carData.setTargetVoltage(chargeInit.getTargetVoltage());
 
-		if (this.getChildren().size() < 1) { // TODO
+			// TODO Hold for all POST/PUT requests: Return BAD_REQUEST if submitted data is not valid!
+
+			EventMessage eMsg = new EventMessage(null);
+			eMsg.setTargetVoltage(carData.getTargetVoltage());
+			eMsg.setDescription("targetVoltageSet");
+			SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
+
 			EvChargingTask chargingTask = new EvChargingTask("task", chargerData, carData);
 			chargingTask.setVisible(false);
 			this.add(chargingTask);
 			exchange.setLocationPath(chargingTask.getURI());
-		}
 
-		exchange.respond(ResponseCode.CREATED, "", MediaTypeRegistry.APPLICATION_JSON); // TODO content?
+			exchange.respond(ResponseCode.CREATED, "", MediaTypeRegistry.APPLICATION_JSON); // TODO content?
+		} else {
+			exchange.respond(ResponseCode.FORBIDDEN); // TODO Correct response code?
+		}
 	}
 
 	/**
@@ -68,6 +74,7 @@ public class EvCharge extends CoapResource {
 
 		if (chargerData.getCableCheckStatus() == 2) {
 			Form chargeInit = new Form("POST", this.getURI(), Utils.getMediaType(ChargeInitForm.class));
+			chargeInit.setNames("next"); // TODO relation types
 			hal.addForm("init", chargeInit);
 		}
 

@@ -36,20 +36,22 @@ public class EvID extends CoapResource {
 
 	@Override
 	public void handleDELETE(CoapExchange exchange) {
-		chargerData.removeCar(carData.getUuid());
+		if (chargerData.removeCar(carData.getUuid()) != null) { // TODO Maybe not needed, if resource exists but map entry not, there are other problems :P
+			this.delete();
 
-		this.delete();
+			// DEBUG
+			SocketHandler socket = SocketHandler.getInstance();
+			socket.pushToListeners(MessageType.DEBUG, new Message("Car (" + carData.getUuid().toString() + ") disconnected."));
 
-		// DEBUG
-		SocketHandler socket = SocketHandler.getInstance();
-		socket.pushToListeners(MessageType.DEBUG, new Message("Car (" + carData.getUuid().toString() + ") disconnected."));
+			EventMessage eMsg = new EventMessage(null, false);
+			eMsg.setDescription("unplugged");
+			SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg); // TODO Provide UUID?
 
-		EventMessage eMsg = new EventMessage(null, false);
-		eMsg.setDescription("unplugged");
-		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg); // TODO Provide UUID?
-
-		exchange.setLocationPath("/.well-known/core"); // Reset
-		exchange.respond(ResponseCode.DELETED);
+			exchange.setLocationPath("/.well-known/core"); // Reset
+			exchange.respond(ResponseCode.DELETED);
+		} else {
+			exchange.respond(ResponseCode.NOT_FOUND); // TODO Correct response code?
+		}
 	}
 
 	/**
@@ -74,7 +76,7 @@ public class EvID extends CoapResource {
 			hal.addLink("charge", new Link(evCharge.getURI()));
 		}
 
-		// Present form to leave the charger
+		// Only provide the form if voltage and current are ramped down
 		if (chargerData.getPresentVoltage() == 0 && chargerData.getTargetCurrent() == 0) {
 			Form leave = new Form("DELETE", this.getURI(), ""); // TODO define accepts
 			hal.addForm("leave", leave);

@@ -17,13 +17,15 @@
     </div>
 
     <div id="ticker-box" class="md-whiteframe-5dp" layout="column" layout-padding flex-gt-sm>
-      <h2>Emulation</h2>
+      <h2>Emulation of charging process</h2>
       <div layout="column">
         <p>State: {{car.state || '-'}}</p>
         <div layout="row">
           <md-button class="md-raised" ng-click="start()" ng-disabled="emulatorRunning()">Start</md-button>
-          <md-button class="md-raised" ng-click="stop()" ng-disabled="">Stop</md-button>
-          <md-button class="md-raised" ng-click="reset()" ng-disabled="">Reset</md-button>
+          <md-button class="md-raised" ng-click="emulate()" ng-disabled="emulatorRunning()">Step</md-button>
+          <md-button class="md-raised" ng-click="stop()" ng-disabled="!emulatorRunning()">Stop</md-button>
+          <!-- TODO disable condition has to be corrected! -->
+          <md-button class="md-raised" ng-click="reset()" ng-disabled="car.nowayback && car.href != '/.well-known/core'">Reset</md-button>
         </div>
       </div>
     </div>
@@ -65,7 +67,7 @@
       <h2>Actions</h2>
       <md-button class="md-raised md-primary" ng-click="togglePlug()" ng-disabled="car.nowayback && car.href != '/.well-known/core'">{{!car.plugged_in && 'Plug in' || 'Unplug'}}</md-button>
 
-      <h2>Links</h2>
+      <h2>Links (green - follow/submit, black - observe)</h2>
       <ng-repeat ng-repeat="(key, value) in car.links" ng-if="value.href != '/.well-known/core'">
         <md-button class="md-raised md-primary" ng-click="follow(value.href)">
           {{ key }}
@@ -73,12 +75,16 @@
             (rt="{{ value.rt }}")
           </span>
         </md-button>
+        <!-- TODO ng-if is just an ugly hack for now, until 'oberserbale' property is correctly defined -->
+        <md-button class="md-raised md-accent" ng-if="key == 'pC' || key == 'pV'" ng-click="observe(value.href)">
+          {{ key }}<ng-if ng-if="value.name"> [{{ value.name }}]</ng-if>
+        </md-button>
       </ng-repeat>
 
       <h2>Forms</h2>
       <ng-repeat ng-repeat="(key, value) in car.forms">
         <md-button class="md-raised md-primary" ng-click="submitForm(value.href, value.method, value.accepts)">
-          {{ key }}
+          {{ key }}<ng-if ng-if="value.name"> [{{ value.name }}]</ng-if>
         </md-button>
       </ng-repeat>
     </div>

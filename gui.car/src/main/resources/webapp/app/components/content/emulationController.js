@@ -8,8 +8,8 @@ app.controller('emulationController', function ($log, $rootScope, $scope, $mdDia
 
   // Create a new emulator for the car
   var emulator = new emulationService({
-    timeout: 500,
-    speedup: 2.5,
+    timeout: 1000,
+    speedup: 1.0,
     car: car
   });
 
@@ -34,6 +34,11 @@ app.controller('emulationController', function ($log, $rootScope, $scope, $mdDia
   // Start the emulation
   $scope.start = function () {
     emulator.start();
+  };
+
+  // Trigger one emulation step
+  $scope.emulate = function () {
+    emulator.emulate();
   };
 
   // Stop / Pause the emulation

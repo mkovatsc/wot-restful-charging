@@ -90,7 +90,7 @@ public class Car {
 
 	public CoREHalBase getCoREHal() {
 		CoREHalBase hal = new CoREHalBase();
-		lastRes = client.get(); // TODO Make use of a CoapHandler
+		lastRes = client.get(); // TODO Make use of a CoapHandler?
 		try {
 			hal = new CoREHalBaseResourceFuture().deserialize(lastRes.getResponseText());
 		} catch (Exception e1) {

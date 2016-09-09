@@ -1,4 +1,4 @@
-app.factory('emulationService', function ($log, $rootScope, $q) {
+app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
   var emulator = function (args) {
 
     // Default config values
@@ -28,7 +28,7 @@ app.factory('emulationService', function ($log, $rootScope, $q) {
     start: function () {
       if (!this.isRunning && typeof this.config.car != 'undefined') {
         this.isRunning = true;
-        this.emulation = setTimeout(this.chainTimeouts(), this.config.timeout);
+        this.emulation = $timeout(this.chainTimeouts(), this.config.timeout);
       }
     },
 
@@ -40,7 +40,7 @@ app.factory('emulationService', function ($log, $rootScope, $q) {
         that.emulate();
         if (that.isRunning) {
           $q.when(that.emulation).then(function () {
-            that.emulation = setTimeout(that.chainTimeouts(), that.config.timeout);
+            that.emulation = $timeout(that.chainTimeouts(), that.config.timeout);
           });
         }
       };
@@ -59,70 +59,84 @@ app.factory('emulationService', function ($log, $rootScope, $q) {
       } else {
         switch (car.state) {
           case 'pluggedIn':
-            // TODO
+            angular.forEach(car.links, function(value, key) {
+              if (typeof(value.rt) != 'undefined' && value.rt == 'ev') {
+                car.follow(value.href);
+                car.changeState('unregistered');
+                return;
+              }
+            });
             break;
-          case 'readyToCharge':
-            car.setTargetVoltage(this.config.speedup);
+          case 'unregistered':
+            // TODO Generally: Sometime one has to wait until a desired form appears!
+            angular.forEach(car.forms, function(value, key) {
+              if (key == 'register') { // TODO Should rather be 'next'
+                car.submitForm(value.href, value.method, value.accepts);
+                car.changeState('registered');
+                return;
+              }
+            });
             break;
-          case 'targetVoltageSet':
-            car.lookupChargingProcess(this.config.speedup);
+          case 'registered':
+            if ('charge' in car.links) {
+              car.follow(car.links.charge['href']);
+              car.changeState('chargeInit');
+            } else {
+              car.follow(car.links.self['href']); // TODO Should rather be 'wait'
+            }
             break;
-          case 'chargingProcess':
-            car.doCurrentDemand(this.config.speedup);
+          case 'chargeInit':
+            if ('init' in car.forms) { // TODO Should rather be 'next'
+              car.submitForm(car.forms.init['href'], car.forms.init['method'], car.forms.init['accepts']);
+              car.changeState('chargeReady');
+            } else {
+              car.follow(car.links.self['href']); // TODO Should rather be 'wait'
+            }
             break;
-          case 'currentDemand':
-            car.doCurrentDemand(this.config.speedup);
+          case 'chargeReady':
+            if ('charge' in car.forms) { // TODO Should rather be 'next'
+              car.charging.currentDemand = car.charging.rate.DC[0]; // TODO
+
+              car.submitForm(car.forms.charge['href'], car.forms.charge['method'], car.forms.charge['accepts']);
+              car.changeState('charging');
+            } else {
+              car.follow(car.links.self['href']); // TODO Should rather be 'wait'
+            }
             break;
-          /*
-                    case 'pluggedIn':
-                      car.doChargeParameterDiscovery(this.config.speedup)
-                      break
-                    case 'chargeParameterDiscovery':
-                      car.doChargeParameterDiscovery(this.config.speedup)
-                      break
-                    case 'chargeParameterDiscoveryDone':
-                      car.doCableCheck(this.config.speedup)
-                      break
-                    case 'cableCheck':
-                      car.doCableCheck(this.config.speedup)
-                      break
-                    case 'cableCheckDone':
-                      car.doPreCharge(this.config.speedup)
-                      break
-                    case 'preCharge':
-                      car.doPreCharge(this.config.speedup)
-                      break
-                    case 'preChargeDone':
-                      car.doPowerDelivery(this.config.speedup)
-                      break
-                    case 'powerDelivery':
-                      car.doPowerDelivery(this.config.speedup)
-                      break
-                    case 'powerDeliveryDone':
-                      car.doCurrentDemand(this.config.speedup)
-                      break
-                    case 'currentDemand':
-                      car.doCurrentDemand(this.config.speedup)
-                      break
-                    case 'currentDemandDone':
-                      car.doPowerDelivery(this.config.speedup)
-                      break
-                    case 'powerDeliveryDoneS':
-                      car.doStopSession(this.config.speedup)
-                      break
-                    case 'powerDeliveryDoneW':
-                      car.doWeldingDetection(this.config.speedup)
-                      break
-                    case 'weldingDetection':
-                      car.doWeldingDetection(this.config.speedup)
-                      break
-                    case 'weldingDetectionDone':
-                      car.doStopSession(this.config.speedup)
-                      break
-          */
+          case 'charging':
+            // TODO Change values while simulation charging process
+            if ('charge' in car.forms) { // TODO Should rather be 'continue'
+              if (car.battery.soc < 100) {
+                car.battery.soc++;
+                car.charging.currentDemand = car.charging.rate.DC[0] - (car.charging.rate.DC[0] * (car.battery.soc / 100));
+
+                car.submitForm(car.forms.charge['href'], car.forms.charge['method'], car.forms.charge['accepts']);
+                car.changeState('charging');
+              } else {
+                car.charging.currentDemand = 0;
+                car.changeState('chargingFinished');
+              }
+            } else {
+              car.follow(car.links.self['href']); // TODO Should rather be 'wait'
+            }
+            break;
+          case 'chargingFinished':
+            if ('stop' in car.forms) {
+              car.submitForm(car.forms.stop['href'], car.forms.stop['method'], car.forms.stop['accepts']);
+              car.changeState('sessionStop');
+            } else {
+              car.follow(car.links.self['href']); // TODO Should rather be 'wait'
+            }
+            break;
           case 'sessionStop':
-            car.unplug(this.config.speedup);
-            this.stop(); // Stop emulation after unplugging
+            if ('leave' in car.forms) {
+              car.submitForm(car.forms.leave['href'], car.forms.leave['method'], car.forms.leave['accepts']);
+              car.changeState(undefined);
+              this.stop(); // Stop emulation
+            } else {
+              car.follow(car.links.self['href']); // TODO Should rather be 'wait'
+            }
+            // TODO Unplug the car?
             break;
           default:
             console.log('No action defined for this state. [' + car.state + ']'); // TODO proper handling
@@ -139,7 +153,7 @@ app.factory('emulationService', function ($log, $rootScope, $q) {
 
     // Stop emulation
     stop: function () {
-      clearTimeout(this.emulation);
+      $timeout.cancel(this.emulation);
       this.isRunning = false;
 
       // TODO Remove existing asynchronous handlers
