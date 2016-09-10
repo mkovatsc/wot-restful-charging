@@ -14,6 +14,7 @@ public class CarData {
 	private UUID uuid;
 	private ChargingType chargingType;
 	private int soc;
+	private boolean charging;
 	private double maxVoltage;
 	private double maxCurrent;
 	private double targetVoltage;
@@ -46,6 +47,14 @@ public class CarData {
 	public synchronized void setSoc(int soc) {
 		this.soc = soc;
 	}
+	public boolean isCharging() {
+		return charging;
+	}
+
+	public void setCharging(boolean charging) {
+		this.charging = charging;
+	}
+
 	public synchronized double getMaxVoltage() {
 		return maxVoltage;
 	}

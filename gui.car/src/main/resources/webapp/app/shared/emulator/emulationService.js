@@ -83,6 +83,7 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
               car.changeState('chargeInit');
             } else {
               car.follow(car.links.self['href']); // TODO Should rather be 'wait'
+              // TODO Applies for every access on 'links' and 'forms': Might not be refreshed yet!
             }
             break;
           case 'chargeInit':
@@ -104,7 +105,6 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
             }
             break;
           case 'charging':
-            // TODO Change values while simulation charging process
             if ('charge' in car.forms) { // TODO Should rather be 'continue'
               if (car.battery.soc < 100) {
                 car.battery.soc++;
