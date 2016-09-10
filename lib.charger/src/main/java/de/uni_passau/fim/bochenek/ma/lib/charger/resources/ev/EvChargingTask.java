@@ -81,6 +81,7 @@ public class EvChargingTask extends CoapResource {
 		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg); // TODO Combine messages
 
 		exchange.setLocationPath(carData.getBookmarks().get("evLoc").getURI());
+		this.getChildren().forEach(child -> ((CoapResource) child).clearAndNotifyObserveRelations(ResponseCode.NOT_FOUND)); // TODO evil cast!
 		this.delete();
 		exchange.respond(ResponseCode.DELETED);
 	}

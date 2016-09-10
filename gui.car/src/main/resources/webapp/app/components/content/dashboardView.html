@@ -71,20 +71,20 @@
       <ng-repeat ng-repeat="(key, value) in car.links" ng-if="value.href != '/.well-known/core'">
         <md-button class="md-raised md-primary" ng-click="follow(value.href)">
           {{ key }}
-          <span ng-if="value.rt">
-            (rt="{{ value.rt }}")
-          </span>
+          <ng-if ng-if="value.rt"> (rt="{{ value.rt }}")</ng-if>
+          <ng-if ng-if="value.name"> [{{ value.name }}]</ng-if>
         </md-button>
         <!-- TODO ng-if is just an ugly hack for now, until 'oberserbale' property is correctly defined -->
         <md-button class="md-raised md-accent" ng-if="key == 'pC' || key == 'pV'" ng-click="observe(value.href)">
-          {{ key }}<ng-if ng-if="value.name"> [{{ value.name }}]</ng-if>
+          {{ key }}
         </md-button>
       </ng-repeat>
 
       <h2>Forms</h2>
       <ng-repeat ng-repeat="(key, value) in car.forms">
         <md-button class="md-raised md-primary" ng-click="submitForm(value.href, value.method, value.accepts)">
-          {{ key }}<ng-if ng-if="value.name"> [{{ value.name }}]</ng-if>
+          {{ key }}
+          <ng-if ng-if="value.name"> [{{ value.name }}]</ng-if>
         </md-button>
       </ng-repeat>
     </div>

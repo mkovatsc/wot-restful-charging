@@ -18,12 +18,17 @@ public class ObserveHandler implements CoapHandler {
 
 	@Override
 	public void onError() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void onLoad(CoapResponse res) {
-		car.sendToCar(String.format(TMPL_NOTIFY, res.getResponseText()));
+		switch (res.getCode()) {
+			case NOT_FOUND :
+				// TODO
+				break;
+			default :
+				car.sendToCar(String.format(TMPL_NOTIFY, res.getResponseText()));
+		}
 	}
 
 }

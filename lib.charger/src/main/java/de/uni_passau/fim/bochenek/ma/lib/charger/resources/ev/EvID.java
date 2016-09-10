@@ -63,7 +63,7 @@ public class EvID extends CoapResource {
 		CoREHalBase hal = new CoREHalBase();
 
 		Link self = new Link(this.getURI());
-		if (chargerData.getPresentVoltage() != 0 || chargerData.getTargetCurrent() != 0) {
+		if ((chargerData.getPresentVoltage() != 0 || chargerData.getTargetCurrent() != 0) || (chargerData.getCableCheckStatus() != 2 && !chargingInit)) {
 			self.setNames("wait");
 		}
 		hal.addLink("self", self);
