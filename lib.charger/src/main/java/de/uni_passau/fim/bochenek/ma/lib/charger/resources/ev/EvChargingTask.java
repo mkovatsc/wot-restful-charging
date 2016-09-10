@@ -93,7 +93,12 @@ public class EvChargingTask extends CoapResource {
 	 */
 	private CoREHalBase getRepresentation() {
 		CoREHalBase hal = new CoREHalBase();
-		hal.addLink("self", new Link(this.getURI()));
+
+		Link self = new Link(this.getURI());
+		if (chargerData.getCableCheckStatus() != 2 || chargerData.getPresentVoltage() != carData.getTargetVoltage() || chargerData.getPresentCurrent() > 0) { // TODO Refactor those conditional attributes
+			self.setNames("wait");
+		}
+		hal.addLink("self", self);
 
 		// TODO Applies to all links: Set the types?
 		for (Resource child : this.getChildren()) {
