@@ -74,8 +74,8 @@ public class EvCharge extends CoapResource {
 
 		if (chargerData.getCableCheckStatus() == 2) {
 			Form chargeInit = new Form("POST", this.getURI(), Utils.getMediaType(ChargeInitForm.class));
-			chargeInit.setNames("next"); // TODO relation types
-			hal.addForm("init", chargeInit);
+			chargeInit.setNames("init"); // TODO relation types
+			hal.addForm("next", chargeInit);
 		}
 
 		return hal;

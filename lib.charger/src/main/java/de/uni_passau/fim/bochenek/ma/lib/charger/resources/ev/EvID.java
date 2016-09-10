@@ -64,9 +64,10 @@ public class EvID extends CoapResource {
 
 		Link self = new Link(this.getURI());
 		if ((chargerData.getPresentVoltage() != 0 || chargerData.getTargetCurrent() != 0) || (chargerData.getCableCheckStatus() != 2 && !chargingInit)) {
-			self.setNames("wait");
+			hal.addLink("wait", self);
+		} else {
+			hal.addLink("self", self);
 		}
-		hal.addLink("self", self);
 
 		// Add link to charging, if cable check was successfully completed
 		if (chargerData.getCableCheckStatus() == 2 && !chargingInit) {
