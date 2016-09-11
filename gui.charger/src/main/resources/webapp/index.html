@@ -13,19 +13,12 @@
   </head>
   <body ng-app="ChargerUI" layout="column" ng-cloak>
 
-    <md-toolbar layout="row" layout-padding ng-controller="sidenavController">
-      <md-button ng-click="toggleLeft()" class="menu" hide-gt-md aria-label="Sidenav">
-        <md-icon md-svg-icon="assets/img/icons/ic_menu_white_24px.svg"></md-icon>
-      </md-button>
+    <md-toolbar layout="row" layout-padding>
       <h1>ChargerUI - Dashboard</h1>
     </md-toolbar>
 
     <div layout="row" flex>
-
-        <navigation></navigation>
-
-        <div id="content" layout="column" layout-margin flex ng-view></div>
-
+      <div id="content" layout="column" layout-margin flex ng-include="'app/components/content/dashboardView.html'"></div>
     </div>
 
     <!-- Angular.js Libraries -->
@@ -33,27 +26,22 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-animate.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-aria.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-messages.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-route.min.js"></script>
 
     <!-- Angular Material Library -->
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.1/angular-material.min.js"></script>
 
     <!-- Bootstrap application -->
     <script src="app/app.module.js"></script>
-    <script src="app/app.routes.js"></script>
 
     <!-- Controllers -->
     <script src="app/components/content/emulationController.js"></script>
     <script src="app/components/content/stateController.js"></script>
-    <script src="app/components/navigation/sidenavController.js"></script>
 
     <!-- Services -->
     <script src="app/shared/emulator/chargerService.js"></script>
     <script src="app/shared/debug/debugService.js"></script>
-    <script src="app/shared/navigation/sidenavService.js"></script>
     <script src="app/shared/websocket/socketService.js"></script>
 
     <!-- Directives -->
-    <script src="app/shared/navigation/sidenavDirective.js"></script>
   </body>
 </html>
