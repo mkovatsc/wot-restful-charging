@@ -20,16 +20,10 @@ import ch.ethz.inf.vs.hypermedia.corehal.model.CoREHalBase;
 import de.uni_passau.fim.bochenek.ma.lib.car.handler.ObserveHandler;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 
-/**
- * TODO Implement some kind of state machine to "force" the right order for
- * method calls
- * 
- * @author Martin Bochenek
- *
- */
 public class Car {
 
-	private CoapClient client; // TODO Extend CoapClient?
+	private String chargerURI;
+	private CoapClient client; // TODO Put null checks in methods!
 	private CoapResponse lastRes;
 
 	private UUID uuid;
@@ -39,14 +33,16 @@ public class Car {
 	private static Logger logger = Logger.getLogger(Car.class.getName());
 
 	public Car(String chargerURI) {
+		this.chargerURI = chargerURI;
 		carData = new CarData();
-		client = new CoapClient(chargerURI); // TODO Server not available?
 
-		// DEBUG
 		logger.info("New CarUI established websocket connection.");
 	}
 
 	public Set<WebLink> plugIn() {
+		if (client == null) {
+			client = new CoapClient(chargerURI); // TODO Server not available?
+		}
 		return client.discover();
 	}
 
@@ -69,14 +65,13 @@ public class Car {
 				lastRes = client.delete();
 				return lastRes;
 			default :
-				return null; // TODO
+				return null;
 		}
 	}
 
-	public boolean observe(String href) {
+	public void observe(String href) {
 		client.setURI(href);
 		carData.getObserves().put(href, client.observe(new ObserveHandler(this)));
-		return false; // TODO
 	}
 
 	public boolean cancelObserve(String href) {
@@ -90,7 +85,7 @@ public class Car {
 
 	public CoREHalBase getCoREHal() {
 		CoREHalBase hal = new CoREHalBase();
-		lastRes = client.get(); // TODO Make use of a CoapHandler?
+		lastRes = client.get();
 		try {
 			hal = new CoREHalBaseResourceFuture().deserialize(lastRes.getResponseText());
 		} catch (Exception e1) {
@@ -101,10 +96,10 @@ public class Car {
 	}
 
 	public void unplug() {
-		// TODO
-
-		// DEBUG
 		logger.log(Level.INFO, "Car with UUID {0} unplugged.", new Object[]{this.uuid});
+
+		client.shutdown();
+		client = null;
 	}
 
 	public void sendToCar(String message) {
@@ -132,12 +127,10 @@ public class Car {
 		return carData;
 	}
 
-	// TODO
 	public String getCurrentLocation() {
 		return client.getURI();
 	}
 
-	// TODO
 	public CoapResponse getLastResponse() {
 		return lastRes;
 	}

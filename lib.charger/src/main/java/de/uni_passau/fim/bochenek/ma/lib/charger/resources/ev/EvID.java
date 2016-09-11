@@ -54,11 +54,6 @@ public class EvID extends CoapResource {
 		}
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @return
-	 */
 	private CoREHalBase getRepresentation() {
 		CoREHalBase hal = new CoREHalBase();
 
@@ -73,7 +68,7 @@ public class EvID extends CoapResource {
 		if (chargerData.getCableCheckStatus() == 2 && !chargingInit) {
 			evCharge = new EvCharge(this.getName(), chargerData, carData);
 			evCharge.setVisible(false);
-			this.getParent().getParent().getChild("charge").add(evCharge); // TODO
+			this.getParent().getParent().getChild("charge").add(evCharge); // TODO This referencing is mad!
 			chargingInit = true;
 		}
 

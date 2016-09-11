@@ -24,7 +24,7 @@ public class ObserveHandler implements CoapHandler {
 	public void onLoad(CoapResponse res) {
 		switch (res.getCode()) {
 			case NOT_FOUND :
-				// TODO
+				// TODO Notify the car, that the observe relation can be deleted?
 				break;
 			default :
 				car.sendToCar(String.format(TMPL_NOTIFY, res.getResponseText()));

@@ -17,21 +17,15 @@ import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message;
 import de.uni_passau.fim.bochenek.ma.lib.charger.messages.Message.MessageType;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
-/**
- * TODO
- * 
- * @author Martin Bochenek
- *
- */
 public class SocketHandler extends WebSocketHandler {
 
 	// Singleton
 	private static SocketHandler instance;
 
 	private static List<Session> listeners;
-	private ChargerData chargerData; // TODO Ugly hack, to be removed...
+	private ChargerData chargerData;
 
-	// Config
+	// Configuration
 	private static final int KEEPALIVE_INTERVAL = 15; // Seconds
 	private static final boolean KEEPALIVE_ENABLED = true;
 	private static final String KEEPALIVE_MESSAGE = "{\"type\" : \"KEEPALIVE\"}";
@@ -68,29 +62,14 @@ public class SocketHandler extends WebSocketHandler {
 		factory.register(AppSocket.class);
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @param listener
-	 */
 	public void addListener(Session listener) {
 		listeners.add(listener);
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @return
-	 */
 	public boolean cleanListeners() {
 		return listeners.removeIf(s -> !s.isOpen());
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @param message
-	 */
 	public void pushToListeners(String message) {
 		for (Session listener : listeners) {
 			try {
@@ -102,22 +81,11 @@ public class SocketHandler extends WebSocketHandler {
 		}
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @param message
-	 */
 	public void pushToListeners(MessageType type, Message message) {
 		Gson gson = new Gson();
 		this.pushToListeners(String.format(MSG_CONTAINER, type, gson.toJson(message)));
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @author Martin Bochenek
-	 *
-	 */
 	static class WebsocketKeepalive extends TimerTask {
 
 		@Override

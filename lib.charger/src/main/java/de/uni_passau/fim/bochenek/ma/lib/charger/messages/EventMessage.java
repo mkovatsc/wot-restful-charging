@@ -2,12 +2,6 @@ package de.uni_passau.fim.bochenek.ma.lib.charger.messages;
 
 import java.util.UUID;
 
-/**
- * TODO Define actual EventMessage
- * 
- * @author Martin Bochenek
- *
- */
 public class EventMessage extends Message {
 
 	private UUID uuid;

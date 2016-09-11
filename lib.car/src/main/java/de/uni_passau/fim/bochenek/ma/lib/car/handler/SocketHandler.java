@@ -13,12 +13,6 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import de.uni_passau.fim.bochenek.ma.lib.car.AppSocket;
 import de.uni_passau.fim.bochenek.ma.lib.car.Car;
 
-/**
- * TODO
- * 
- * @author Martin Bochenek
- *
- */
 public class SocketHandler extends WebSocketHandler {
 
 	// Singleton
@@ -26,7 +20,7 @@ public class SocketHandler extends WebSocketHandler {
 
 	private static List<Car> cars;
 
-	// Config
+	// Configuration
 	private static final String CHARGER_URI = "coap://localhost:5683";
 	private static final int KEEPALIVE_INTERVAL = 15; // Seconds
 	private static final boolean KEEPALIVE_ENABLED = true;
@@ -56,11 +50,6 @@ public class SocketHandler extends WebSocketHandler {
 		factory.register(AppSocket.class);
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @param listener
-	 */
 	public Car addListener(Session listener) {
 		Car car = new Car(CHARGER_URI);
 		car.setSession(listener);
@@ -68,21 +57,10 @@ public class SocketHandler extends WebSocketHandler {
 		return car;
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @return
-	 */
 	public boolean cleanListeners() {
 		return cars.removeIf(c -> !c.getSession().isOpen());
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @param session
-	 * @return
-	 */
 	public Car getCarFor(Session session) {
 		for (Car car : cars) { // TODO terribly inefficient
 			if (car.getSession().hashCode() == session.hashCode()) {
@@ -92,12 +70,6 @@ public class SocketHandler extends WebSocketHandler {
 		return null;
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @param session
-	 * @param message
-	 */
 	public void pushToCar(Session session, String message) {
 		try {
 			this.getCarFor(session).getSession().getRemote().sendString(message);
@@ -107,11 +79,6 @@ public class SocketHandler extends WebSocketHandler {
 		}
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @param message
-	 */
 	private void pushToListeners(String message) {
 		for (Car car : cars) {
 			try {
@@ -123,12 +90,6 @@ public class SocketHandler extends WebSocketHandler {
 		}
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @author Martin Bochenek
-	 *
-	 */
 	static class WebsocketKeepalive extends TimerTask {
 
 		@Override

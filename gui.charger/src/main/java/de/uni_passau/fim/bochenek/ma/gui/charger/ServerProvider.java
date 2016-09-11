@@ -18,22 +18,16 @@ import de.uni_passau.fim.bochenek.ma.util.server.GuiServer;
 import de.uni_passau.fim.bochenek.ma.util.server.data.CarData;
 import de.uni_passau.fim.bochenek.ma.util.server.data.ChargerData;
 
-/**
- * TODO
- * 
- * @author Martin Bochenek
- *
- */
 public class ServerProvider {
+
+	// Configuration
+	private static final int appPort = 8080;
+	private static final int socketPort = 8081;
+	private static final URL appUrl = ServerProvider.class.getResource("/webapp");
 
 	private static Logger logger = Logger.getLogger(ServerProvider.class.getName());;
 
 	public static void main(String[] args) {
-
-		// Config
-		int appPort = 8080;
-		int socketPort = 8081;
-		URL appUrl = ServerProvider.class.getResource("/webapp");
 
 		// Start GUI server
 		GuiServer server = new GuiServer(appPort, appUrl, socketPort, SocketHandler.getInstance());
@@ -46,7 +40,7 @@ public class ServerProvider {
 
 		// Prepare data POJOs for charger and connected cars
 		ChargerData chargerData = new ChargerData();
-		SocketHandler.getInstance().setChargerData(chargerData); // TODO Part of a ugly hack...
+		SocketHandler.getInstance().setChargerData(chargerData); // TODO Part of an ugly hack...
 
 		// Setup and start charger
 		Charger charger = new Charger(chargerData);
@@ -61,12 +55,6 @@ public class ServerProvider {
 		timer.schedule(new InterfaceUpdate(chargerData), 0, 1000);
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @author Martin Bochenek
-	 *
-	 */
 	static class InterfaceUpdate extends TimerTask {
 
 		private ChargerData charger;

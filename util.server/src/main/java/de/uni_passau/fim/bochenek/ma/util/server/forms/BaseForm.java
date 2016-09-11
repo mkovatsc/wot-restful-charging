@@ -15,11 +15,6 @@ public class BaseForm extends CoREHalBase {
 
 	private static Logger logger = Logger.getLogger(BaseForm.class.getName());
 
-	/**
-	 * 
-	 * @param jo
-	 * @return
-	 */
 	public boolean parse(JsonObject jo) {
 		for (Field field : this.getAllDeclaredFields()) {
 			field.setAccessible(true);
@@ -52,10 +47,6 @@ public class BaseForm extends CoREHalBase {
 		return true;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	protected LinkedList<Field> getAllDeclaredFields() {
 		LinkedList<Field> fields = new LinkedList<Field>();
 		fields.addAll(Arrays.asList(this.getClass().getDeclaredFields()));

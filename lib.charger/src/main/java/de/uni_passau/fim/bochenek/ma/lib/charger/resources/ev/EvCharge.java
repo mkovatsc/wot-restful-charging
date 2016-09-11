@@ -45,7 +45,7 @@ public class EvCharge extends CoapResource {
 			ChargeInitForm chargeInit = new ChargeInitForm(formData);
 			carData.setTargetVoltage(chargeInit.getTargetVoltage());
 
-			// TODO Hold for all POST/PUT requests: Return BAD_REQUEST if submitted data is not valid!
+			// TODO Holds for all POST/PUT requests: Return BAD_REQUEST if submitted data is not valid!
 
 			EventMessage eMsg = new EventMessage(null);
 			eMsg.setTargetVoltage(carData.getTargetVoltage());
@@ -57,17 +57,12 @@ public class EvCharge extends CoapResource {
 			this.add(chargingTask);
 			exchange.setLocationPath(chargingTask.getURI());
 
-			exchange.respond(ResponseCode.CREATED, "", MediaTypeRegistry.APPLICATION_JSON); // TODO content?
+			exchange.respond(ResponseCode.CREATED, "", MediaTypeRegistry.APPLICATION_JSON);
 		} else {
 			exchange.respond(ResponseCode.FORBIDDEN); // TODO Correct response code?
 		}
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @return
-	 */
 	private CoREHalBase getRepresentation() {
 		CoREHalBase hal = new CoREHalBase();
 		hal.addLink("self", new Link(this.getURI()));

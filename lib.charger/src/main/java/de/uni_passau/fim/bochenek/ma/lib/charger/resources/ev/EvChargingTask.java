@@ -59,7 +59,7 @@ public class EvChargingTask extends CoapResource {
 			eMsg.setDescription("targetCurrentSet");
 			SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
 
-			exchange.respond(ResponseCode.CHANGED, "", MediaTypeRegistry.APPLICATION_JSON); // TODO content?
+			exchange.respond(ResponseCode.CHANGED, "", MediaTypeRegistry.APPLICATION_JSON);
 		} else {
 			exchange.respond(ResponseCode.PRECONDITION_FAILED); // TODO Correct response code?
 		}
@@ -78,7 +78,7 @@ public class EvChargingTask extends CoapResource {
 		eMsg.setDescription("targetVoltageSet");
 		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
 		eMsg.setDescription("targetCurrentSet");
-		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg); // TODO Combine messages
+		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
 
 		exchange.setLocationPath(carData.getBookmarks().get("evLoc").getURI());
 		this.getChildren().forEach(child -> ((CoapResource) child).clearAndNotifyObserveRelations(ResponseCode.NOT_FOUND)); // TODO evil cast!
@@ -86,11 +86,6 @@ public class EvChargingTask extends CoapResource {
 		exchange.respond(ResponseCode.DELETED);
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @return
-	 */
 	private CoREHalBase getRepresentation() {
 		CoREHalBase hal = new CoREHalBase();
 

@@ -73,11 +73,6 @@ public class EvRoot extends CoapResource {
 		exchange.respond(ResponseCode.CREATED, actionResult.toString(), MediaTypeRegistry.APPLICATION_JSON);
 	}
 
-	/**
-	 * TODO
-	 * 
-	 * @return
-	 */
 	private CoREHalBase getRepresentation() {
 		CoREHalBase hal = new CoREHalBase();
 		hal.addLink("self", new Link(this.getURI()));

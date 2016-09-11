@@ -137,7 +137,7 @@ public class AppSocket {
 									}
 									break;
 								default :
-									// TODO
+									logger.log(Level.INFO, "No further processing defined for this action.");
 									break;
 							}
 							break;
@@ -149,7 +149,6 @@ public class AppSocket {
 							break;
 					}
 				} catch (IllegalArgumentException iae) {
-					// TODO Find some elegant solution
 					logger.log(Level.WARNING, "No valid message type. (" + message + ")"); // TODO Message covers not all the errors!
 				}
 			}

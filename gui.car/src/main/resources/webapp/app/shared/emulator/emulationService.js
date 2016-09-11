@@ -19,6 +19,7 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
     }
   };
 
+  // Generic function to process a state
   function processState(car, type, relation, nextState) {
     $log.info('Calling ' + arguments.callee.name + '(<car>, ' + type + ', ' + relation + ', ' + nextState + ')');
 
@@ -109,7 +110,7 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
             break;
           case 'sessionStop':
             processState(car, 'form', 'leave', undefined);
-            if (typeof(car.state) == 'undefined') {
+            if (typeof car.state == 'undefined') {
               this.stop(); // Stop emulation
             }
             // TODO Unplug the car?

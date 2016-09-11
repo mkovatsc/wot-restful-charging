@@ -48,14 +48,13 @@ public class AppSocket {
 	@OnWebSocketMessage
 	public void onMessage(String message) {
 
-		// TODO Copied from lib.car -> find a better solution!
+		// TODO Copied from lib.car -> find a better (generic) solution!
 		if (message != null && !message.equals("")) {
 			JsonParser parser = new JsonParser();
 			JsonElement msg = null;
 			try {
 				msg = parser.parse(message);
 			} catch (JsonSyntaxException jse) {
-				// TODO Something to do here?
 				logger.log(Level.WARNING, "No valid JSON received. (" + message + ")");
 			}
 
@@ -67,12 +66,11 @@ public class AppSocket {
 					ChargerData chargerData = socket.getChargerData();
 
 					switch (type) {
-						case EVENT : // TODO
+						case EVENT : // TODO Are there any events to process?
 							break;
 						case ACTION :
 							ActionMessage actMsg = gson.fromJson(msg.getAsJsonObject().get("data"), ActionMessage.class);
 
-							// DEBUG
 							logger.log(Level.INFO, "Action received: {0}", new Object[]{actMsg.getAction()});
 
 							// Handle triggered action
@@ -96,7 +94,8 @@ public class AppSocket {
 									socket.pushToListeners(MessageType.DEBUG, new Message("Charger updated presentCurrent to: " + chargerData.getPresentCurrent()));
 									break;
 								default :
-									// TODO
+									logger.log(Level.INFO, "No further processing defined for this action.");
+									break;
 							}
 							break;
 						default :

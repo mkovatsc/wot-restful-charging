@@ -1,11 +1,5 @@
 package de.uni_passau.fim.bochenek.ma.lib.charger.messages;
 
-/**
- * TODO Implement actual ActionMessage
- * 
- * @author Martin Bochenek
- *
- */
 public class ActionMessage {
 
 	private String action;

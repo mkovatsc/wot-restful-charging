@@ -147,7 +147,7 @@ app.factory('carService', function ($log, $rootScope, socketService) {
           method: method
         };
 
-        // Fill in form values > TODO generic solution?
+        // Fill in form values > TODO generic solution? Retrieve media types from server?
         switch (accepts) {
             case 'application/register+json':
               data.soc = this.battery.soc;

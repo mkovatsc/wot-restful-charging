@@ -2,12 +2,6 @@ package de.uni_passau.fim.bochenek.ma.lib.car.messages;
 
 import de.uni_passau.fim.bochenek.ma.util.server.enums.ChargingType;
 
-/**
- * TODO Define actual EventMessage
- * 
- * @author Martin Bochenek
- *
- */
 public class EventMessage extends Message {
 
 	private boolean pluggedIn;
