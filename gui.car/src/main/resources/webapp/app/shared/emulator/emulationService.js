@@ -19,6 +19,27 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
     }
   };
 
+  function processState(car, type, relation, nextState) {
+    $log.info('Calling ' + arguments.callee.name + '(<car>, ' + type + ', ' + relation + ', ' + nextState + ')');
+
+    if (type == 'link' && relation in car.links) {
+      car.follow(car.links[relation].href);
+      car.changeState(nextState);
+    } else if (type == 'form' && relation in car.forms) {
+      car.submitForm(car.forms[relation].href, car.forms[relation].method, car.forms[relation].accepts);
+      car.changeState(nextState);
+    } else if ('wait' in car.links) {
+      car.follow(car.links.wait['href']); // TODO Applies to every access on 'links' and 'forms': Might not be refreshed yet!
+    } else if ('next' in car.links) {
+      car.follow(car.links.next['href']);
+    } else if ('next' in car.forms) {
+      car.submitForm(car.forms.next['href'], car.forms.next['method'], car.forms.next['accepts']);
+    } else {
+      // TODO Well, we're screwed!
+      $log.warn('Well, we are stuck! CarState: ' + car.state);
+    }
+  };
+
   emulator.prototype = {
     isRunning: false,
     cycles: 0,
@@ -68,113 +89,33 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
             });
             break;
           case 'unregistered':
-            // TODO Generally: Sometime one has to wait until a desired form appears!
-            angular.forEach(car.forms, function(value, key) {
-              if (key == 'next') {
-                car.submitForm(value.href, value.method, value.accepts);
-                car.changeState('registered'); // TODO Who says we are already there?!
-                return;
-              }
-            });
+            processState(car, 'form', 'register', 'registered');
             break;
           case 'registered':
-            if ('charge' in car.links) {
-              car.follow(car.links.charge['href']);
-              car.changeState('chargeInit');
-            } else if ('wait' in car.links) { // TODO The following statements hold for every state -> function!
-              car.follow(car.links.wait['href']); // TODO Applies to every access on 'links' and 'forms': Might not be refreshed yet!
-            } else if ('next' in car.links) {
-              car.follow(car.links.next['href']);
-            } else if ('next' in car.forms) {
-              car.submitForm(car.forms.next['href'], car.forms.next['method'], car.forms.next['accepts']);
-            } else {
-              // TODO Well, we're screwed!
-            }
-            break;
-          case 'chargeInit':
-            if ('next' in car.forms) {
-              car.submitForm(car.forms.next['href'], car.forms.next['method'], car.forms.next['accepts']);
-              car.changeState('chargeReady');
-            } else if ('wait' in car.links) {
-              car.follow(car.links.wait['href']);
-            } else if ('next' in car.links) {
-              car.follow(car.links.next['href']);
-            } else if ('next' in car.forms) { // TODO already covered above, so this doesn't qualify for an own state!
-              car.submitForm(car.forms.next['href'], car.forms.next['method'], car.forms.next['accepts']);
-            } else {
-              // TODO Well, we're screwed!
-            }
-            break;
-          case 'chargeReady':
-            if ('next' in car.forms) {
-              car.charging.currentDemand = car.charging.rate.DC[0]; // TODO
-
-              car.submitForm(car.forms.next['href'], car.forms.next['method'], car.forms.next['accepts']);
-              car.changeState('charging');
-            } else if ('wait' in car.links) {
-              car.follow(car.links.wait['href']);
-            } else if ('next' in car.links) {
-              car.follow(car.links.next['href']);
-            } else if ('next' in car.forms) { // TODO already covered above, so this doesn't qualify for an own state!
-              car.submitForm(car.forms.next['href'], car.forms.next['method'], car.forms.next['accepts']);
-            } else {
-              // TODO Well, we're screwed!
-            }
+            processState(car, 'link', 'charge', 'charging');
             break;
           case 'charging':
-            if ('continue' in car.forms) {
-              if (car.battery.soc < 100) {
-                car.battery.soc++;
-                car.charging.currentDemand = car.charging.rate.DC[0] - (car.charging.rate.DC[0] * (car.battery.soc / 100));
-
-                car.submitForm(car.forms.continue['href'], car.forms.continue['method'], car.forms.continue['accepts']);
-                car.changeState('charging');
-              } else {
-                car.charging.currentDemand = 0;
-                car.changeState('chargingFinished');
-              }
-            } else if ('wait' in car.links) {
-              car.follow(car.links.wait['href']);
-            } else if ('next' in car.links) {
-              car.follow(car.links.next['href']);
-            } else if ('next' in car.forms) {
-              car.submitForm(car.forms.next['href'], car.forms.next['method'], car.forms.next['accepts']);
+            if (car.battery.soc < 100) {
+              car.battery.soc++; // TODO Base on time rather than cylces?
+              car.charging.currentDemand = car.charging.rate.DC[0] - (car.charging.rate.DC[0] * (car.battery.soc / 100));
+              processState(car);
             } else {
-              // TODO Well, we're screwed!
+              car.charging.currentDemand = 0;
+              car.changeState('chargingFinished');
             }
             break;
           case 'chargingFinished':
-            if ('stop' in car.forms) {
-              car.submitForm(car.forms.stop['href'], car.forms.stop['method'], car.forms.stop['accepts']);
-              car.changeState('sessionStop');
-            } else if ('wait' in car.links) {
-              car.follow(car.links.wait['href']);
-            } else if ('next' in car.links) {
-              car.follow(car.links.next['href']);
-            } else if ('next' in car.forms) {
-              car.submitForm(car.forms.next['href'], car.forms.next['method'], car.forms.next['accepts']);
-            } else {
-              // TODO Well, we're screwed!
-            }
+            processState(car, 'form', 'stop', 'sessionStop');
             break;
           case 'sessionStop':
-            if ('leave' in car.forms) {
-              car.submitForm(car.forms.leave['href'], car.forms.leave['method'], car.forms.leave['accepts']);
-              car.changeState(undefined);
+            processState(car, 'form', 'leave', undefined);
+            if (typeof(car.state) == 'undefined') {
               this.stop(); // Stop emulation
-            } else if ('wait' in car.links) {
-              car.follow(car.links.wait['href']);
-            } else if ('next' in car.links) {
-              car.follow(car.links.next['href']);
-            } else if ('next' in car.forms) {
-              car.submitForm(car.forms.next['href'], car.forms.next['method'], car.forms.next['accepts']);
-            } else {
-              // TODO Well, we're screwed!
             }
             // TODO Unplug the car?
             break;
           default:
-            console.log('No action defined for this state. [' + car.state + ']'); // TODO proper handling
+            $log.warn('No action defined for this state. [' + car.state + ']'); // TODO proper handling
         }
       }
 

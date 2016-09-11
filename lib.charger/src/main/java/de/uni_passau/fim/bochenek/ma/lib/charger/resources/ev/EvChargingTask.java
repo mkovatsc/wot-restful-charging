@@ -95,7 +95,7 @@ public class EvChargingTask extends CoapResource {
 		CoREHalBase hal = new CoREHalBase();
 
 		Link self = new Link(this.getURI());
-		if (chargerData.getCableCheckStatus() != 2 || chargerData.getPresentVoltage() != carData.getTargetVoltage() || chargerData.getPresentCurrent() > 0) { // TODO Refactor those conditional attributes
+		if (chargerData.getCableCheckStatus() != 2 || chargerData.getPresentVoltage() != carData.getTargetVoltage()) { // TODO Refactor those conditional attributes
 			hal.addLink("wait", self); // TODO Not always correct, is there a process running?
 		} else {
 			hal.addLink("self", self);
@@ -109,11 +109,7 @@ public class EvChargingTask extends CoapResource {
 		if (chargerData.getCableCheckStatus() == 2 && chargerData.getPresentVoltage() == carData.getTargetVoltage()) { // TODO define acceptance range for voltage
 			Form charge = new Form("PUT", this.getURI(), Utils.getMediaType(ChargeForm.class));
 			charge.setNames("charge");
-			if (!carData.isCharging()) {
-				hal.addForm("next", charge);
-			} else {
-				hal.addForm("continue", charge);
-			}
+			hal.addForm("next", charge);
 		}
 
 		// Only provide the form if current is ramped down

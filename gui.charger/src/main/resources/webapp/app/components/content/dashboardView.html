@@ -21,13 +21,10 @@
           </md-tab>
         </md-tabs>
       </div>
-      <div class="cablecheck">
-        <h3>Cable check</h3>
-        <p>Status: {{charger.status.cableCheck || 'N/A'}}</p>
-      </div>
-      <div class="voltageAdaption">
-        <h3>Voltage adaption</h3>
-        <p>Status: {{charger.status.voltageAdaption || 'N/A'}}</p>
+      <div class="physStat">
+        <h3>State of physical processes</h3>
+        <p>Cable check: {{charger.status.cableCheck || 'N/A'}}</p>
+        <p>Voltage adaption: {{charger.status.voltageAdaption || 'N/A'}}</p>
       </div>
       <!--
       <div class="state">

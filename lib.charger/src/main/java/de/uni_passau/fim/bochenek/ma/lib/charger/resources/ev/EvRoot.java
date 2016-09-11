@@ -84,8 +84,7 @@ public class EvRoot extends CoapResource {
 
 		// TODO Don't show if already registered
 		Form register = new Form("POST", this.getURI(), Utils.getMediaType(RegisterForm.class));
-		register.setNames("register");
-		hal.addForm("next", register);
+		hal.addForm("register", register);
 
 		// TODO Don't show resources of other cars
 		for (Resource res : this.getChildren()) {
