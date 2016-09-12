@@ -149,16 +149,16 @@ app.factory('carService', function ($log, $rootScope, socketService) {
 
         // Fill in form values > TODO generic solution? Retrieve media types from server?
         switch (accepts) {
-            case 'application/register+json':
+            case 'application/x.register+json':
               data.soc = this.battery.soc;
               data.chargingType = 'DC';
               data.maxVoltage = this.charging.voltage.DC;
               data.maxCurrent = Math.max.apply(null, this.charging.rate.DC);
               break;
-            case 'application/chargeinit+json':
+            case 'application/x.chargeinit+json':
               data.targetVoltage = this.charging.voltage.DC;
               break;
-            case 'application/charge+json':
+            case 'application/x.charge+json':
               data.soc = this.battery.soc;
               data.targetCurrent = this.charging.currentDemand;
               break;

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 
 import ch.ethz.inf.vs.hypermedia.client.MediaType;
 
-@MediaType(contentType = 65011, mediaType = "application/chargeinit+json")
+@MediaType(contentType = 65011, mediaType = "application/x.chargeinit+json")
 public class ChargeInitForm extends BaseForm {
 
 	private double targetVoltage;

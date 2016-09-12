@@ -97,7 +97,7 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
             break;
           case 'charging':
             if (car.battery.soc < 100) {
-              car.battery.soc++; // TODO Base on time rather than cylces?
+              car.battery.soc++; // TODO Base on time rather than cylces? Updates even if we don't fill in the right form!
               car.charging.currentDemand = car.charging.rate.DC[0] - (car.charging.rate.DC[0] * (car.battery.soc / 100));
               processState(car);
             } else {

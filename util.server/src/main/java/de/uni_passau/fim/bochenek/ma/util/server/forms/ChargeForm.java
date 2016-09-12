@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 
 import ch.ethz.inf.vs.hypermedia.client.MediaType;
 
-@MediaType(contentType = 65012, mediaType = "application/charge+json")
+@MediaType(contentType = 65012, mediaType = "application/x.charge+json")
 public class ChargeForm extends BaseForm {
 
 	private int soc;
