@@ -155,7 +155,7 @@ app.factory('carService', function ($log, $rootScope, socketService) {
               data.maxVoltage = this.charging.voltage.DC;
               data.maxCurrent = Math.max.apply(null, this.charging.rate.DC);
               break;
-            case 'application/x.chargeinit+json':
+            case 'application/x.charge-init+json':
               data.targetVoltage = this.charging.voltage.DC;
               break;
             case 'application/x.charge+json':

@@ -1,3 +1,5 @@
+// TODO Needs to be updated in the end!
+
 var cars = {
   selected : {},
   bmw_i3 : {

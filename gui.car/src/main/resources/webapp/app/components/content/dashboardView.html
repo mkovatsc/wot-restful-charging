@@ -69,12 +69,12 @@
 
       <h2>Links (green - follow/submit, black - observe)</h2>
       <ng-repeat ng-repeat="(key, value) in car.links" ng-if="value.href != '/.well-known/core'">
-        <md-button class="md-raised md-primary" ng-click="follow(value.href)">
+        <!-- TODO ng-if is just an ugly hack for now, until 'oberservable' property is correctly defined -->
+        <md-button class="md-raised md-primary" ng-if="key != 'pC' && key != 'pV'" ng-click="follow(value.href)">
           {{ key }}
           <ng-if ng-if="value.rt"> (rt="{{ value.rt }}")</ng-if>
           <ng-if ng-if="value.name"> [{{ value.name }}]</ng-if>
         </md-button>
-        <!-- TODO ng-if is just an ugly hack for now, until 'oberserbale' property is correctly defined -->
         <md-button class="md-raised md-accent" ng-if="key == 'pC' || key == 'pV'" ng-click="observe(value.href)">
           {{ key }}
         </md-button>

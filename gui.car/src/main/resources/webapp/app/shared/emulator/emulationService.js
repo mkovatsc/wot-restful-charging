@@ -93,6 +93,7 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
             processState(car, 'form', 'register', 'registered');
             break;
           case 'registered':
+            // TODO Bookmark the current resource, to recognize the URL when "stop"ing a process!
             processState(car, 'link', 'charge', 'charging');
             break;
           case 'charging':

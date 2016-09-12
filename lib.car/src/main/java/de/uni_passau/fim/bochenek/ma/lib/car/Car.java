@@ -3,7 +3,6 @@ package de.uni_passau.fim.bochenek.ma.lib.car;
 import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.californium.core.CoapClient;
@@ -96,10 +95,10 @@ public class Car {
 	}
 
 	public void unplug() {
-		logger.log(Level.INFO, "Car with UUID {0} unplugged.", new Object[]{this.uuid});
-
-		client.shutdown();
-		client = null;
+		if (client != null) {
+			client.shutdown();
+			client = null;
+		}
 	}
 
 	public void sendToCar(String message) {
