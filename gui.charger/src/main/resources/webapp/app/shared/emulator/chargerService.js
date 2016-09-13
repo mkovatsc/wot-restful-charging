@@ -7,7 +7,7 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
       voltageAdaption: ''
     };
 
-    this.runningProcs = {}; // Keeps the promisess
+    this.runningProcs = {}; // Keeps the promises
 
     this.config = {
       socketaddr: undefined
@@ -78,7 +78,8 @@ app.factory('chargerService', function ($log, $rootScope, $interval, $timeout, s
           that.status = {
             se: {},
             ev: {},
-            cableCheck: ''
+            cableCheck: '',
+            voltageAdaption: ''
           };
           $rootScope.$apply();
         } else if ('description' in data && data['description'] == 'targetVoltageSet') {
