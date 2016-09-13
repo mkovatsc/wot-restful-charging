@@ -92,7 +92,7 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
         switch (car.state) {
           case 'pluggedIn':
             angular.forEach(car.links, function(value, key) {
-              if (typeof(value.rt) != 'undefined' && value.rt == 'ev') {
+              if (typeof value.rt  != 'undefined' && value.rt == 'ev') {
                 car.follow(value.href);
                 car.changeState('unregistered');
                 return;
@@ -107,14 +107,14 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
             processState(car, 'link', 'charge', 'charging');
             break;
           case 'charging':
-            if (car.battery.soc < 100) {
-              if (processState(car) == 'next') { // TODO Bugfix aka. ugly bugfix, that not even fixes the problem Completely!
-                car.battery.soc++; // TODO Base on time rather than cylces? Updates even if we don't fill in the right form!
-                car.charging.currentDemand = car.charging.rate.DC[0] - (car.charging.rate.DC[0] * (car.battery.soc / 100));
-              };
-            } else {
+            if (car.battery.soc < 100 && processState(car) == 'next') { // TODO Bugfix aka. ugly hack, that not even really fixes the problem!
+              car.battery.soc++; // TODO Base on time rather than cylces? Updates even if we don't fill in the right form!
+              car.charging.currentDemand = car.charging.rate.DC[0] - (car.charging.rate.DC[0] * (car.battery.soc / 100));
+            } else if (car.battery.soc >= 100) {
               car.charging.currentDemand = 0;
               car.changeState('chargingFinished');
+            } else {
+              // TODO
             }
             break;
           case 'chargingFinished':

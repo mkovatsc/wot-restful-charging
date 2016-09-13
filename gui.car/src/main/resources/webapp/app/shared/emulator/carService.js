@@ -91,7 +91,6 @@ app.factory('carService', function ($log, $rootScope, socketService) {
 
     // Additional state information
     connector: undefined,
-    runningProc: undefined,
 
     // Plug the car in
     plugIn: function (speedup) {
@@ -228,8 +227,6 @@ app.factory('carService', function ($log, $rootScope, socketService) {
 
     // Reset the car's state
     reset: function () {
-      clearTimeout(this.runningProc);
-      this.runningProc = undefined; // TODO there must be a cleaner solution!
       this.unplug(1);
       this.battery.soc = 5;
       this.battery.charging = false;
