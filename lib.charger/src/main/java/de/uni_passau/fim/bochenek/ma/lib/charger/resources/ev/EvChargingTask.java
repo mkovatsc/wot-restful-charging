@@ -58,7 +58,7 @@ public class EvChargingTask extends CoapResource {
 			eMsg.setTargetCurrent(carData.getTargetCurrent());
 			eMsg.setDescription("targetCurrentSet");
 			SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
-			
+
 			// TODO As the UI might need a second to update the present current, the links shown to the car are invalid!
 			// TODO Maybe make use of a "dirty" flag, to rather show a incomplete representation instead of an invalid one.
 
@@ -101,7 +101,9 @@ public class EvChargingTask extends CoapResource {
 
 		// TODO Applies to all links: Set the types?
 		for (Resource child : this.getChildren()) {
-			hal.addLink(child.getName(), new Link(child.getURI()));
+			Link tmp = new Link(child.getURI());
+			tmp.setObservable(child.isObservable());
+			hal.addLink(child.getName(), tmp);
 		}
 
 		if (chargerData.getCableCheckStatus() == 2 && chargerData.getPresentVoltage() == carData.getTargetVoltage()) { // TODO define acceptance range for voltage
