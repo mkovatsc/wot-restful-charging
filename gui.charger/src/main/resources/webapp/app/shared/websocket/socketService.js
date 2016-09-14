@@ -15,7 +15,6 @@ app.factory('socketService', function ($timeout, $log) {
       // Initialize websocket connection
       this.config.websocket = new WebSocket(this.config.socketaddr);
 
-      // TODO Anything to do here other then some debugging?
       this.config.websocket.onopen = function () {
         $log.info('Socket successfully opened.');
       };
@@ -30,7 +29,7 @@ app.factory('socketService', function ($timeout, $log) {
 
       var that = this;
       var callHandlers = function (msgType, data) {
-        angular.forEach(that.config.handlers[msgType], function (handler) { // TODO no handler(s) defined?
+        angular.forEach(that.config.handlers[msgType], function (handler) {
           handler(data);
         });
       };

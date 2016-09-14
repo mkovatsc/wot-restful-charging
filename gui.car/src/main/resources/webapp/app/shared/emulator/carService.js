@@ -86,7 +86,8 @@ app.factory('carService', function ($log, $rootScope, socketService) {
         DC: [125]
       },
       currentDemand : 0,
-      complete: false
+      complete: false,
+      target_soc: 100
     },
 
     // Additional state information

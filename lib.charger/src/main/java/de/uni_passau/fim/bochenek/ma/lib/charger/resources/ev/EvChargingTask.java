@@ -58,6 +58,9 @@ public class EvChargingTask extends CoapResource {
 			eMsg.setTargetCurrent(carData.getTargetCurrent());
 			eMsg.setDescription("targetCurrentSet");
 			SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
+			
+			// TODO As the UI might need a second to update the present current, the links shown to the car are invalid!
+			// TODO Maybe make use of a "dirty" flag, to rather show a incomplete representation instead of an invalid one.
 
 			exchange.respond(ResponseCode.CHANGED, "", MediaTypeRegistry.APPLICATION_JSON);
 		} else {
@@ -104,7 +107,7 @@ public class EvChargingTask extends CoapResource {
 		if (chargerData.getCableCheckStatus() == 2 && chargerData.getPresentVoltage() == carData.getTargetVoltage()) { // TODO define acceptance range for voltage
 			Form charge = new Form("PUT", this.getURI(), Utils.getMediaType(ChargeForm.class));
 			charge.setNames("charge");
-			hal.addForm("next", charge);
+			hal.addForm("continue", charge);
 		}
 
 		// Only provide the form if current is ramped down

@@ -14,19 +14,26 @@
         {{car.battery.soc | number : 0}} %
         <md-progress-linear md-mode="determinate" value="{{car.battery.soc | number : 0}}"></md-progress-linear>
       </div>
+      <h2>Car state:</h2>
+      <p>State: {{car.state || '-'}}</p>
     </div>
 
     <div id="ticker-box" class="md-whiteframe-5dp" layout="column" layout-padding flex-gt-sm>
-      <h2>Emulation of charging process</h2>
-      <div layout="column">
-        <p>State: {{car.state || '-'}}</p>
-        <div layout="row">
-          <md-button class="md-raised" ng-click="start()" ng-disabled="emulatorRunning()">Start</md-button>
-          <md-button class="md-raised" ng-click="emulate()" ng-disabled="emulatorRunning()">Step</md-button>
-          <md-button class="md-raised" ng-click="stop()" ng-disabled="!emulatorRunning()">Stop</md-button>
-          <!-- TODO disable condition has to be corrected! -->
-          <md-button class="md-raised" ng-click="reset()" ng-disabled="car.nowayback && car.href != '/.well-known/core'">Reset</md-button>
-        </div>
+      <h2>Emulation of charging process:</h2>
+      <div layout="row">
+        <form>
+          <md-input-container>
+            <label for="target_soc">Target SoC (%):</label>
+            <input type="number" name="target_soc" min="0" max="100" ng-model="car.charging.target_soc">
+          </md-input-container>
+        </form>
+      </diV>
+      <div layout="row">
+        <md-button class="md-raised" ng-click="start()" ng-disabled="emulatorRunning()">Start</md-button>
+        <md-button class="md-raised" ng-click="emulate()" ng-disabled="emulatorRunning()">Step</md-button>
+        <md-button class="md-raised" ng-click="stop()" ng-disabled="!emulatorRunning()">Stop</md-button>
+        <!-- TODO disable condition has to be corrected! -->
+        <md-button class="md-raised" ng-click="reset()" ng-disabled="car.nowayback && car.href != '/.well-known/core'">Reset</md-button>
       </div>
     </div>
 

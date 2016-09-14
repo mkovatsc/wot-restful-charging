@@ -23,6 +23,8 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
   function processState(car, type, relation, nextState) {
     $log.info('Calling ' + arguments.callee.name + '(<car>, ' + type + ', ' + relation + ', ' + nextState + ')');
 
+    // TODO Applies to every access on 'links' and 'forms': Might not be refreshed yet!
+
     if (type == 'link' && relation in car.links) {
       car.follow(car.links[relation].href);
       car.changeState(nextState);
@@ -34,7 +36,7 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
 
       return relation;
     } else if ('wait' in car.links) {
-      car.follow(car.links.wait['href']); // TODO Applies to every access on 'links' and 'forms': Might not be refreshed yet!
+      car.follow(car.links.wait['href']);
 
       return 'wait';
     } else if ('next' in car.links) {
@@ -107,14 +109,13 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
             processState(car, 'link', 'charge', 'charging');
             break;
           case 'charging':
-            if (car.battery.soc < 100 && processState(car) == 'next') { // TODO Bugfix aka. ugly hack, that not even really fixes the problem!
+            if (car.battery.soc >= 100 || car.battery.soc >= car.charging.target_soc) {
+              car.charging.currentDemand = 0;
+              processState(car, 'form', 'continue', 'chargingFinished');
+            } else {
               car.battery.soc++; // TODO Base on time rather than cylces? Updates even if we don't fill in the right form!
               car.charging.currentDemand = car.charging.rate.DC[0] - (car.charging.rate.DC[0] * (car.battery.soc / 100));
-            } else if (car.battery.soc >= 100) {
-              car.charging.currentDemand = 0;
-              car.changeState('chargingFinished');
-            } else {
-              // TODO
+              processState(car, 'form', 'continue', 'charging');
             }
             break;
           case 'chargingFinished':
