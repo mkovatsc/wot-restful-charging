@@ -103,7 +103,7 @@ public class ServerProvider {
 				header.append("A provided option could not be recognized.");
 			}
 
-			formatter.printHelp("car", header.toString(), options, "");
+			formatter.printHelp("charger", header.toString(), options, "");
 		}
 	}
 
