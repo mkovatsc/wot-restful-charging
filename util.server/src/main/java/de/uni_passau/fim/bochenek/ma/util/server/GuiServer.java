@@ -25,10 +25,10 @@ public class GuiServer {
 	}
 
 	public void start() throws Exception {
-		if (appServer != null) {
+		if (appServer != null && !appServer.isStarted()) {
 			appServer.start();
 		}
-		if (socketServer != null) {
+		if (socketServer != null && !socketServer.isStarted()) {
 			socketServer.start();
 		}
 	}
@@ -37,7 +37,7 @@ public class GuiServer {
 		if (appServer != null && appServer.isStarted()) {
 			appServer.stop();
 		}
-		if (socketServer != null && appServer.isStarted()) {
+		if (socketServer != null && socketServer.isStarted()) {
 			socketServer.stop();
 		}
 	}
