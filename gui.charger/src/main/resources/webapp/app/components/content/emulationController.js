@@ -2,7 +2,7 @@ app.controller('emulationController', function ($log, $rootScope, $scope, charge
 
   // Create a new charger
   var charger = new chargerService({
-    socketaddr: 'ws://localhost:8081'
+    socketaddr: 'ws://localhost:' + $rootScope.socketPort
   });
   $rootScope.charger = charger;
 

@@ -2,7 +2,7 @@ app.controller('emulationController', function ($log, $rootScope, $scope, $mdDia
 
   // Create a new car
   var car = new carService({
-    socketaddr: 'ws://localhost:8091'
+    socketaddr: 'ws://localhost:' + $rootScope.socketPort
   });
   $rootScope.car = car; // Assign it to $rootScope for global state access
 

@@ -18,7 +18,7 @@
     </md-toolbar>
 
     <div layout="row" flex>
-      <md-content id="content" layout="column" layout-margin flex ng-include="'app/components/content/dashboardView.html'"></md-content>
+      <md-content id="content" layout="column" layout-margin flex ng-if="autoConfigSuccessful" ng-include="'app/components/content/dashboardView.html'"></md-content>
     </div>
 
     <!-- Angular.js Libraries -->

@@ -1,10 +1,20 @@
 package de.uni_passau.fim.bochenek.ma.util.server;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.URL;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 
@@ -59,13 +69,21 @@ public class GuiServer {
 
 		// Set up the application server
 		appServer = new Server(appPort);
-		ResourceHandler resource_handler = new ResourceHandler();
+		ResourceHandler resourceHandler = new ResourceHandler();
 		if (url != null) {
-			resource_handler.setResourceBase(url.toExternalForm());
-		} else {
-			// TODO Actual error handling
+			resourceHandler.setResourceBase(url.toExternalForm());
 		}
-		appServer.setHandler(resource_handler);
+
+		// Create contexts for the application and the configuration
+		ContextHandler ctxApp = new ContextHandler("/");
+		ctxApp.setHandler(resourceHandler);
+		ContextHandler ctxConfig = new ContextHandler("/config");
+		ctxConfig.setHandler(new ConfigHandler());
+
+		// Add the contexts to the application server
+		ContextHandlerCollection contexts = new ContextHandlerCollection();
+		contexts.setHandlers(new Handler[]{ctxApp, ctxConfig});
+		appServer.setHandler(contexts);
 	}
 
 	private void setupSocketServer(int socketPort, WebSocketHandler socketHandler) {
@@ -84,6 +102,21 @@ public class GuiServer {
 
 	public int getSocketPort() {
 		return socketPort; // TODO May be uninitialized
+	}
+
+	private class ConfigHandler extends AbstractHandler {
+
+		@Override
+		public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+			response.setContentType("application/json; charset=utf-8");
+			response.setStatus(HttpServletResponse.SC_OK);
+
+			PrintWriter out = response.getWriter();
+			out.println("{ \"socketPort\" : " + socketPort + " }");
+
+			baseRequest.setHandled(true);
+		}
+
 	}
 
 }
