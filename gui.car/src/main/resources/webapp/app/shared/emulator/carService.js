@@ -132,7 +132,7 @@ app.factory('carService', function ($log, $rootScope, socketService) {
     },
 
     // Submit a form
-    submitForm: function (href, method, accepts) {
+    submitForm: function (href, method, accepts, payload) {
       $log.info('Submitting form: ' + method + ' ' + href + ' (' + accepts + ')');
 
       this.links = {}; // Reset links and forms, as they might no longer be valid
@@ -163,7 +163,13 @@ app.factory('carService', function ($log, $rootScope, socketService) {
               data.targetCurrent = this.charging.currentDemand;
               break;
             default:
-              // TODO
+
+              // If there is additional payload defined, include it in the request
+              if (typeof payload != 'undefined') {
+                angular.forEach(payload, function (value, key) {
+                  data[key] = value;
+                });
+              }
         }
 
         this.config.socket.send('ACTION', data);

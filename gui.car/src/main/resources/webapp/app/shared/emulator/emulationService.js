@@ -35,6 +35,12 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
       car.changeState(nextState);
 
       return relation;
+    } else if (relation == 'leave' && 'stop' in car.forms) { // TODO
+      if (typeof car.forms.stop.preFilled != 'undefined') {
+        car.submitForm(car.forms.stop['href'], car.forms.stop['method'], car.forms.stop['accepts'], car.forms.stop.preFilled);
+      } else {
+        car.submitForm(car.forms.stop['href'], car.forms.stop['method'], car.forms.stop['accepts']);
+      }
     } else if ('wait' in car.links) {
       car.follow(car.links.wait['href']);
 
@@ -119,13 +125,15 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
             }
             break;
           case 'chargingFinished':
-            processState(car, 'form', 'stop', 'sessionStop');
+            car.charging.currentDemand = 0;
+            processState(car, 'form', 'leave', 'chargingStopped');
+            break;
+          case 'chargingStopped':
+            processState(car, 'form', 'leave', 'sessionStop');
             break;
           case 'sessionStop':
             processState(car, 'form', 'leave', undefined);
-            if (typeof car.state == 'undefined') {
-              this.stop(); // Stop emulation
-            }
+            this.stop(); // Stop emulation
             // TODO Unplug the car?
             break;
           default:

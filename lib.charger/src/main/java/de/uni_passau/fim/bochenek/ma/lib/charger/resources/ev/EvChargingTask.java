@@ -43,9 +43,38 @@ public class EvChargingTask extends CoapResource {
 	public void handleGET(CoapExchange exchange) {
 		exchange.respond(ResponseCode.CONTENT, this.getRepresentation().toString(), MediaTypeRegistry.APPLICATION_JSON);
 	}
+	@Override
+	public void handlePOST(CoapExchange exchange) {
+		Gson gson = new GsonBuilder().create();
+		JsonObject formData = gson.fromJson(exchange.getRequestText(), JsonObject.class); // TODO not very robust...
+
+		if (!formData.has("targetVoltage") || !formData.has("targetVoltage")) {
+			exchange.respond(ResponseCode.BAD_OPTION);
+		} else if (formData.get("targetVoltage").getAsDouble() != 0.0 || formData.get("targetCurrent").getAsDouble() != 0.0) {
+			// TODO Parse error?
+			// TODO Which error code?
+		} else {
+			carData.setTargetVoltage(formData.get("targetVoltage").getAsDouble());
+			carData.setTargetCurrent(formData.get("targetCurrent").getAsDouble());
+			carData.setCharging(false);
+
+			// Tell charger that the target voltage and current was updated
+			EventMessage eMsg = new EventMessage(null);
+			eMsg.setTargetVoltage(carData.getTargetVoltage());
+			eMsg.setTargetCurrent(carData.getTargetCurrent());
+			eMsg.setDescription("targetVoltageSet");
+			SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
+			eMsg.setDescription("targetCurrentSet");
+			SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
+
+			exchange.respond(ResponseCode.VALID);
+		}
+	}
 
 	@Override
 	public void handlePUT(CoapExchange exchange) {
+
+		// TODO Any way to decide whether we got a PUT from "next" or "stop"
 		if (chargerData.getPresentVoltage() == carData.getTargetVoltage()) { // TODO Define acceptance range?
 			Gson gson = new GsonBuilder().create();
 			JsonObject formData = gson.fromJson(exchange.getRequestText(), JsonObject.class); // TODO not very robust...
@@ -70,18 +99,8 @@ public class EvChargingTask extends CoapResource {
 
 	@Override
 	public void handleDELETE(CoapExchange exchange) {
-		carData.setTargetVoltage(0);
-		carData.setTargetCurrent(0);
-		carData.setCharging(false);
 
-		// Tell charger that the target voltage and current was updated
-		EventMessage eMsg = new EventMessage(null);
-		eMsg.setTargetVoltage(carData.getTargetVoltage());
-		eMsg.setTargetCurrent(carData.getTargetCurrent());
-		eMsg.setDescription("targetVoltageSet");
-		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
-		eMsg.setDescription("targetCurrentSet");
-		SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
+		// TODO Don't allow DELETE if there is still voltage and current present
 
 		exchange.setLocationPath(carData.getBookmarks().get("evLoc").getURI());
 		this.getChildren().forEach(child -> ((CoapResource) child).clearAndNotifyObserveRelations(ResponseCode.NOT_FOUND)); // TODO evil cast!
@@ -112,10 +131,16 @@ public class EvChargingTask extends CoapResource {
 			hal.addForm("continue", charge);
 		}
 
-		// Only provide the form if current is ramped down
-		if (chargerData.getPresentCurrent() == 0) {
-			Form stop = new Form("DELETE", this.getURI(), ""); // TODO define accepts
+		if (chargerData.getPresentCurrent() != 0 || carData.isCharging()) {
+			Form stop = new Form("POST", this.getURI(), "application/json");
+
+			// Include pre-filled form
+			stop.addPreFilled("targetCurrent", 0);
+			stop.addPreFilled("targetVoltage", 0);
 			hal.addForm("stop", stop);
+		} else {
+			Form stop = new Form("DELETE", this.getURI(), "");
+			hal.addForm("leave", stop);
 		}
 
 		return hal;

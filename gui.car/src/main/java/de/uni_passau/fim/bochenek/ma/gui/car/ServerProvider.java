@@ -47,7 +47,7 @@ public class ServerProvider {
 				.type(Integer.class)
 				.build());
 
-		// Try to parse the arguments and print help if something wents wrong
+		// Try to parse the arguments and print help if something went wrong
 		try {
 			CommandLine line = parser.parse(options, args);
 
