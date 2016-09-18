@@ -18,6 +18,8 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 
+import com.google.gson.JsonObject;
+
 public class GuiServer {
 
 	private int appPort;
@@ -111,8 +113,13 @@ public class GuiServer {
 			response.setContentType("application/json; charset=utf-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 
+			// Create the configuration object
+			JsonObject config = new JsonObject();
+			config.addProperty("socketPort", socketPort);
+			config.addProperty("carModel", "bmw_i3"); // TODO Get from command line arguments
+
 			PrintWriter out = response.getWriter();
-			out.println("{ \"socketPort\" : " + socketPort + " }");
+			out.println(config.toString());
 
 			baseRequest.setHandled(true);
 		}

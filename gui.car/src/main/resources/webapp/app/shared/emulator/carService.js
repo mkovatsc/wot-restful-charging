@@ -2,6 +2,15 @@ app.factory('carService', function ($log, $rootScope, socketService) {
   var car = function (args) {
     this.uuid = undefined;
 
+    // Populate the object with the data of the chosen car model
+    if (typeof $rootScope.carModel == 'undefined') {
+      $rootScope.carModel = 'bmw_i3'; // Default car model
+    }
+    var key;
+    for (key in cars[$rootScope.carModel]) {
+      this[key] = cars[$rootScope.carModel][key];
+    }
+
     // Navigation for RESTful interface
     this.href = '/.well-known/core';
     this.nowayback = false; // TODO true as soon as a form was sent
@@ -65,33 +74,13 @@ app.factory('carService', function ($log, $rootScope, socketService) {
 
   car.prototype = {
 
-    // Basic model description (default: BMW i3)
-    name: 'BMW i3',
-    state: undefined,
-    battery: {
-      capacity: 18.8, // kWh
-      soc: 5, // State of charge
-      R_C: 1.55, // charge = U*(1-e^-(t/R*C)) with t in minutes / 10
-      charging: false
-    },
-    plugged_in: false,
-    ready_charge: false,
-    charging: {
-      voltage: {
-        AC: 230,
-        DC: 400
-      },
-      rate: {
-        AC: [12, 16, 32],
-        DC: [125]
-      },
-      currentDemand : 0,
-      complete: false,
-      target_soc: 100
-    },
-
     // Additional state information
     connector: undefined,
+    state: undefined,
+    plugged_in: false,
+    soc: 5,
+    target_soc: 100,
+    currentDemand: 0,
 
     // Plug the car in
     plugIn: function (speedup) {
@@ -102,7 +91,7 @@ app.factory('carService', function ($log, $rootScope, socketService) {
       if (typeof this.config.socket != 'undefined') {
         var data = {
           pluggedIn: true,
-          soc: this.battery.soc,
+          soc: this.soc,
           chargingType: 'DC',
           maxVoltage: this.charging.voltage.DC,
           maxCurrent: Math.max.apply(null, this.charging.rate.DC)
@@ -150,7 +139,7 @@ app.factory('carService', function ($log, $rootScope, socketService) {
         // Fill in form values > TODO generic solution? Retrieve media types from server?
         switch (accepts) {
             case 'application/x.register+json':
-              data.soc = this.battery.soc;
+              data.soc = this.soc;
               data.chargingType = 'DC';
               data.maxVoltage = this.charging.voltage.DC;
               data.maxCurrent = Math.max.apply(null, this.charging.rate.DC);
@@ -159,8 +148,8 @@ app.factory('carService', function ($log, $rootScope, socketService) {
               data.targetVoltage = this.charging.voltage.DC;
               break;
             case 'application/x.charge+json':
-              data.soc = this.battery.soc;
-              data.targetCurrent = this.charging.currentDemand;
+              data.soc = this.soc;
+              data.targetCurrent = this.currentDemand;
               break;
             default:
               break;
@@ -236,11 +225,8 @@ app.factory('carService', function ($log, $rootScope, socketService) {
     // Reset the car's state
     reset: function () {
       this.unplug(1);
-      this.battery.soc = 5;
-      this.battery.charging = false;
+      this.soc = 5;
       this.plugged_in = false;
-      this.ready_charge = false;
-      this.charging.complete = false;
     },
 
     // Change state of the car

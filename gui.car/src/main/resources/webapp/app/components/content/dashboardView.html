@@ -11,8 +11,8 @@
     <div id="" class="md-whiteframe-5dp" layout-padding flex-gt-sm>
       <h2>State of Charge</h2>
       <div>
-        {{car.battery.soc | number : 0}} %
-        <md-progress-linear md-mode="determinate" value="{{car.battery.soc | number : 0}}"></md-progress-linear>
+        {{car.soc | number : 0}} %
+        <md-progress-linear md-mode="determinate" value="{{car.soc | number : 0}}"></md-progress-linear>
       </div>
       <h2>Car state:</h2>
       <p>State: {{car.state || '-'}}</p>
@@ -24,7 +24,7 @@
         <form>
           <md-input-container>
             <label for="target_soc">Target SoC (%):</label>
-            <input type="number" name="target_soc" min="0" max="100" ng-model="car.charging.target_soc">
+            <input type="number" name="target_soc" min="0" max="100" ng-model="car.target_soc">
           </md-input-container>
         </form>
       </diV>
@@ -46,11 +46,11 @@
       <form>
         <md-input-container>
           <label for="soc">State of Charge (%):</label>
-          <input type="number" name="soc" min="0" max="100" ng-model="car.battery.soc">
+          <input type="number" name="soc" min="0" max="100" ng-model="car.soc">
         </md-input-container>
         <md-input-container>
           <label for="tC">Current demand (A):</label>
-          <input type="number" name="tC" min="0" ng-model="car.charging.currentDemand"><!-- TODO limit max value -->
+          <input type="number" name="tC" min="0" ng-model="car.currentDemand"><!-- TODO limit max value -->
         </md-input-container>
       </form>
 
