@@ -163,13 +163,14 @@ app.factory('carService', function ($log, $rootScope, socketService) {
               data.targetCurrent = this.charging.currentDemand;
               break;
             default:
+              break;
+        }
 
-              // If there is additional payload defined, include it in the request
-              if (typeof payload != 'undefined') {
-                angular.forEach(payload, function (value, key) {
-                  data[key] = value;
-                });
-              }
+        // If there is additional payload defined, include it in the request
+        if (typeof payload != 'undefined') {
+          angular.forEach(payload, function (value, key) {
+            data[key] = value;
+          });
         }
 
         this.config.socket.send('ACTION', data);
