@@ -11,6 +11,14 @@ app.factory('carService', function ($log, $rootScope, socketService) {
       this[key] = cars[$rootScope.carModel][key];
     }
 
+    // Additional state information
+    this.connector = undefined;
+    this.state = undefined;
+    this.plugged_in = false;
+    this.soc = 5;
+    this.target_soc = 100;
+    this.currentDemand = 0;
+
     // Navigation for RESTful interface
     this.href = '/.well-known/core';
     this.nowayback = false; // TODO true as soon as a form was sent
@@ -73,14 +81,6 @@ app.factory('carService', function ($log, $rootScope, socketService) {
   };
 
   car.prototype = {
-
-    // Additional state information
-    connector: undefined,
-    state: undefined,
-    plugged_in: false,
-    soc: 5,
-    target_soc: 100,
-    currentDemand: 0,
 
     // Plug the car in
     plugIn: function (speedup) {
