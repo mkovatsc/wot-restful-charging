@@ -77,18 +77,21 @@ public class AppSocket {
 							switch (actMsg.getAction()) {
 								case "updateCableCheckStatus" :
 									chargerData.setCableCheckStatus(actMsg.getCableCheckStatus());
+									chargerData.setUpdateOutstanding(false);
 
 									// DEBUG
 									socket.pushToListeners(MessageType.DEBUG, new Message("Charger updated cableCheckStatus to: " + chargerData.getCableCheckStatus()));
 									break;
 								case "updatePresentVoltage" :
 									chargerData.setPresentVoltage(actMsg.getPresentVoltage());
+									chargerData.setUpdateOutstanding(false);
 
 									// DEBUG
 									socket.pushToListeners(MessageType.DEBUG, new Message("Charger updated presentVoltage to: " + chargerData.getPresentVoltage()));
 									break;
 								case "updatePresentCurrent" :
 									chargerData.setPresentCurrent(actMsg.getPresentCurrent());
+									chargerData.setUpdateOutstanding(false);
 
 									// DEBUG
 									socket.pushToListeners(MessageType.DEBUG, new Message("Charger updated presentCurrent to: " + chargerData.getPresentCurrent()));

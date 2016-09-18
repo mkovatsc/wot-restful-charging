@@ -20,6 +20,7 @@ public class ChargerData {
 	private double presentCurrent;
 	private int cableCheckStatus; // TODO Remove magic numbers, make ENUM! 0 (not running), 1 (running), 2 (completed successful), 3 (error)
 	private String currentState; // TODO make ENUM
+	private boolean updateOutstanding;
 
 	private Map<String, List<CoapResource>> subscribers;
 	private Map<UUID, CarData> carsData;
@@ -99,6 +100,14 @@ public class ChargerData {
 	public synchronized void setCurrentState(String state) {
 		this.currentState = state;
 		notifySubscribers("currentState");
+	}
+
+	public boolean isUpdateOutstanding() {
+		return updateOutstanding;
+	}
+
+	public void setUpdateOutstanding(boolean updateOutstanding) {
+		this.updateOutstanding = updateOutstanding;
 	}
 
 	public void subscribe(CoapResource me, String field) {

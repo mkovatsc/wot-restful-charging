@@ -66,6 +66,7 @@ public class EvChargingTask extends CoapResource {
 			SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
 			eMsg.setDescription("targetCurrentSet");
 			SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
+			chargerData.setUpdateOutstanding(true);
 
 			exchange.respond(ResponseCode.VALID);
 		}
@@ -87,9 +88,7 @@ public class EvChargingTask extends CoapResource {
 			eMsg.setTargetCurrent(carData.getTargetCurrent());
 			eMsg.setDescription("targetCurrentSet");
 			SocketHandler.getInstance().pushToListeners(MessageType.EVENT, eMsg);
-
-			// TODO As the UI might need a second to update the present current, the links shown to the car are invalid!
-			// TODO Maybe make use of a "dirty" flag, to rather show a incomplete representation instead of an invalid one.
+			chargerData.setUpdateOutstanding(true);
 
 			exchange.respond(ResponseCode.CHANGED, "", MediaTypeRegistry.APPLICATION_JSON);
 		} else {
@@ -112,7 +111,7 @@ public class EvChargingTask extends CoapResource {
 		CoREHalBase hal = new CoREHalBase();
 
 		Link self = new Link(this.getURI());
-		if (chargerData.getCableCheckStatus() != 2 || chargerData.getPresentVoltage() != carData.getTargetVoltage()) { // TODO Refactor those conditional attributes
+		if (chargerData.getCableCheckStatus() != 2 || chargerData.getPresentVoltage() != carData.getTargetVoltage() || chargerData.isUpdateOutstanding()) { // TODO Refactor those conditional attributes
 			hal.addLink("wait", self); // TODO Not always correct, is there a process running?
 		} else {
 			hal.addLink("self", self);
