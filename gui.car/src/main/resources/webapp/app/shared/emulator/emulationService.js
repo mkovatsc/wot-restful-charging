@@ -27,12 +27,10 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
     if (type == 'link' && relation in car.links) {
       car.follow(car.links[relation].href);
       car.changeState(nextState);
-
       return relation;
     } else if (type == 'form' && relation in car.forms) {
       car.submitForm(car.forms[relation].href, car.forms[relation].method, car.forms[relation].accepts);
       car.changeState(nextState);
-
       return relation;
     } else if (relation == 'leave' && 'stop' in car.forms) { // TODO
       if (typeof car.forms.stop.preFilled != 'undefined') {
@@ -40,17 +38,15 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
       } else {
         car.submitForm(car.forms.stop['href'], car.forms.stop['method'], car.forms.stop['accepts']);
       }
+      return 'stop';
     } else if ('wait' in car.links) {
       car.follow(car.links.wait['href']);
-
       return 'wait';
     } else if ('next' in car.links) {
       car.follow(car.links.next['href']);
-
       return 'next';
     } else if ('next' in car.forms) {
       car.submitForm(car.forms.next['href'], car.forms.next['method'], car.forms.next['accepts']);
-
       return 'next';
     } else {
       // TODO Well, we're screwed!
@@ -131,10 +127,6 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
             processState(car, 'form', 'leave', 'chargingStopped');
             break;
           case 'chargingStopped':
-            processState(car, 'form', 'leave', 'sessionStop');
-            break;
-          case 'sessionStop':
-            processState(car, 'form', 'leave', undefined);
             this.stop(); // Stop emulation
             // TODO Unplug the car?
             break;
@@ -155,7 +147,6 @@ app.factory('emulationService', function ($log, $rootScope, $timeout, $q) {
     stop: function () {
       $timeout.cancel(this.emulation);
       this.isRunning = false;
-
       // TODO Remove existing asynchronous handlers
     },
 
