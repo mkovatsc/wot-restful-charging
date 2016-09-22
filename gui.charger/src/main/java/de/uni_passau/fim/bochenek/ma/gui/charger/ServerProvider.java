@@ -45,15 +45,15 @@ public class ServerProvider {
 
 		// Create available options
 		Options options = new Options();
-		options.addOption(Option.builder("a").longOpt("app-port").desc("The port where the UI will be served.").hasArg().type(Integer.class).build());
-		options.addOption(Option.builder("s").longOpt("socket-port").desc("The port where the websocket will be listening.").hasArg().type(Integer.class).build());
+		options.addOption(Option.builder("a").longOpt("app-port").desc("The port where the UI will be served.").hasArg().type(Number.class).build());
+		options.addOption(Option.builder("s").longOpt("socket-port").desc("The port where the websocket will be listening.").hasArg().type(Number.class).build());
 
 		// Try to parse the arguments and print help if something went wrong
 		try {
 			CommandLine line = parser.parse(options, args);
 
-			int portApp = (line.getParsedOptionValue("a") != null) ? (Integer) line.getParsedOptionValue("a") : DEFAULT_PORT_APP;
-			int portSocket = (line.getParsedOptionValue("s") != null) ? (Integer) line.getParsedOptionValue("s") : DEFAULT_PORT_SOCKET;
+			int portApp = (line.getParsedOptionValue("a") != null) ? Integer.parseInt(line.getOptionValue("a")) : DEFAULT_PORT_APP;
+			int portSocket = (line.getParsedOptionValue("s") != null) ? Integer.parseInt(line.getOptionValue("s")) : DEFAULT_PORT_SOCKET;
 
 			// Start GUI server
 			GuiServer server = new GuiServer(portApp, APP_URL, portSocket, SocketHandler.getInstance());
