@@ -38,6 +38,30 @@ public class Car {
 		logger.info("New CarUI established websocket connection.");
 	}
 
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public Session getSession() {
+		return session;
+	}
+
+	public void setSession(Session session) {
+		this.session = session;
+	}
+
+	public CarData getData() {
+		return carData;
+	}
+
+	public String getCurrentLocation() {
+		return client.getURI();
+	}
+
+	public CoapResponse getLastResponse() {
+		return lastRes;
+	}
+
 	public Set<WebLink> plugIn() {
 		if (client == null) {
 			client = new CoapClient(chargerURI); // TODO Server not available?
@@ -105,33 +129,8 @@ public class Car {
 		try {
 			session.getRemote().sendString(message);
 		} catch (IOException e) {
-			// TODO Session invalid? Store cars?
-			e.printStackTrace();
+			logger.info("Could not send message to car.");
 		}
-	}
-
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	public Session getSession() {
-		return session;
-	}
-
-	public void setSession(Session session) {
-		this.session = session;
-	}
-
-	public CarData getData() {
-		return carData;
-	}
-
-	public String getCurrentLocation() {
-		return client.getURI();
-	}
-
-	public CoapResponse getLastResponse() {
-		return lastRes;
 	}
 
 }

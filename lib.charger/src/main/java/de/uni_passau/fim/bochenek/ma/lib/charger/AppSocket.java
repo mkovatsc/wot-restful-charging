@@ -66,8 +66,6 @@ public class AppSocket {
 					ChargerData chargerData = socket.getChargerData();
 
 					switch (type) {
-						case EVENT : // TODO Are there any events to process?
-							break;
 						case ACTION :
 							ActionMessage actMsg = gson.fromJson(msg.getAsJsonObject().get("data"), ActionMessage.class);
 
@@ -105,7 +103,6 @@ public class AppSocket {
 							logger.log(Level.INFO, "No handler found for this type of message. (" + message + ")");
 							break;
 					}
-					// TODO Proper handling for invalid contents
 				} catch (IllegalArgumentException iae) {
 					// TODO Find some elegant solution
 					logger.log(Level.WARNING, "No valid message type. (" + message + ")");

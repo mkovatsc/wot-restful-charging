@@ -45,18 +45,8 @@ public class ServerProvider {
 
 		// Create available options
 		Options options = new Options();
-		options.addOption(Option.builder("a")
-				.longOpt("app-port")
-				.desc("The port where the UI will be served.")
-				.hasArg()
-				.type(Integer.class)
-				.build());
-		options.addOption(Option.builder("s")
-				.longOpt("socket-port")
-				.desc("The port where the websocket will be listening.")
-				.hasArg()
-				.type(Integer.class)
-				.build());
+		options.addOption(Option.builder("a").longOpt("app-port").desc("The port where the UI will be served.").hasArg().type(Integer.class).build());
+		options.addOption(Option.builder("s").longOpt("socket-port").desc("The port where the websocket will be listening.").hasArg().type(Integer.class).build());
 
 		// Try to parse the arguments and print help if something went wrong
 		try {
@@ -64,14 +54,19 @@ public class ServerProvider {
 
 			int portApp = (line.getParsedOptionValue("a") != null) ? (Integer) line.getParsedOptionValue("a") : DEFAULT_PORT_APP;
 			int portSocket = (line.getParsedOptionValue("s") != null) ? (Integer) line.getParsedOptionValue("s") : DEFAULT_PORT_SOCKET;
-			
+
 			// Start GUI server
 			GuiServer server = new GuiServer(portApp, APP_URL, portSocket, SocketHandler.getInstance());
 			try {
 				server.start();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.log(Level.INFO, "GuiServer could not be successfully started.");
+			}
+
+			// Debugging information
+			if (server.isRunning()) {
+				logger.log(Level.INFO, "GuiServer (Application) started on: " + server.getAppPort());
+				logger.log(Level.INFO, "GuiServer (Socket) started on: " + server.getSocketPort());
 			}
 
 			// Prepare data POJOs for charger and connected cars
@@ -81,10 +76,6 @@ public class ServerProvider {
 			// Setup and start charger
 			Charger charger = new Charger(chargerData);
 			charger.start();
-
-			// Debugging information
-			logger.log(Level.INFO, "GuiServer (Application) started on: " + server.getAppPort());
-			logger.log(Level.INFO, "GuiServer (Socket) started on: " + server.getSocketPort());
 
 			// Start regular interface update
 			Timer timer = new Timer();

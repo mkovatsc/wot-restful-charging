@@ -74,8 +74,6 @@ public class EvChargingTask extends CoapResource {
 
 	@Override
 	public void handlePUT(CoapExchange exchange) {
-
-		// TODO Any way to decide whether we got a PUT from "next" or "stop"
 		if (chargerData.getPresentVoltage() == carData.getTargetVoltage()) { // TODO Define acceptance range?
 			Gson gson = new GsonBuilder().create();
 			JsonObject formData = gson.fromJson(exchange.getRequestText(), JsonObject.class); // TODO not very robust...
@@ -92,19 +90,21 @@ public class EvChargingTask extends CoapResource {
 
 			exchange.respond(ResponseCode.CHANGED, "", MediaTypeRegistry.APPLICATION_JSON);
 		} else {
-			exchange.respond(ResponseCode.PRECONDITION_FAILED); // TODO Correct response code?
+			exchange.respond(ResponseCode.FORBIDDEN);
 		}
 	}
 
 	@Override
 	public void handleDELETE(CoapExchange exchange) {
+		if (chargerData.getPresentCurrent() == 0 && !carData.isCharging()) {
+			exchange.setLocationPath(carData.getBookmarks().get("evLoc").getURI());
+			this.getChildren().forEach(child -> ((CoapResource) child).clearAndNotifyObserveRelations(ResponseCode.NOT_FOUND)); // TODO evil cast!
+			this.delete();
+			exchange.respond(ResponseCode.DELETED);
+		} else {
+			exchange.respond(ResponseCode.FORBIDDEN);
+		}
 
-		// TODO Don't allow DELETE if there is still voltage and current present
-
-		exchange.setLocationPath(carData.getBookmarks().get("evLoc").getURI());
-		this.getChildren().forEach(child -> ((CoapResource) child).clearAndNotifyObserveRelations(ResponseCode.NOT_FOUND)); // TODO evil cast!
-		this.delete();
-		exchange.respond(ResponseCode.DELETED);
 	}
 
 	private CoREHalBase getRepresentation() {
@@ -117,7 +117,6 @@ public class EvChargingTask extends CoapResource {
 			hal.addLink("self", self);
 		}
 
-		// TODO Applies to all links: Set the types?
 		for (Resource child : this.getChildren()) {
 			Link tmp = new Link(child.getURI());
 			tmp.setObservable(child.isObservable());

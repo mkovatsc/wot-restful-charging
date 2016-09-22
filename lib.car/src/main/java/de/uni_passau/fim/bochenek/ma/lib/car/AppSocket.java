@@ -61,7 +61,6 @@ public class AppSocket {
 			try {
 				msg = parser.parse(message);
 			} catch (JsonSyntaxException jse) {
-				// TODO Something to do here?
 				logger.log(Level.WARNING, "No valid JSON received. (" + message + ")");
 				return;
 			}

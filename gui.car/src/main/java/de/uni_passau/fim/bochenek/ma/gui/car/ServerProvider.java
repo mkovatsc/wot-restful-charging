@@ -34,18 +34,8 @@ public class ServerProvider {
 
 		// Create available options
 		Options options = new Options();
-		options.addOption(Option.builder("a")
-				.longOpt("app-port")
-				.desc("The port where the UI will be served.")
-				.hasArg()
-				.type(Integer.class)
-				.build());
-		options.addOption(Option.builder("s")
-				.longOpt("socket-port")
-				.desc("The port where the websocket will be listening.")
-				.hasArg()
-				.type(Integer.class)
-				.build());
+		options.addOption(Option.builder("a").longOpt("app-port").desc("The port where the UI will be served.").hasArg().type(Integer.class).build());
+		options.addOption(Option.builder("s").longOpt("socket-port").desc("The port where the websocket will be listening.").hasArg().type(Integer.class).build());
 
 		// Try to parse the arguments and print help if something went wrong
 		try {
@@ -59,13 +49,14 @@ public class ServerProvider {
 			try {
 				server.start();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.log(Level.INFO, "GuiServer could not be successfully started.");
 			}
 
 			// Debugging information
-			logger.log(Level.INFO, "GuiServer (Application) started on: " + server.getAppPort());
-			logger.log(Level.INFO, "GuiServer (Socket) started on: " + server.getSocketPort());
+			if (server.isRunning()) {
+				logger.log(Level.INFO, "GuiServer (Application) started on: " + server.getAppPort());
+				logger.log(Level.INFO, "GuiServer (Socket) started on: " + server.getSocketPort());
+			}
 		} catch (ParseException exp) {
 			HelpFormatter formatter = new HelpFormatter();
 			StringBuilder header = new StringBuilder("Error: ");
@@ -79,7 +70,7 @@ public class ServerProvider {
 			if (exp instanceof UnrecognizedOptionException) {
 				header.append("A provided option could not be recognized.");
 			}
-			
+
 			formatter.printHelp("car", header.toString(), options, "");
 		}
 	}

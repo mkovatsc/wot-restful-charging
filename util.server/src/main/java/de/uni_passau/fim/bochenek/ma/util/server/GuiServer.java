@@ -106,6 +106,10 @@ public class GuiServer {
 		return socketPort; // TODO May be uninitialized
 	}
 
+	public boolean isRunning() {
+		return appServer.isRunning() && socketServer.isRunning();
+	}
+
 	private class ConfigHandler extends AbstractHandler {
 
 		@Override

@@ -59,7 +59,7 @@ public class EvCharge extends CoapResource {
 
 			exchange.respond(ResponseCode.CREATED, "", MediaTypeRegistry.APPLICATION_JSON);
 		} else {
-			exchange.respond(ResponseCode.FORBIDDEN); // TODO Correct response code?
+			exchange.respond(ResponseCode.FORBIDDEN);
 		}
 	}
 
